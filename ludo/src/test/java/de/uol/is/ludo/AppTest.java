@@ -1,4 +1,4 @@
-package $package;
+package de.uol.is.ludo;
 
 import static org.junit.Assert.assertTrue;
 
