@@ -8,11 +8,11 @@ import java.util.ArrayList;
 public class Field {
 
     private final int[] coordinates;
-    private ArrayList<Agent> agents_on_the_field;
-    private Field follw_field = null;
+    private ArrayList<Agent> agentsOnTheField;
+    private Field follwField = null;
     private boolean intersection;
-    private String intersection_color;
-    private ArrayList<Field> gateway_fields;
+    private String intersectionColor;
+    private ArrayList<Field> gatewayFields;
 
     public Field(int[] coordinates, boolean intersection) {
         this.coordinates = coordinates;
@@ -23,16 +23,16 @@ public class Field {
      ***** Getter & Setter *****
      ***************************/
 
-    public void setFollw_field(Field follw_field) {
-        this.follw_field = follw_field;
+    public void setFollwField(Field follwField) {
+        this.follwField = follwField;
     }
 
-    public ArrayList<Agent> getAgents_on_the_field() {
-        return agents_on_the_field;
+    public ArrayList<Agent> getAgentsOnTheField() {
+        return agentsOnTheField;
     }
 
-    public Field getFollw_field() {
-        return follw_field;
+    public Field getFollwField() {
+        return follwField;
     }
 
     public void addGatewayField(int x, int y) {
@@ -40,10 +40,10 @@ public class Field {
     }
 
     public void addGatewayField(Field field) {
-        gateway_fields.add(field);
+        gatewayFields.add(field);
     }
 
     public void setIntersectionColor(String color) {
-        intersection_color = color;
+        intersectionColor = color;
     }
 }
