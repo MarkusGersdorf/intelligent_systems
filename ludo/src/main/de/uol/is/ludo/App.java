@@ -1,5 +1,7 @@
 package de.uol.is.ludo;
 
+import sim.engine.*;
+
 /**
  * Hello world!
  *
