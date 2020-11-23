@@ -118,10 +118,10 @@ public class Mdga extends SimState {
 
         for(int i = 0; i < xFields.length -1; i++) {
             Field field = (Field) board.get(xFields[i], yFields[i]);
-            field.setFollw_field((Field) board.get(xFields[i+1], yFields[i+1]));
+            field.setFollwField((Field) board.get(xFields[i+1], yFields[i+1]));
         }
 
         Field field = (Field) board.get(xFields[xFields.length - 1], yFields[xFields.length - 1]);
-        field.setFollw_field((Field) board.get(xFields[0], yFields[0]));
+        field.setFollwField((Field) board.get(xFields[0], yFields[0]));
     }
 }
