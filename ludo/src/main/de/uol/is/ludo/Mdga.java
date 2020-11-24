@@ -2,7 +2,6 @@ package de.uol.is.ludo;
 
 import sim.engine.*;
 import sim.field.grid.ObjectGrid2D;
-
 import java.util.ArrayList;
 
 /**     0 1 2 3 4 5 6 7 8 9 10
@@ -27,7 +26,7 @@ import java.util.ArrayList;
 public class Mdga extends SimState {
 
     private static int numberOfPlayers = 4;
-    private static ArrayList<Agent> players = new ArrayList<Agent>();
+    public static ArrayList<Agent> players = new ArrayList<Agent>();
     public static String[] playerColors = {"RED", "YELLOW", "BLUE", "GREEN"};
     private static ObjectGrid2D board = new ObjectGrid2D(11, 11);
 
@@ -43,6 +42,10 @@ public class Mdga extends SimState {
         mdga.start();
     }
 
+    public void start() {
+        super.start();
+    }
+
     private static void initAgents() {
 
         Field[] startPosistions = {
@@ -55,10 +58,6 @@ public class Mdga extends SimState {
         for (int i = 0; i < numberOfPlayers; i++) {
             players.add(new Agent(playerColors[i], startPosistions[i]));
         }
-    }
-
-    public void start() {
-        super.start();
     }
 
     private static void initBoard() {
@@ -113,6 +112,7 @@ public class Mdga extends SimState {
                 board.set(xFields[i], yFields[i], newField);
             } else {
                 Field newField = new Field(coordinates, false);
+                board.set(xFields[i], yFields[i], newField);
             }
         }
 
@@ -124,4 +124,17 @@ public class Mdga extends SimState {
         Field field = (Field) board.get(xFields[xFields.length - 1], yFields[xFields.length - 1]);
         field.setFollwField((Field) board.get(xFields[0], yFields[0]));
     }
+
+    /***************************
+     ***** Getter & Setter *****
+     ***************************/
+
+    public static ObjectGrid2D getBoard() {
+        return board;
+    }
+
+    public static void setBoard(ObjectGrid2D board) {
+        Mdga.board = board;
+    }
+
 }
