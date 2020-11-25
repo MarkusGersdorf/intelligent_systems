@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class Mdga extends SimState {
 
     private static int numberOfPlayers = 4;
-    public static ArrayList<Agent> players = new ArrayList<Agent>();
+    public static ArrayList<Agent_old> players = new ArrayList<Agent_old>();
     public static String[] playerColors = {"RED", "YELLOW", "BLUE", "GREEN"};
     private static ObjectGrid2D board = new ObjectGrid2D(11, 11);
 
@@ -56,7 +56,7 @@ public class Mdga extends SimState {
         };
 
         for (int i = 0; i < numberOfPlayers; i++) {
-            players.add(new Agent(playerColors[i], startPosistions[i]));
+            players.add(new Agent_old(playerColors[i], startPosistions[i]));
         }
     }
 

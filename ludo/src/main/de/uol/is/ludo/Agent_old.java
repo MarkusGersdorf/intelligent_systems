@@ -5,13 +5,13 @@ import sim.engine.Steppable;
 
 import java.util.ArrayList;
 
-public class Agent implements Steppable {
+public class Agent_old implements Steppable {
 
     private String playerColor;
     private Field startPos;
     private ArrayList<ToyFigure> toyFigureList = new ArrayList<ToyFigure>();
 
-    public Agent(String playerColor, Field startPos) {
+    public Agent_old(String playerColor, Field startPos) {
         this.playerColor = playerColor;
         this.startPos = startPos;
         for(int i = 0; i < 4; i++) {
@@ -55,7 +55,7 @@ public class Agent implements Steppable {
     }
 
     public void goThrough() {
-        
+
     }
 
     /**
