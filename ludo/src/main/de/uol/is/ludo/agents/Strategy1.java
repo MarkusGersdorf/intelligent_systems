@@ -43,4 +43,9 @@ public class Strategy1 extends Agent {
 
         return null;
     }
+
+    @Override
+    public void addToyFigure(ToyFigure toyFigure) {
+
+    }
 }

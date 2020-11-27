@@ -26,4 +26,10 @@ public abstract class Agent implements Steppable {
     }
 
     protected abstract ToyFigure chooseFigure();
+
+    public String getPlayerColor() {
+        return "null";
+    }
+
+    public abstract void addToyFigure(ToyFigure toyFigure);
 }

@@ -1,5 +1,7 @@
 package de.uol.is.ludo;
 
+import de.uol.is.ludo.agents.Agent;
+
 import java.util.ArrayList;
 
 /**

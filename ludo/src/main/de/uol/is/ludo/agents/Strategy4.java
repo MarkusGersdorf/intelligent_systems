@@ -18,6 +18,11 @@ public class Strategy4 extends Agent {
     }
 
     @Override
+    public void addToyFigure(ToyFigure toyFigure) {
+
+    }
+
+    @Override
     public void step(SimState simState) {
 
     }
