@@ -32,4 +32,11 @@ public class Agent implements Steppable {
     public static int dice(){
         return ((int) (Math.random()*(6 - 1))) + 1;
     }
+
+    public String getPlayerColor() {
+        return "";
+    }
+
+    public void addToyFigure(ToyFigure toyFigure) {
+    }
 }
