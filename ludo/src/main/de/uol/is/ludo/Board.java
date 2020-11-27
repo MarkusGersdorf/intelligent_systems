@@ -2,7 +2,6 @@ package de.uol.is.ludo;
 
 
 import de.uol.is.ludo.agents.Agent;
-import de.uol.is.ludo.agents.Strategy1;
 
 import java.util.ArrayList;
 
@@ -12,7 +11,7 @@ public class Board {
     private ArrayList<Field> fields;
     private String color;
 
-    public ArrayList<Field> getPosition(Strategy1 agent) {
+    public ArrayList<Field> getPosition(Agent agent) {
         return null;
     }
 
