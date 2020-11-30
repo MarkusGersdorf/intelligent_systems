@@ -4,6 +4,8 @@ import de.uol.is.ludo.Board;
 import de.uol.is.ludo.Field;
 import de.uol.is.ludo.ToyFigure;
 
+import java.util.ArrayList;
+
 public class Strategy1 extends Agent {
 
     public Strategy1(String name, String color, Field startPos, Board board) {
@@ -13,7 +15,6 @@ public class Strategy1 extends Agent {
 
     @Override
     protected ToyFigure chooseFigure() {
-
         return null;
     }
 

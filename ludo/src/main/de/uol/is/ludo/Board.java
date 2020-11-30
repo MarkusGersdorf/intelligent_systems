@@ -23,4 +23,12 @@ public class Board {
 
     }
 
+    public int[] getCloseEnemies(Field field) {
+        return new int[0];
+    }
+
+    public int restOfWay(Field field) {
+        return 0;
+    }
+
 }
