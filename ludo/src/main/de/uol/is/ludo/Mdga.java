@@ -1,5 +1,7 @@
 package de.uol.is.ludo;
 
+import de.uol.is.ludo.agents.Agent;
+import de.uol.is.ludo.agents.Strategy1;
 import sim.engine.*;
 import sim.field.grid.ObjectGrid2D;
 import java.util.ArrayList;
@@ -56,7 +58,7 @@ public class Mdga extends SimState {
         };
 
         for (int i = 0; i < numberOfPlayers; i++) {
-            players.add(new Agent(playerColors[i], startPosistions[i]));
+            players.add(new Strategy1("Strategy1", "RED", startPosistions[0], new Board()));
         }
     }
 
