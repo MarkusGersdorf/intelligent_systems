@@ -6,29 +6,32 @@ import de.uol.is.ludo.agents.Agent;
 import java.util.ArrayList;
 
 
-public class Board {
-    private Agent agent;
-    private ArrayList<Field> fields;
-    private String color;
+public class Board implements IBoard {
 
-    public ArrayList<Field> getPosition(Agent agent) {
-        return null;
-    }
+    private Die die = new Die();
+    private ArrayList<Field> field_list = new ArrayList<>();
+    private Field[] fields = new Field[40];
+    private Entry entry = new Entry();
+    private Goal[][] goal = new Goal[4][4];
+    private Pawn[] pawns = new Pawn[16];
 
-    public void moveFigure(ToyFigure figure, Field field) {
-
-    }
-
-    public void moveFigure(ToyFigure figure, int numberOfFields) {
-
-    }
-
-    public int[] getCloseEnemies(Field field) {
-        return new int[0];
-    }
-
-    public int restOfWay(Field field) {
+    @Override
+    public int roll() {
         return 0;
     }
 
+    @Override
+    public boolean move_pawn(Pawn pawn, int steps) {
+        return false;
+    }
+
+    @Override
+    public boolean set_pawn_into_game(Pawn pawn) {
+        return false;
+    }
+
+    @Override
+    public ArrayList<Field> get_field_list() {
+        return null;
+    }
 }
