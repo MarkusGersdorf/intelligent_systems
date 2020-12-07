@@ -2,7 +2,6 @@ package de.uol.is.ludo;
 
 public class Field implements IField
 {
-
     private Pawn pawn;
 
     public Field()

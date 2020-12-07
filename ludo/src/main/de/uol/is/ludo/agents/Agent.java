@@ -24,7 +24,7 @@ public abstract class Agent implements Steppable {
 
     @Override
     public void step(SimState simState) {
-
+    /*
         if (board.getPosition(this).size() == 0) {
             int num = -1;
 
@@ -46,6 +46,7 @@ public abstract class Agent implements Steppable {
                 board.moveFigure(figure, num);
             } while (num == 6);
         }
+        */
     }
 
     protected int dice() {
