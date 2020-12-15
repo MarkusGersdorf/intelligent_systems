@@ -1,5 +1,7 @@
 package de.uol.is.ludo;
 
+import de.uol.is.ludo.agents.Agent;
+
 import java.util.ArrayList;
 
 /**
@@ -25,7 +27,7 @@ public class Field {
             ToyFigure toyFigure = toyFiguresOnTheField.get(i);
             toyFiguresOnTheField.remove(toyFigure);
             for(int j = 0; j < 4; j++) {
-                Agent_old agent = Mdga.players.get(j);
+                Agent agent = Mdga.players.get(j);
                 if(agent.getPlayerColor() == toyFigure.getColor()) {
                     agent.addToyFigure(toyFigure);
                 }
