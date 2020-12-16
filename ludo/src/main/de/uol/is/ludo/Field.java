@@ -10,11 +10,6 @@ public class Field implements IField
         field_id = id;
     }
 
-    public void kick_pawn(IPawn p)
-    {
-        pawn = p;
-    }
-
     @Override
     public boolean set_pawn(IPawn p)
     {

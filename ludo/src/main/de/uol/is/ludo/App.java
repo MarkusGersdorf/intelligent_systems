@@ -2,7 +2,6 @@ package de.uol.is.ludo;
 
 import sim.engine.*;
 import de.uol.is.ludo.IBoard;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 
 public class App 
 {
-    private static final IBoard board = new Board();
+    private static IBoard board = new Board();
     private static Field[] fields;
     private static Entry entry = new Entry();
     private static ArrayList<IPawn> all_pawns = new ArrayList<>();
@@ -31,19 +30,14 @@ public class App
 
     public static void main( String[] args )
     {
-        update(board);
+        my_pawns = board.get_my_pawns(my_color);
 
-        selected_pawn = my_pawns.get(0);
-        board.set_pawn_into_game(selected_pawn);
-        board.move_pawn(selected_pawn, board.roll());
+        board.set_pawn_into_game(my_pawns.get(0));
 
-        update(board);
-    }
-
-    private static void update(IBoard b)
-    {
-        fields = b.get_fields();
-        entry = b.get_entry();
-        my_pawns = b.get_my_pawns(my_color);
+        for (int i = 0; i < 100; i++)
+        {
+            System.out.println(my_pawns.get(0).get_field().get_field_id());
+            board.move_pawn(my_pawns.get(0), board.roll());
+        }
     }
 }

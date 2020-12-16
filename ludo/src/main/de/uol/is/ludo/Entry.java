@@ -28,6 +28,11 @@ public class Entry extends Field
         return false;
     }
 
+    public void move_pawn_into_entry(IPawn p)
+    {
+        pawns.add(p);
+    }
+
     @Override
     public field_type get_field_type()
     {

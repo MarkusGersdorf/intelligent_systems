@@ -70,21 +70,31 @@ public class Board implements IBoard
     @Override
     public boolean move_pawn(IPawn pawn, int steps)
     {
-        // Check, if target field is empty
-        if(fields[(pawn.get_field().get_field_id() + steps)].get_pawn() == null)
+        int max_range = (pawn.get_starting_pos() + 39) % 40;
+        // Check, if pawn needs to be moved into goal
+        if (true)
         {
-            fields[(pawn.get_field().get_field_id() + steps)].set_pawn(pawn);
+
+        }
+        // Check, if target field is empty
+        if(fields[(pawn.get_field().get_field_id() + steps) % 40].get_pawn() == null)
+        {
+            fields[(pawn.get_field().get_field_id() + steps) % 40].set_pawn(pawn);
             fields[(pawn.get_field().get_field_id())].remove_pawn();
+            pawn.set_field(fields[(pawn.get_field().get_field_id() + steps) % 40]);
             return true;
         }
         // Check, if both pawns are from same player
-        else if (fields[(pawn.get_field().get_field_id() + steps)].get_pawn().get_player() != fields[(pawn.get_field().get_field_id())].get_pawn().get_player())
+        else if (fields[(pawn.get_field().get_field_id() + steps) % 40].get_pawn().get_player() != fields[(pawn.get_field().get_field_id())].get_pawn().get_player())
         {
-            fields[(pawn.get_field().get_field_id() + steps)].kick_pawn(pawn);
+            entry.move_pawn_into_entry(fields[(pawn.get_field().get_field_id() + steps) % 40].get_pawn());
+            fields[(pawn.get_field().get_field_id() + steps) % 40].remove_pawn();
+            fields[(pawn.get_field().get_field_id() + steps) % 40].set_pawn(pawn);
             fields[(pawn.get_field().get_field_id())].remove_pawn();
+            pawn.set_field(fields[(pawn.get_field().get_field_id() + steps) % 40]);
             return true;
         }
-        // Both pawns are from same player
+        // Both pawns are from same player and cannot move further into goal
         else
         {
             return false;
@@ -160,5 +170,11 @@ public class Board implements IBoard
             }
         }
         return my_pawns;
+    }
+
+    @Override
+    public void update()
+    {
+
     }
 }
