@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public interface IBoard
 {
+    void reset();
+
     int roll();
 
     boolean move_pawn(IPawn pawn, int steps);
@@ -18,6 +20,4 @@ public interface IBoard
     ArrayList<IPawn> get_all_pawns();
 
     ArrayList<IPawn> get_my_pawns(IPawn.player player);
-
-    void update();
 }

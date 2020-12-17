@@ -2,13 +2,16 @@ package de.uol.is.ludo;
 
 public class Pawn implements IPawn
 {
+    private int id;
     private int player_id;
     private Field field;
     private int starting_pos;
+    private int moved_steps;
 
-    public Pawn(int id, Field f)
+    public Pawn(int id, int p_id, Field f)
     {
-        player_id = id;
+        this.id = id;
+        player_id = p_id;
         field = f;
         switch (player_id)
         {
@@ -27,6 +30,7 @@ public class Pawn implements IPawn
             default:
                 break;
         }
+        moved_steps = 0;
     }
 
     @Override
@@ -59,9 +63,18 @@ public class Pawn implements IPawn
     }
 
     @Override
-    public void set_player_id(int i)
+    public int get_moved_steps() { return this.moved_steps; }
+
+    @Override
+    public int get_player_id()
     {
-        this.player_id = i;
+        return this.player_id;
+    }
+
+    @Override
+    public int get_id()
+    {
+        return this.id;
     }
 
     @Override
@@ -74,5 +87,32 @@ public class Pawn implements IPawn
     public void set_starting_pos(int i)
     {
         this.starting_pos = i;
+    }
+
+    @Override
+    public void add_moved_steps(int i)
+    {
+        this.moved_steps += i;
+    }
+
+    @Override
+    public void sub_moved_steps(int i) { this.moved_steps -= i; }
+
+    @Override
+    public void set_moved_steps(int i)
+    {
+        this.moved_steps = i;
+    }
+
+    @Override
+    public void set_player_id(int i)
+    {
+        this.player_id = i;
+    }
+
+    @Override
+    public void set_id(int id)
+    {
+        this.id = id;
     }
 }

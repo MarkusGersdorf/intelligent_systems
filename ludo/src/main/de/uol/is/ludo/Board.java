@@ -25,8 +25,8 @@ public class Board implements IBoard
     private Die die = new Die();
     private Field[] fields = new Field[56];
     private Entry entry = new Entry();
-    private Goal[][] goal = new Goal[4][4];
     private Pawn[] pawns = new Pawn[16];
+    private boolean game_over = false;
 
     public Board()
     {
@@ -49,7 +49,7 @@ public class Board implements IBoard
 
         for (int i = 0; i < 16; i++)
         {
-            Pawn p = new Pawn((i/4), this.entry);
+            Pawn p = new Pawn(i, (i/4), this.entry);
             pawns[i] = p;
         }
 
@@ -62,6 +62,13 @@ public class Board implements IBoard
     }
 
     @Override
+    public void reset()
+    {
+        initialize_board();
+        game_over = false;
+    }
+
+    @Override
     public int roll()
     {
         return die.roll();
@@ -70,14 +77,35 @@ public class Board implements IBoard
     @Override
     public boolean move_pawn(IPawn pawn, int steps)
     {
-        int max_range = (pawn.get_starting_pos() + 39) % 40;
-        // Check, if pawn needs to be moved into goal
-        if (true)
+        // TODO: Logik im Goal implementieren (bis zu welchem Feld, darf nicht überspringen
+        if(pawn.get_field().get_field_type() == IField.field_type.GOAL)
         {
+            if(pawn.get_field().get_field_id() == (39 + (pawn.get_player_id() + 1) * 4))
+            {
+                return false;
+            }
+            else if((pawn.get_field().get_field_id() + steps) <= get_limit_goal(pawn))
+            {
+                fields[pawn.get_field().get_field_id() + steps].set_pawn(pawn);
+                fields[pawn.get_field().get_field_id()].remove_pawn();
+                pawn.set_field(fields[(pawn.get_field().get_field_id() + steps)]);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
+        pawn.add_moved_steps(steps);
+        boolean move_into_goal = (pawn.get_moved_steps() >= 40);
+
+        if(move_into_goal)
+        {
+            return check_goal_movement(pawn, steps);
         }
         // Check, if target field is empty
-        if(fields[(pawn.get_field().get_field_id() + steps) % 40].get_pawn() == null)
+        else if(fields[(pawn.get_field().get_field_id() + steps) % 40].get_pawn() == null)
         {
             fields[(pawn.get_field().get_field_id() + steps) % 40].set_pawn(pawn);
             fields[(pawn.get_field().get_field_id())].remove_pawn();
@@ -85,7 +113,7 @@ public class Board implements IBoard
             return true;
         }
         // Check, if both pawns are from same player
-        else if (fields[(pawn.get_field().get_field_id() + steps) % 40].get_pawn().get_player() != fields[(pawn.get_field().get_field_id())].get_pawn().get_player())
+        else if (fields[(pawn.get_field().get_field_id() + steps) % 40].get_pawn().get_player() != fields[pawn.get_field().get_field_id()].get_pawn().get_player())
         {
             entry.move_pawn_into_entry(fields[(pawn.get_field().get_field_id() + steps) % 40].get_pawn());
             fields[(pawn.get_field().get_field_id() + steps) % 40].remove_pawn();
@@ -97,6 +125,7 @@ public class Board implements IBoard
         // Both pawns are from same player and cannot move further into goal
         else
         {
+            System.out.println("Cannot move");
             return false;
         }
     }
@@ -109,7 +138,6 @@ public class Board implements IBoard
             fields[pawn.get_starting_pos()].set_pawn(pawn);
             entry.remove_pawn_from_entry(pawn);
             pawn.set_field(fields[pawn.get_starting_pos()]);
-            System.out.println("Set Pawn on Field");
             return true;
         }
         return false;
@@ -172,9 +200,61 @@ public class Board implements IBoard
         return my_pawns;
     }
 
-    @Override
-    public void update()
+    private boolean check_goal_movement(IPawn pawn, int steps)
     {
+        int left_steps = pawn.get_moved_steps() - 39;
+        pawn.set_moved_steps(39);
 
+        if(left_steps > 4 || fields[39 + (pawn.get_player_id() * 4) + left_steps].get_pawn() != null)
+        {
+            pawn.set_moved_steps((pawn.get_moved_steps() + left_steps) - steps);
+            return false;
+        }
+
+        fields[(pawn.get_field().get_field_id()) % 40].remove_pawn();
+        pawn.set_field(fields[39 + (pawn.get_player_id() * 4) + left_steps]);
+        fields[39 + (pawn.get_player_id() * 4) + left_steps].set_pawn(pawn);
+
+        return true;
+    }
+
+    private boolean check_game_over()
+    {
+        return false;
+    }
+
+    private int get_limit_goal(IPawn pawn)
+    {
+        int lower_limit = (40 + pawn.get_player_id() * 4);
+
+        if(fields[lower_limit].get_pawn() == null || fields[lower_limit].get_pawn().get_id() == pawn.get_id())
+        {
+            if(fields[lower_limit + 1].get_pawn() == null || fields[lower_limit + 1].get_pawn().get_id() == pawn.get_id())
+            {
+                if(fields[lower_limit + 2].get_pawn() == null || fields[lower_limit + 2].get_pawn().get_id() == pawn.get_id())
+                {
+                    if(fields[lower_limit + 3].get_pawn() == null || fields[lower_limit + 3].get_pawn().get_id() == pawn.get_id())
+                    {
+                        return (lower_limit + 3);
+                    }
+                    else
+                    {
+                        return (lower_limit + 2);
+                    }
+                }
+                else
+                {
+                    return (lower_limit + 1);
+                }
+            }
+            else
+            {
+                return (lower_limit);
+            }
+        }
+        else
+        {
+            return 0;
+        }
     }
 }

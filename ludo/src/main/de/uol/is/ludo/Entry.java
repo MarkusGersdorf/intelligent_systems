@@ -31,6 +31,7 @@ public class Entry extends Field
     public void move_pawn_into_entry(IPawn p)
     {
         pawns.add(p);
+        p.set_field(this);
     }
 
     @Override
