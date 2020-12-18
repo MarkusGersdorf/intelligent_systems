@@ -1,22 +1,33 @@
 package de.uol.is.ludo;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
+/**
+ * This class represents the board and will be used by the agents
+ *
+ * @version 0.1
+ *
+ * @author Thomas Cwil
+ * @author Joosten Steenhusen
+ */
 
 public class Board implements IBoard
 {
-    private Die die = new Die();
-    private Field[] fields = new Field[56];
-    private Entry entry = new Entry();
-    private Pawn[] pawns = new Pawn[16];
+    private final Die die = new Die();
+    private final Field[] fields = new Field[56];
+    private final Entry entry = new Entry();
+    private final Pawn[] pawns = new Pawn[16];
     private boolean game_over = false;
-
-    private int winner_id;
 
     public Board()
     {
         initialize_board();
     }
 
+    /**
+     * This method will reset the board (e.g. when starting a new game)
+     */
     private void initialize_board()
     {
         for (int i = 0; i < 40; i++)
@@ -45,6 +56,9 @@ public class Board implements IBoard
         }
     }
 
+    /**
+     * @deprecated
+     */
     @Override
     public void reset()
     {
@@ -52,12 +66,22 @@ public class Board implements IBoard
         game_over = false;
     }
 
+    /**
+     * Method simulates a die
+     * @return integer between 1-6
+     */
     @Override
     public int roll()
     {
         return die.roll();
     }
 
+    /**
+     * Main method of board, which moves the pawns on the board
+     * @param pawn given pawn from agent
+     * @param steps given steps from agent (die)
+     * @return boolean, if movement was successful
+     */
     @Override
     public boolean move_pawn(IPawn pawn, int steps)
     {
@@ -118,6 +142,11 @@ public class Board implements IBoard
         }
     }
 
+    /**
+     * This method sets given pawn into the board
+     * @param pawn given by agent
+     * @return true if successful
+     */
     @Override
     public boolean set_pawn_into_game(IPawn pawn)
     {
@@ -139,42 +168,48 @@ public class Board implements IBoard
         }
     }
 
+    /**
+     * Getter
+     * @return Array of Field
+     */
     @Override
     public Field[] get_fields()
     {
         return fields;
     }
 
+    /**
+     * Getter
+     * @return Entry
+     */
     @Override
     public Entry get_entry()
     {
         return this.entry;
     }
 
+    /**
+     * Get all pawns from all players
+     * @return ArrayList of IPawn
+     */
     @Override
     public ArrayList<IPawn> get_all_pawns()
     {
         ArrayList<IPawn> all_pawns = new ArrayList<>();
-        ArrayList<IPawn> entry_pawns = new ArrayList<>();
-        for (IField f : fields)
-        {
-            if (f.get_pawn() != null)
-            {
-                all_pawns.add(f.get_pawn());
-            }
-        }
-        for (IPawn p : entry_pawns)
-        {
-            all_pawns.add(p);
-        }
-        return null;
+        Collections.addAll(all_pawns, pawns);
+        return all_pawns;
     }
 
+    /**
+     * Get only my pawns
+     * @param player the specific player
+     * @return ArrayList of IPawn
+     */
     @Override
     public ArrayList<IPawn> get_my_pawns(IPawn.player player)
     {
         ArrayList<IPawn> my_pawns = new ArrayList<>();
-        ArrayList<IPawn> entry_pawns = new ArrayList<>();
+        ArrayList<IPawn> entry_pawns;
         for (IField f : fields)
         {
             if (f.get_pawn() != null)
@@ -196,6 +231,12 @@ public class Board implements IBoard
         return my_pawns;
     }
 
+    /**
+     * Checks if pawn can be moved into goal
+     * @param pawn given by agent
+     * @param steps given by agent
+     * @return true, if successful
+     */
     private boolean check_goal_movement(IPawn pawn, int steps)
     {
         int left_steps = pawn.get_moved_steps() - 39;
@@ -214,35 +255,43 @@ public class Board implements IBoard
         return true;
     }
 
+    /**
+     * Routine, which checks if game is over, setting winner_id (player_id) and game_over (boolean)
+     */
     private void check_game_over()
     {
         if(fields[40].get_pawn() != null && fields[41].get_pawn() != null && fields[42].get_pawn() != null && fields[43].get_pawn() != null)
         {
-            winner_id = 0;
             game_over = true;
         }
         if(fields[44].get_pawn() != null && fields[45].get_pawn() != null && fields[46].get_pawn() != null && fields[47].get_pawn() != null)
         {
-            winner_id = 1;
             game_over = true;
         }
         if(fields[48].get_pawn() != null && fields[49].get_pawn() != null && fields[50].get_pawn() != null && fields[51].get_pawn() != null)
         {
-            winner_id = 2;
             game_over = true;
         }
         if(fields[52].get_pawn() != null && fields[53].get_pawn() != null && fields[54].get_pawn() != null && fields[55].get_pawn() != null)
         {
-            winner_id = 3;
             game_over = true;
         }
     }
 
+    /**
+     * Getter
+     * @return game_over
+     */
     public boolean game_over()
     {
         return game_over;
     }
 
+    /**
+     * Checks, how far given pawn can move into goal
+     * @param pawn given by agent
+     * @return integer between 1-4
+     */
     private int get_limit_goal(IPawn pawn)
     {
         int lower_limit = (40 + pawn.get_player_id() * 4);
