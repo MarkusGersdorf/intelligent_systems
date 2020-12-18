@@ -1,24 +1,6 @@
 package de.uol.is.ludo;
 
-
-import de.uol.is.ludo.agents.Agent;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
-
-/**
- * RULES
- * PlayerID
- *             case 0:
- *                 return player.RED;
- *             case 1:
- *                 return player.BLUE;
- *             case 2:
- *                 return player.YELLOW;
- *             case 3:
- *                 return player.BLACK;
- */
 
 public class Board implements IBoard
 {
@@ -27,6 +9,8 @@ public class Board implements IBoard
     private Entry entry = new Entry();
     private Pawn[] pawns = new Pawn[16];
     private boolean game_over = false;
+
+    private int winner_id;
 
     public Board()
     {
@@ -77,7 +61,11 @@ public class Board implements IBoard
     @Override
     public boolean move_pawn(IPawn pawn, int steps)
     {
-        // TODO: Logik im Goal implementieren (bis zu welchem Feld, darf nicht überspringen
+        check_game_over();
+        if(game_over)
+        {
+            return false;
+        }
         if(pawn.get_field().get_field_type() == IField.field_type.GOAL)
         {
             if(pawn.get_field().get_field_id() == (39 + (pawn.get_player_id() + 1) * 4))
@@ -108,6 +96,7 @@ public class Board implements IBoard
         else if(fields[(pawn.get_field().get_field_id() + steps) % 40].get_pawn() == null)
         {
             fields[(pawn.get_field().get_field_id() + steps) % 40].set_pawn(pawn);
+            // TODO: System.out.println(pawn.get_field().get_field_id());
             fields[(pawn.get_field().get_field_id())].remove_pawn();
             pawn.set_field(fields[(pawn.get_field().get_field_id() + steps) % 40]);
             return true;
@@ -133,6 +122,11 @@ public class Board implements IBoard
     @Override
     public boolean set_pawn_into_game(IPawn pawn)
     {
+        check_game_over();
+        if(game_over)
+        {
+            return false;
+        }
         if(pawn.get_field().get_field_id() == -1)
         {
             fields[pawn.get_starting_pos()].set_pawn(pawn);
@@ -218,9 +212,33 @@ public class Board implements IBoard
         return true;
     }
 
-    private boolean check_game_over()
+    private void check_game_over()
     {
-        return false;
+        if(fields[40].get_pawn() != null && fields[41].get_pawn() != null && fields[42].get_pawn() != null && fields[43].get_pawn() != null)
+        {
+            winner_id = 0;
+            game_over = true;
+        }
+        if(fields[44].get_pawn() != null && fields[45].get_pawn() != null && fields[46].get_pawn() != null && fields[47].get_pawn() != null)
+        {
+            winner_id = 1;
+            game_over = true;
+        }
+        if(fields[48].get_pawn() != null && fields[49].get_pawn() != null && fields[50].get_pawn() != null && fields[51].get_pawn() != null)
+        {
+            winner_id = 2;
+            game_over = true;
+        }
+        if(fields[52].get_pawn() != null && fields[53].get_pawn() != null && fields[54].get_pawn() != null && fields[55].get_pawn() != null)
+        {
+            winner_id = 3;
+            game_over = true;
+        }
+    }
+
+    public boolean game_over()
+    {
+        return game_over;
     }
 
     private int get_limit_goal(IPawn pawn)

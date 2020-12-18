@@ -18,24 +18,61 @@ import java.util.ArrayList;
  *              52 - 55: Goal (BLACK)
  */
 
+// TODO: Check, wenn 6 gewürfelt, dann Figur ins Spielfeld (falls Figur im Entry vorhanden)
+// TODO: 3er Regel
+// TODO: Wenn Spielzug "false", muss der Agent was anderes machen können
+// TODO: Warum Out of Array? -> Recherche
+
 public class App 
 {
     private static final IBoard board = new Board();
-    private static final IPawn.player my_color = IPawn.player.BLUE;
-    private static final ArrayList<IPawn> my_pawns = board.get_my_pawns(my_color);
-
-    private static IField[] fields = board.get_fields();
+    private static int rolled;
+    private static final ArrayList<IPawn> red_pawns = board.get_my_pawns(IPawn.player.RED);
+    private static final ArrayList<IPawn> blue_pawns = board.get_my_pawns(IPawn.player.BLUE);
+    private static final ArrayList<IPawn> yellow_pawns = board.get_my_pawns(IPawn.player.YELLOW);
+    private static final ArrayList<IPawn> black_pawns = board.get_my_pawns(IPawn.player.BLACK);
 
     public static void main( String[] args )
     {
-        for(IPawn p : my_pawns)
+        while(!board.game_over())
         {
-            board.set_pawn_into_game(p);
-            for (int i = 0; i < 1000; i++)
+            for (IPawn p : red_pawns)
             {
-                board.move_pawn(p, board.roll());
+                for(int i = 0; i < 150; i++)
+                {
+                    rolled = board.roll();
+                    if(rolled == 6)
+                    {
+                        if(get_pawn_from_entry(red_pawns) != null)
+                        {
+                            System.out.println("SET PAWN INTO GAME");
+                            board.set_pawn_into_game(get_pawn_from_entry(red_pawns));
+                        }
+                        else
+                        {
+                            board.move_pawn(p, rolled);
+                        }
+                    }
+                    else
+                    {
+                        System.out.println(rolled);
+                        board.move_pawn(p, rolled);
+                    }
+                }
             }
-            System.out.println(p.get_field().get_field_id());
         }
+        System.out.println("GAME OVER");
+    }
+
+    private static IPawn get_pawn_from_entry(ArrayList<IPawn> pawns)
+    {
+        for (IPawn p : pawns)
+        {
+            if(p.get_field().get_field_type() == IField.field_type.ENTRY)
+            {
+                return p;
+            }
+        }
+        return null;
     }
 }

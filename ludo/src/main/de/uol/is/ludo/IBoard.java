@@ -13,6 +13,8 @@ public interface IBoard
 
     boolean set_pawn_into_game(IPawn pawn);
 
+    boolean game_over();
+
     Field[] get_fields();
 
     Entry get_entry();

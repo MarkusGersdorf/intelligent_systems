@@ -2,7 +2,7 @@ package de.uol.is.ludo;
 
 public interface IPawn
 {
-    public enum player
+    enum player
     {
         RED, BLUE, YELLOW, BLACK;
     }
