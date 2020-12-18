@@ -34,34 +34,7 @@ public class App
 
     public static void main( String[] args )
     {
-        while(!board.game_over())
-        {
-            for (IPawn p : red_pawns)
-            {
-                for(int i = 0; i < 150; i++)
-                {
-                    rolled = board.roll();
-                    if(rolled == 6)
-                    {
-                        if(get_pawn_from_entry(red_pawns) != null)
-                        {
-                            System.out.println("SET PAWN INTO GAME");
-                            board.set_pawn_into_game(get_pawn_from_entry(red_pawns));
-                        }
-                        else
-                        {
-                            board.move_pawn(p, rolled);
-                        }
-                    }
-                    else
-                    {
-                        System.out.println(rolled);
-                        board.move_pawn(p, rolled);
-                    }
-                }
-            }
-        }
-        System.out.println("GAME OVER");
+
     }
 
     private static IPawn get_pawn_from_entry(ArrayList<IPawn> pawns)

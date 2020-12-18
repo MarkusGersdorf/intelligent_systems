@@ -96,7 +96,6 @@ public class Board implements IBoard
         else if(fields[(pawn.get_field().get_field_id() + steps) % 40].get_pawn() == null)
         {
             fields[(pawn.get_field().get_field_id() + steps) % 40].set_pawn(pawn);
-            // TODO: System.out.println(pawn.get_field().get_field_id());
             fields[(pawn.get_field().get_field_id())].remove_pawn();
             pawn.set_field(fields[(pawn.get_field().get_field_id() + steps) % 40]);
             return true;
@@ -127,14 +126,17 @@ public class Board implements IBoard
         {
             return false;
         }
-        if(pawn.get_field().get_field_id() == -1)
+        if(pawn.get_field().get_field_id() == -1 && fields[pawn.get_starting_pos()].get_pawn() != null)
         {
             fields[pawn.get_starting_pos()].set_pawn(pawn);
             entry.remove_pawn_from_entry(pawn);
             pawn.set_field(fields[pawn.get_starting_pos()]);
             return true;
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
 
     @Override
