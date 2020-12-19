@@ -6,6 +6,8 @@ import de.uol.is.ludo.Pawn;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 
+import java.util.ArrayList;
+
 public abstract class Agent implements Steppable {
 
     protected String name;
@@ -24,36 +26,36 @@ public abstract class Agent implements Steppable {
 
     @Override
     public void step(SimState simState) {
-    /*
-        if (board.getPosition(this).size() == 0) {
+
+        if (board.getRemainingNumberOfPawn() == 4) {
             int num = -1;
 
             for (int i = 0; i < 3; i++) {
-                num = dice();
+                num = board.roll();
                 if (num == 6) {
-                    board.moveFigure(figures[0], startPos);
+                    board.set_pawn_into_game(figures[0]);
+                    board.move_pawn(figures[0], board.roll());
                     figures[0] = null;
                     break;
                 }
             }
         }
 
-        if (board.getPosition(this).size() != 0) {
+        if (board.getRemainingNumberOfPawn() != 4) {
             int num;
             do {
-                num = dice();
-                Pawn figure = chooseFigure();
-                board.moveFigure(figure, num);
+                num = board.roll();
+                ArrayList<Pawn> optionList = chooseFigure();
+                for (Pawn pawn : optionList) {
+                    if (board.move_pawn(pawn, num)) {
+                        break;
+                    }
+                }
             } while (num == 6);
         }
-        */
     }
 
-    protected int dice() {
-        return ((int) (Math.random() * (6 - 1))) + 1;
-    }
-
-    protected abstract Pawn chooseFigure();
+    protected abstract ArrayList<Pawn> chooseFigure();
 
     public String getPlayerColor() {
         return "null";

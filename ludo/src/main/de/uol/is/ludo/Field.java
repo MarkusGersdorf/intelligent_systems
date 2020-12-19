@@ -4,9 +4,7 @@ public class Field implements IField
 {
     private Pawn pawn;
 
-    public Field()
-    {
-
+    public Field() {
     }
 
     @Override

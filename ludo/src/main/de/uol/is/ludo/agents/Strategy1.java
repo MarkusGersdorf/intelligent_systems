@@ -4,6 +4,8 @@ import de.uol.is.ludo.Board;
 import de.uol.is.ludo.Field;
 import de.uol.is.ludo.Pawn;
 
+import java.util.ArrayList;
+
 public class Strategy1 extends Agent {
 
     public Strategy1(String name, String color, Field startPos, Board board) {
@@ -12,8 +14,17 @@ public class Strategy1 extends Agent {
     }
 
     @Override
-    protected Pawn chooseFigure() {
-        return null;
+    protected ArrayList<Pawn> chooseFigure() {
+        ArrayList<Pawn> optionList = new ArrayList<>();
+        ArrayList<Field> fields = board.get_field_list();
+        for(Field field : fields) {
+            if(field.get_pawn() != null) {
+                if(String.valueOf(field.get_pawn().get_player()).equals(color)) {
+                    optionList.add(field.get_pawn());
+                }
+            }
+        }
+        return optionList;
     }
 
     @Override
