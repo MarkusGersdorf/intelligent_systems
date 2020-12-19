@@ -4,14 +4,21 @@ import java.util.ArrayList;
 
 public class Entry extends Field
 {
-    private ArrayList<Pawn> pawns = new ArrayList<>();
+    private ArrayList<IPawn> pawns = new ArrayList<>();
 
-    public void set_pawn(Pawn p)
+    public Entry()
     {
-        pawns.add(p);
+        super(-1);
     }
 
-    public boolean remove_pawn_from_entry(Pawn p)
+    @Override
+    public boolean set_pawn(IPawn p)
+    {
+        pawns.add(p);
+        return true;
+    }
+
+    public boolean remove_pawn_from_entry(IPawn p)
     {
         if(pawns.contains(p))
         {
@@ -21,8 +28,20 @@ public class Entry extends Field
         return false;
     }
 
+    public void move_pawn_into_entry(IPawn p)
+    {
+        pawns.add(p);
+        p.set_field(this);
+    }
+
+    @Override
     public field_type get_field_type()
     {
         return field_type.ENTRY;
+    }
+
+    public ArrayList<IPawn> get_pawns()
+    {
+        return pawns;
     }
 }

@@ -8,6 +8,6 @@ public class Die
 
     public int roll()
     {
-        return die.nextInt(6);
+        return (die.nextInt(6) + 1);
     }
 }

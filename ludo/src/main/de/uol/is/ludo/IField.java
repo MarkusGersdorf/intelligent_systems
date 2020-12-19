@@ -7,9 +7,13 @@ public interface IField
         ENTRY, GOAL, FIELD
     }
 
-    void set_pawn(Pawn p);
+    boolean set_pawn(IPawn p);
 
-    Pawn get_pawn();
+    void remove_pawn();
+
+    IPawn get_pawn();
 
     field_type get_field_type();
+
+    int get_field_id();
 }

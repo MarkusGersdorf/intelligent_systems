@@ -1,16 +1,25 @@
 package de.uol.is.ludo;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public interface IBoard
 {
+    void reset();
+
     int roll();
 
-    boolean move_pawn(Pawn pawn, int steps);
+    boolean move_pawn(IPawn pawn, int steps);
 
-    boolean set_pawn_into_game(Pawn pawn);
+    boolean set_pawn_into_game(IPawn pawn);
 
-    ArrayList<Field> get_field_list();
+    boolean game_over();
 
-    int getRemainingNumberOfPawn();
+    Field[] get_fields();
+
+    Entry get_entry();
+
+    ArrayList<IPawn> get_all_pawns();
+
+    ArrayList<IPawn> get_my_pawns(IPawn.player player);
 }
