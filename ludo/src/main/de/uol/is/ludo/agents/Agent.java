@@ -2,7 +2,7 @@ package de.uol.is.ludo.agents;
 
 import de.uol.is.ludo.Board;
 import de.uol.is.ludo.Field;
-import de.uol.is.ludo.ToyFigure;
+import de.uol.is.ludo.Pawn;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 
@@ -10,7 +10,7 @@ public abstract class Agent implements Steppable {
 
     protected String name;
     protected String color;
-    protected ToyFigure[] figures;
+    protected Pawn[] figures;
     protected Field startPos;
     protected String strategy;
     protected Board board;
@@ -24,7 +24,7 @@ public abstract class Agent implements Steppable {
 
     @Override
     public void step(SimState simState) {
-
+    /*
         if (board.getPosition(this).size() == 0) {
             int num = -1;
 
@@ -42,21 +42,22 @@ public abstract class Agent implements Steppable {
             int num;
             do {
                 num = dice();
-                ToyFigure figure = chooseFigure();
+                Pawn figure = chooseFigure();
                 board.moveFigure(figure, num);
             } while (num == 6);
         }
+        */
     }
 
     protected int dice() {
         return ((int) (Math.random() * (6 - 1))) + 1;
     }
 
-    protected abstract ToyFigure chooseFigure();
+    protected abstract Pawn chooseFigure();
 
     public String getPlayerColor() {
         return "null";
     }
 
-    public abstract void addToyFigure(ToyFigure toyFigure);
+    public abstract void addToyFigure(Pawn pawn);
 }
