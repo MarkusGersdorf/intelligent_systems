@@ -155,7 +155,7 @@ public class Board implements IBoard
         {
             return false;
         }
-        if(pawn.get_field().get_field_id() == -1 && fields[pawn.get_starting_pos()].get_pawn() != null)
+        if(pawn.get_field().get_field_id() == -1 && fields[pawn.get_starting_pos()].get_pawn() == null)
         {
             fields[pawn.get_starting_pos()].set_pawn(pawn);
             entry.remove_pawn_from_entry(pawn);

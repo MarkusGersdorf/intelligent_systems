@@ -34,7 +34,15 @@ public class App
 
     public static void main( String[] args )
     {
-
+        for (IPawn p : blue_pawns)
+        {
+            board.set_pawn_into_game(p);
+            for (int i = 0; i < 150; i++)
+            {
+                board.move_pawn(p, board.roll());
+            }
+            System.out.println(p.get_field().get_field_id());
+        }
     }
 
     private static IPawn get_pawn_from_entry(ArrayList<IPawn> pawns)
