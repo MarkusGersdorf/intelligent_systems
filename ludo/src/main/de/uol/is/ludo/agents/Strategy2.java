@@ -1,24 +1,24 @@
 package de.uol.is.ludo.agents;
 
-import de.uol.is.ludo.Board;
-import de.uol.is.ludo.Field;
-import de.uol.is.ludo.ToyFigure;
+import de.uol.is.ludo.*;
 import sim.engine.SimState;
+
+import java.util.ArrayList;
 
 public class Strategy2 extends Agent {
 
-    public Strategy2(String name, String color, Field startPos, Board board) {
-        super(name, color, startPos, board);
+    public Strategy2(String name, IPawn.player color, IBoard board) {
+        super(name, color, board);
         this.strategy = "Strategy2";
     }
 
     @Override
-    protected ToyFigure chooseFigure() {
+    protected ArrayList<IPawn> chooseFigure() {
         return null;
     }
 
     @Override
-    public void addToyFigure(ToyFigure toyFigure) {
+    public void addToyFigure(Pawn pawn) {
 
     }
 

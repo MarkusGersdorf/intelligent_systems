@@ -1,62 +1,95 @@
 package de.uol.is.ludo.agents;
 
-import de.uol.is.ludo.Board;
-import de.uol.is.ludo.Field;
-import de.uol.is.ludo.ToyFigure;
+import de.uol.is.ludo.*;
 import sim.engine.SimState;
 import sim.engine.Steppable;
+
+import java.util.ArrayList;
 
 public abstract class Agent implements Steppable {
 
     protected String name;
-    protected String color;
-    protected ToyFigure[] figures;
-    protected Field startPos;
+    protected IPawn.player color;
     protected String strategy;
-    protected Board board;
+    protected IBoard board;
 
-    public Agent(String name, String color, Field startPos, Board board) {
+    public Agent(String name, IPawn.player color, IBoard board) {
         this.name = name;
         this.color = color;
-        this.startPos = startPos;
         this.board = board;
     }
 
     @Override
     public void step(SimState simState) {
 
-        if (board.getPosition(this).size() == 0) {
+        if (get_remaining_number_of_pawn() == 4) {
             int num = -1;
 
             for (int i = 0; i < 3; i++) {
-                num = dice();
+                num = board.roll();
                 if (num == 6) {
-                    board.moveFigure(figures[0], startPos);
-                    figures[0] = null;
+                    IPawn pawn = get_pawn_from_house();
+                    board.set_pawn_into_game(pawn);
+                    board.move_pawn(pawn, board.roll());
                     break;
                 }
             }
-        }
-
-        if (board.getPosition(this).size() != 0) {
+        } else {
             int num;
             do {
-                num = dice();
-                ToyFigure figure = chooseFigure();
-                board.moveFigure(figure, num);
+                num = board.roll();
+                if (num == 6) {
+                    ArrayList<IPawn> pawns = board.get_my_pawns(color);
+                    for (IPawn pawn : pawns) {
+                        if (pawn.get_field().get_field_type() == IField.field_type.ENTRY) {
+                            if(!board.set_pawn_into_game(pawn)) {
+                                ArrayList<IPawn> optionList = chooseFigure();
+                                for (IPawn option_pawn : optionList) {
+                                    if (board.move_pawn(option_pawn, num)) {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    ArrayList<IPawn> optionList = chooseFigure();
+                    for (IPawn pawn : optionList) {
+                        if (board.move_pawn(pawn, num)) {
+                            break;
+                        }
+                    }
+                }
             } while (num == 6);
         }
     }
 
-    protected int dice() {
-        return ((int) (Math.random() * (6 - 1))) + 1;
+    protected int get_remaining_number_of_pawn() {
+        ArrayList<IPawn> pawns = board.get_my_pawns(color);
+        int counter_entries = 0;
+        for (IPawn pawn : pawns) {
+            if (pawn.get_field().get_field_type() == IField.field_type.ENTRY) {
+                counter_entries++;
+            }
+        }
+        return counter_entries;
     }
 
-    protected abstract ToyFigure chooseFigure();
-
-    public String getPlayerColor() {
-        return "null";
+    protected IPawn get_pawn_from_house() {
+        ArrayList<IPawn> pawns = board.get_my_pawns(color);
+        for (IPawn pawn : pawns) {
+            if (pawn.get_field().get_field_id() == -1) {
+                return pawn;
+            }
+        }
+        return null;
     }
 
-    public abstract void addToyFigure(ToyFigure toyFigure);
+    protected abstract ArrayList<IPawn> chooseFigure();
+
+    public IPawn.player getPlayerColor() {
+        return color;
+    }
+
+    public abstract void addToyFigure(Pawn pawn);
 }
