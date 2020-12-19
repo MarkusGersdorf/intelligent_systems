@@ -2,6 +2,7 @@ package de.uol.is.ludo.agents;
 
 import de.uol.is.ludo.Board;
 import de.uol.is.ludo.Field;
+import de.uol.is.ludo.IPawn;
 import de.uol.is.ludo.Pawn;
 import sim.engine.SimState;
 import sim.engine.Steppable;
@@ -9,13 +10,13 @@ import sim.engine.Steppable;
 public abstract class Agent implements Steppable {
 
     protected String name;
-    protected String color;
+    protected IPawn.player color;
     protected Pawn[] figures;
     protected Field startPos;
     protected String strategy;
     protected Board board;
 
-    public Agent(String name, String color, Field startPos, Board board) {
+    public Agent(String name, IPawn.player color, Field startPos, Board board) {
         this.name = name;
         this.color = color;
         this.startPos = startPos;
