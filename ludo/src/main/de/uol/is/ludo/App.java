@@ -18,10 +18,7 @@ import java.util.ArrayList;
  *              52 - 55: Goal (BLACK)
  */
 
-// TODO: Check, wenn 6 gewürfelt, dann Figur ins Spielfeld (falls Figur im Entry vorhanden)
-// TODO: 3er Regel
-// TODO: Wenn Spielzug "false", muss der Agent was anderes machen können
-// TODO: Warum Out of Array? -> Recherche
+// TODO: Magic Numbers entfernen / erklären 
 
 public class App 
 {
