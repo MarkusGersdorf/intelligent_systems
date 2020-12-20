@@ -46,9 +46,7 @@ public abstract class Agent implements Steppable {
         int num;
 
         if (get_remaining_number_of_pawn() == 4) {
-            // TODO: Was ist, wenn der Spieler eine 6 würfelt. Dann darf er doch noch einmal würfeln?
-            //  Evtl. den else Fall immer abarbeiten?
-            //  In dem ersten Bereich nur zweimal würfeln lassen, dann in den elese bereich gehen.
+            // If a 6 is rolled, move the figure to the start square. Then try to move the figure again.
             for (int i = 0; i < 3; i++) {
                 num = board.roll();
                 if (num == 6) {
