@@ -1,9 +1,8 @@
 package de.uol.is.ludo.agents;
 
-import de.uol.is.ludo.*;
-import sim.engine.SimState;
+import de.uol.is.ludo.IBoard;
+import de.uol.is.ludo.IPawn;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Strategy4 extends Agent {
@@ -18,13 +17,4 @@ public class Strategy4 extends Agent {
         return null;
     }
 
-    @Override
-    public void addToyFigure(Pawn pawn) {
-
-    }
-
-    @Override
-    public void step(SimState simState) {
-
-    }
 }

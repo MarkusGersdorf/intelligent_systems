@@ -1,8 +1,9 @@
 package de.uol.is.ludo.agents;
 
-import de.uol.is.ludo.*;
+import de.uol.is.ludo.IBoard;
+import de.uol.is.ludo.IField;
+import de.uol.is.ludo.IPawn;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Strategy1 extends Agent {
@@ -30,10 +31,5 @@ public class Strategy1 extends Agent {
         optionList.addAll(pawns);
 
         return optionList;
-    }
-
-    @Override
-    public void addToyFigure(Pawn pawn) {
-
     }
 }

@@ -1,6 +1,8 @@
 package de.uol.is.ludo.agents;
 
-import de.uol.is.ludo.*;
+import de.uol.is.ludo.IBoard;
+import de.uol.is.ludo.IField;
+import de.uol.is.ludo.IPawn;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 
@@ -23,7 +25,7 @@ public abstract class Agent implements Steppable {
     public void step(SimState simState) {
 
         if (get_remaining_number_of_pawn() == 4) {
-            int num = -1;
+            int num;
 
             for (int i = 0; i < 3; i++) {
                 num = board.roll();
@@ -90,6 +92,4 @@ public abstract class Agent implements Steppable {
     public IPawn.player getPlayerColor() {
         return color;
     }
-
-    public abstract void addToyFigure(Pawn pawn);
 }
