@@ -46,7 +46,6 @@ public class Strategy1 extends Agent {
         }
 
         pawns.removeIf(x -> x.get_starting_pos() == x.get_field().get_field_id()); // Delete all the pieces that are on the starting field
-        // TODO: Check this function :) - Is the sorting random?
         Collections.shuffle(pawns, new Random()); // Generate a random ranking
         optionList.addAll(pawns); // Add all other characters to the result, sorted by game progress
         return optionList;

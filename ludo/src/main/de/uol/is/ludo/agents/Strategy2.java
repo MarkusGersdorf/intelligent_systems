@@ -46,7 +46,6 @@ public class Strategy2 extends Agent {
         }
 
         pawns.removeIf(x -> x.get_starting_pos() == x.get_field().get_field_id()); // Delete all the pieces that are on the starting field
-        // TODO: easy to implement strategy ba descending -> see following line
         // pawns.sort(Comparator.comparing(IPawn::getFieldId).reversed()); // sort pawns by field id
         pawns.sort(Comparator.comparing(IPawn::getFieldId)); // sort pawns by field id
         optionList.addAll(pawns); // Add all other characters to the result, sorted by game progress
