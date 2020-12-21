@@ -238,17 +238,22 @@ public class Board extends SimState implements IBoard {
      * Routine, which checks if game is over, setting winner_id (player_id) and game_over (boolean)
      */
     private void check_game_over() {
+        String winner = "none";
         if (fields[40].get_pawn() != null && fields[41].get_pawn() != null && fields[42].get_pawn() != null && fields[43].get_pawn() != null) {
             game_over = true;
+            winner = agents[0].getStrategy();
         }
         if (fields[44].get_pawn() != null && fields[45].get_pawn() != null && fields[46].get_pawn() != null && fields[47].get_pawn() != null) {
             game_over = true;
+            winner = agents[1].getStrategy();
         }
         if (fields[48].get_pawn() != null && fields[49].get_pawn() != null && fields[50].get_pawn() != null && fields[51].get_pawn() != null) {
             game_over = true;
+            winner = agents[2].getStrategy();
         }
         if (fields[52].get_pawn() != null && fields[53].get_pawn() != null && fields[54].get_pawn() != null && fields[55].get_pawn() != null) {
             game_over = true;
+            winner = agents[3].getStrategy();
         }
         if (game_over) {
             System.out.println("--------------------------------");
@@ -257,6 +262,7 @@ public class Board extends SimState implements IBoard {
                     System.out.println("Auf dem " + field.get_field_type() + "(" + field.get_field_id() + ") steht " + field.get_pawn().get_player());
                 }
             }
+            System.out.println("The winner is: " + winner);
             System.exit(0);
         }
     }
