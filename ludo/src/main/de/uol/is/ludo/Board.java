@@ -21,6 +21,8 @@ public class Board extends SimState implements IBoard {
     private final Pawn[] pawns = new Pawn[16];
     private boolean game_over = false;
     private Agent[] agents;
+    private Gui gui;
+    private boolean output = false;
 
     public Board(long seed) {
         super(seed);
@@ -60,6 +62,7 @@ public class Board extends SimState implements IBoard {
     public void reset() {
         initialize_board();
         game_over = false;
+        output = false;
     }
 
     /**
@@ -138,7 +141,6 @@ public class Board extends SimState implements IBoard {
      */
     @Override
     public boolean set_pawn_into_game(IPawn pawn) {
-        System.out.println("Set " + pawn + " into the game!");
         check_game_over();
         if (game_over) {
             return false;
@@ -238,24 +240,40 @@ public class Board extends SimState implements IBoard {
      * Routine, which checks if game is over, setting winner_id (player_id) and game_over (boolean)
      */
     private void check_game_over() {
-        if (fields[40].get_pawn() != null && fields[41].get_pawn() != null && fields[42].get_pawn() != null && fields[43].get_pawn() != null) {
-            game_over = true;
-        }
-        if (fields[44].get_pawn() != null && fields[45].get_pawn() != null && fields[46].get_pawn() != null && fields[47].get_pawn() != null) {
-            game_over = true;
-        }
-        if (fields[48].get_pawn() != null && fields[49].get_pawn() != null && fields[50].get_pawn() != null && fields[51].get_pawn() != null) {
-            game_over = true;
-        }
-        if (fields[52].get_pawn() != null && fields[53].get_pawn() != null && fields[54].get_pawn() != null && fields[55].get_pawn() != null) {
-            game_over = true;
-        }
-        if (game_over) {
-            System.out.println("--------------------------------");
+        String winner = null;
+        for (int i = 0; i < agents.length; i++) {
+            int counter = 0;
             for (IPawn pawn : get_all_pawns()) {
-                System.out.println("Auf dem " + pawn.get_field().get_field_type() + "(" + pawn.get_field().get_field_id() + ") steht " + pawn.get_player());
+                if (pawn.get_player_id() == i && pawn.get_field().get_field_type() == IField.field_type.GOAL) {
+                    counter++;
+                }
             }
-            System.exit(0);
+            if (counter == 4) {
+                game_over = true;
+                switch (i) {
+                    case 0:
+                        winner = "RED";
+                        break;
+                    case 1:
+                        winner = "BLUE";
+                        break;
+                    case 2:
+                        winner = "YELLOW";
+                        break;
+                    case 3:
+                        winner = "BLACK";
+                        break;
+                    default:
+                        winner = "Nobody";
+                        break;
+                }
+                break;
+            }
+        }
+
+        if (game_over && !output) {
+            output = true;
+            gui.calc_visualization(get_all_pawns(), winner, agents);
         }
     }
 
@@ -302,5 +320,10 @@ public class Board extends SimState implements IBoard {
 
     public Agent[] get_agent() {
         return agents;
+    }
+
+    @Override
+    public void set_gui(Gui gui) {
+        this.gui = gui;
     }
 }

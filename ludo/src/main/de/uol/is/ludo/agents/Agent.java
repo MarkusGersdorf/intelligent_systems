@@ -1,6 +1,9 @@
 package de.uol.is.ludo.agents;
 
-import de.uol.is.ludo.*;
+import de.uol.is.ludo.IBoard;
+import de.uol.is.ludo.IField;
+import de.uol.is.ludo.IPawn;
+import de.uol.is.ludo.Pawn;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 
@@ -12,6 +15,8 @@ public abstract class Agent implements Steppable {
     protected IPawn.player color;
     protected String strategy;
     protected IBoard board;
+    protected int moves;
+    protected int rounds;
 
     public Agent(String name, IPawn.player color, IBoard board) {
         this.name = name;
@@ -21,16 +26,19 @@ public abstract class Agent implements Steppable {
 
     @Override
     public void step(SimState simState) {
-
+        rounds += 1;
         if (get_remaining_number_of_pawn() == 4) {
             int num = -1;
 
             for (int i = 0; i < 3; i++) {
                 num = board.roll();
+                moves += num;
                 if (num == 6) {
                     IPawn pawn = get_pawn_from_house();
                     board.set_pawn_into_game(pawn);
-                    board.move_pawn(pawn, board.roll());
+                    num = board.roll();
+                    moves += num;
+                    board.move_pawn(pawn, num);
                     break;
                 }
             }
@@ -38,6 +46,7 @@ public abstract class Agent implements Steppable {
             int num;
             do {
                 num = board.roll();
+                moves += num;
                 if (num == 6) {
                     ArrayList<IPawn> pawns = board.get_my_pawns(color);
                     for (IPawn pawn : pawns) {
@@ -92,4 +101,16 @@ public abstract class Agent implements Steppable {
     }
 
     public abstract void addToyFigure(Pawn pawn);
+
+    public String get_strategy() {
+        return strategy;
+    }
+
+    public int get_moves() {
+        return moves;
+    }
+
+    public int get_rounds() {
+        return rounds;
+    }
 }

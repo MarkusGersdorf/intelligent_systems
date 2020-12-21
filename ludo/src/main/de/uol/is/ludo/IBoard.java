@@ -2,7 +2,6 @@ package de.uol.is.ludo;
 
 import de.uol.is.ludo.agents.Agent;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public interface IBoard
@@ -28,4 +27,6 @@ public interface IBoard
     void set_agents(Agent[] agents);
 
     Agent[] get_agent();
+
+    void set_gui(Gui gui);
 }

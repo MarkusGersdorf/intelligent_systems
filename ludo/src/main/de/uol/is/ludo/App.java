@@ -26,27 +26,21 @@ import java.util.ArrayList;
 
 public class App extends SimState {
     private static final IBoard board = new Board(System.currentTimeMillis());
-    private static int rolled;
-    private static final ArrayList<IPawn> red_pawns = board.get_my_pawns(IPawn.player.RED);
-    private static final ArrayList<IPawn> blue_pawns = board.get_my_pawns(IPawn.player.BLUE);
-    private static final ArrayList<IPawn> yellow_pawns = board.get_my_pawns(IPawn.player.YELLOW);
-    private static final ArrayList<IPawn> black_pawns = board.get_my_pawns(IPawn.player.BLACK);
+    Gui gui;
 
     public App(long seed) {
         super(seed);
     }
 
-    public void start() {
-        super.start();
+    public void start(Gui gui) {
+        this.gui = gui;
+        board.set_gui(gui);
         initialize_agents();
-        for (int i = 0; i < 4; i++) {
-            schedule.scheduleRepeating(board.get_agent()[i]);
+        while (!board.game_over()) {
+            for (int j = 0; j < 4; j++) {
+                board.get_agent()[j].step(this);
+            }
         }
-    }
-
-    public static void main(String[] args) {
-        doLoop(App.class, args);
-        System.exit(0);
     }
 
     private static IPawn get_pawn_from_entry(ArrayList<IPawn> pawns) {
@@ -58,17 +52,18 @@ public class App extends SimState {
         return null;
     }
 
-    private static void initialize_agents() {
+    private void initialize_agents() {
         Agent[] agents = new Agent[4];
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             Agent new_agent = new Strategy1("Strategy " + i, get_player_color(i), board);
             agents[i] = new_agent;
+            gui.add_to_console("Agent " + i + " (Strategy " + new_agent.get_strategy() + ")");
         }
         board.set_agents(agents);
     }
 
     private static IPawn.player get_player_color(int player_id) {
-        switch (player_id){
+        switch (player_id) {
             case 0:
                 return IPawn.player.RED;
             case 1:
@@ -81,5 +76,9 @@ public class App extends SimState {
                 return null;
         }
 
+    }
+
+    public void reset_board() {
+        board.reset();
     }
 }
