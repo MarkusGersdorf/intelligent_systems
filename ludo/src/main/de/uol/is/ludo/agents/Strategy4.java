@@ -21,7 +21,7 @@ public class Strategy4 extends Agent {
      * @return a list in which the game pieces are returned sorted
      */
     @Override
-    protected ArrayList<IPawn> chooseFigure() {
+    protected ArrayList<IPawn> chooseFigure(ArrayList<IPawn> pawns) {
         return null;
     }
 

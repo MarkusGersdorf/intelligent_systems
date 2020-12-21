@@ -21,6 +21,8 @@ public abstract class Agent implements Steppable {
     protected String strategy;
     protected IBoard board;
 
+    protected ArrayList<IPawn> optionList = new ArrayList<>();
+
     /**
      * @param name  agent name
      * @param color agent color
@@ -64,7 +66,7 @@ public abstract class Agent implements Steppable {
                     for (IPawn pawn : pawns) {
                         if (pawn.get_field().get_field_type() == IField.field_type.ENTRY) {
                             if (!board.set_pawn_into_game(pawn)) {
-                                ArrayList<IPawn> optionList = chooseFigure();
+                                ArrayList<IPawn> optionList = chooseFigure(getPawnOnBoard());
                                 for (IPawn option_pawn : optionList) {
                                     if (board.move_pawn(option_pawn, num)) {
                                         break;
@@ -74,7 +76,7 @@ public abstract class Agent implements Steppable {
                         }
                     }
                 } else {
-                    ArrayList<IPawn> optionList = chooseFigure();
+                    ArrayList<IPawn> optionList = chooseFigure(getPawnOnBoard());
                     for (IPawn pawn : optionList) {
                         if (board.move_pawn(pawn, num)) {
                             break;
@@ -124,6 +126,27 @@ public abstract class Agent implements Steppable {
      *
      * @return a list in which the game pieces are returned sorted
      */
-    protected abstract ArrayList<IPawn> chooseFigure();
+    protected abstract ArrayList<IPawn> chooseFigure(ArrayList<IPawn> pawns);
+
+    private ArrayList<IPawn> getPawnOnBoard() {
+        ArrayList<IPawn> pawns = new ArrayList<>(board.get_my_pawns(color)); // Get a copy of all figures of this player
+        optionList.clear();
+        pawns.removeIf(x -> x.get_field().get_field_type() == IField.field_type.ENTRY); // delete all figures that are in the entry
+
+        // If a piece is on the start square, move it first.
+        for (IPawn pawn : pawns) {
+            if (pawn.get_starting_pos() == pawn.get_field().get_field_id()) {
+                optionList.add(pawn);
+                break;
+            }
+        }
+
+        pawns.removeIf(x -> x.get_starting_pos() == x.get_field().get_field_id()); // Delete all the pieces that are on the starting field
+        return pawns;
+    }
+
+    public String getStrategy() {
+        return strategy;
+    }
 
 }
