@@ -252,10 +252,8 @@ public class Board extends SimState implements IBoard {
         }
         if (game_over) {
             System.out.println("--------------------------------");
-            for (Field field : fields) {
-                if (field.get_pawn() != null && field.get_field_type() == IField.field_type.GOAL) {
-                    System.out.println("Auf dem " + field.get_field_type() + "(" + field.get_field_id() + ") steht " + field.get_pawn().get_player());
-                }
+            for (IPawn pawn : get_all_pawns()) {
+                System.out.println("Auf dem " + pawn.get_field().get_field_type() + "(" + pawn.get_field().get_field_id() + ") steht " + pawn.get_player());
             }
             System.exit(0);
         }
