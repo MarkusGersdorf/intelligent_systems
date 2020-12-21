@@ -22,7 +22,9 @@ public class Strategy3 extends Agent {
      */
     @Override
     protected ArrayList<IPawn> chooseFigure(ArrayList<IPawn> pawns) {
-        return null;
+        // TODO sort pawns - by clever strategy
+        optionList.addAll(pawns);
+        return optionList;
     }
 
 }
