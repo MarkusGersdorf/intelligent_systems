@@ -128,6 +128,12 @@ public abstract class Agent implements Steppable {
      */
     protected abstract ArrayList<IPawn> chooseFigure(ArrayList<IPawn> pawns);
 
+    /**
+     * Search for all agents on the field.
+     * If there is an agent on the starting field, add it to the list first.
+     *
+     * @return list with figures on the field
+     */
     private ArrayList<IPawn> getPawnOnBoard() {
         ArrayList<IPawn> pawns = new ArrayList<>(board.get_my_pawns(color)); // Get a copy of all figures of this player
         optionList.clear();
