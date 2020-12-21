@@ -62,13 +62,13 @@ public class App extends SimState {
     private static void initialize_agents() {
         Agent[] agents = new Agent[4];
         for (int i = 0; i < 4; i++) {
+            Agent new_agent;
             if (i % 2 == 0) {
-                Agent new_agent = new Strategy1("Strategy " + i, get_player_color(i), board);
-                agents[i] = new_agent;
+                new_agent = new Strategy1("Strategy " + i, get_player_color(i), board);
             } else {
-                Agent new_agent = new Strategy2("Strategy " + i, get_player_color(i), board);
-                agents[i] = new_agent;
+                new_agent = new Strategy2("Strategy " + i, get_player_color(i), board);
             }
+            agents[i] = new_agent;
         }
         board.set_agents(agents);
     }
