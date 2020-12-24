@@ -128,7 +128,7 @@ public class Board extends SimState implements IBoard {
         }
         // Both pawns are from same player and cannot move further into goal
         else {
-            System.out.println("Cannot move");
+            // System.out.println("Cannot move");
             return false;
         }
     }

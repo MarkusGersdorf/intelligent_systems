@@ -12,9 +12,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -185,12 +185,15 @@ public class Gui extends Application {
     @FXML
     private TextField multiplier;
 
-    @FXML
-    private Text progress;
-
     private HashMap<String, Circle> circleHashMap = null;
     private static String[] args;
     private final App app = new App(System.currentTimeMillis());
+    private double replay_rate;
+    private double win_counter_red;
+    private double win_counter_blue;
+    private double win_counter_yellow;
+    private double win_counter_black;
+    private double round_counter = 0;
 
     public static void main(String[] args) {
         Gui.args = args;
@@ -209,36 +212,21 @@ public class Gui extends Application {
     }
 
     @FXML
-    public void on_play_button() {
+    public void on_play_button() throws IOException {
         if (circleHashMap == null) {
             circleHashMap = init_gui();
         }
-        int replay_rate = Integer.parseInt(multiplier.getText());
+
+        replay_rate = Integer.parseInt(multiplier.getText());
+        reset_win_rates();
+        reset_visualization();
         for (int i = 0; i < replay_rate; i++) {
-            reset_visualization();
             app.start(this);
             app.reset_board();
         }
     }
 
-    @FXML
-    public void on_exit_button() {
-        Platform.exit();
-    }
-
-    public void add_to_console(String output) {
-        console.appendText(output + "\n");
-    }
-
-    private void reset_visualization() {
-        console.clear();
-        for (Circle circle : circleHashMap.values()) {
-            circle.setFill(Paint.valueOf("WHITE"));
-        }
-
-    }
-
-    public void calc_visualization(ArrayList<IPawn> pawns, String winner, Agent[] agents) {
+    private void set_visualization(ArrayList<IPawn> pawns, String winner, Agent[] agents) {
         int counter_goal_red = 1;
         int counter_goal_blue = 1;
         int counter_goal_yellow = 1;
@@ -290,27 +278,80 @@ public class Gui extends Application {
                     counter_entry_black++;
                 }
             }
-        }
 
-        String general_information = "General Information: \n \n" +
-                " - Winner: " + winner + "\n" +
-                " - Mason Time: " + app.schedule.getTime() + "\n" +
-                " - Mason Steps: " + app.schedule.getSteps() + "\n" +
-                " - Mason Schedule Complete: " + app.schedule.scheduleComplete() + "\n" +
-                " - Mason Hashcode: " + app.schedule.hashCode() + "\n" +
-                " - Mason Is Sealed: " + app.schedule.isSealed() + "\n";
+            String general_information =
+                    "Win-Rates: \n \n" +
+                            " - Win-Rate RED: " + ((win_counter_red / replay_rate) * 100.0) + "%" + "\n" +
+                            " - Win-Rate BLUE: " + ((win_counter_blue / replay_rate) * 100.0) + "%" + "\n" +
+                            " - Win-Rate YELLOW: " + ((win_counter_yellow / replay_rate) * 100.0) + "%" + "\n" +
+                            " - Win-Rate BLACK: " + ((win_counter_black / replay_rate) * 100.0) + "%" + "\n" +
 
-        for (Agent agent : agents) {
-            String agent_information = "\n Agent " + agent.getPlayerColor() + "(ID = " + get_player_id(agent.getPlayerColor()) + "): \n \n" +
-                    " - Used Strategy: " + agent.get_strategy() + "\n" +
-                    " - Rounds played by " + agent.getPlayerColor() + ": " + agent.get_rounds() + "\n" +
-                    " - Total number of dice from " + agent.getPlayerColor() + ": " + agent.get_moves() + "\n" +
-                    " - Pawns in goal: " + get_pawns(agent.getPlayerColor(), IField.field_type.GOAL, pawns) + "\n" +
-                    " - Pawns in house: " + get_pawns(agent.getPlayerColor(), IField.field_type.ENTRY, pawns) + "\n" +
-                    " - Pawns on fields: " + get_pawns(agent.getPlayerColor(), IField.field_type.FIELD, pawns) + "\n";
-            general_information = general_information + agent_information;
+                            "General Information: \n \n" +
+                            " - Winner: " + winner + "\n" +
+                            " - Mason Time: " + app.schedule.getTime() + "\n" +
+                            " - Mason Steps: " + app.schedule.getSteps() + "\n" +
+                            " - Mason Schedule Complete: " + app.schedule.scheduleComplete() + "\n" +
+                            " - Mason Hashcode: " + app.schedule.hashCode() + "\n" +
+                            " - Mason Is Sealed: " + app.schedule.isSealed() + "\n";
+
+            for (Agent agent : agents) {
+                String agent_information = "\n Agent " + agent.getPlayerColor() + "(ID = " + get_player_id(agent.getPlayerColor()) + "): \n \n" +
+                        " - Used Strategy: " + agent.get_strategy() + "\n" +
+                        " - Rounds played by " + agent.getPlayerColor() + ": " + agent.get_rounds() + "\n" +
+                        " - Total number of dice from " + agent.getPlayerColor() + ": " + agent.get_moves() + "\n" +
+                        " - Pawns in goal: " + get_pawns(agent.getPlayerColor(), IField.field_type.GOAL, pawns) + "\n" +
+                        " - Pawns in house: " + get_pawns(agent.getPlayerColor(), IField.field_type.ENTRY, pawns) + "\n" +
+                        " - Pawns on fields: " + get_pawns(agent.getPlayerColor(), IField.field_type.FIELD, pawns) + "\n";
+                general_information = general_information + agent_information;
+            }
+
+            runtime_information.setText(general_information);
         }
-        runtime_information.setText(general_information);
+    }
+
+    @FXML
+    public void on_exit_button() {
+        Platform.exit();
+    }
+
+    public void add_to_console(String output) {
+        console.appendText(output + "\n");
+    }
+
+    private void reset_visualization() {
+        console.clear();
+        round_counter = 0;
+        for (Circle circle : circleHashMap.values()) {
+            circle.setFill(Paint.valueOf("WHITE"));
+        }
+    }
+
+    public void reset_win_rates() {
+        win_counter_red = 0;
+        win_counter_blue = 0;
+        win_counter_yellow = 0;
+        win_counter_black = 0;
+    }
+
+    public void calc_visualization(ArrayList<IPawn> pawns, String winner, Agent[] agents) {
+        switch (winner) {
+            case "RED":
+                win_counter_red += 1;
+                break;
+            case "BLUE":
+                win_counter_blue += 1;
+                break;
+            case "YELLOW":
+                win_counter_yellow += 1;
+                break;
+            case "BLACK":
+                win_counter_black += 1;
+                break;
+        }
+        round_counter++;
+        if (round_counter == replay_rate) {
+            set_visualization(pawns, winner, agents);
+        }
     }
 
     private int get_pawns(IPawn.player player, IField.field_type type, ArrayList<IPawn> pawns) {
