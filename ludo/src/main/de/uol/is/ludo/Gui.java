@@ -221,6 +221,7 @@ public class Gui extends Application {
         reset_win_rates();
         reset_visualization();
         for (int i = 0; i < replay_rate; i++) {
+            System.out.println(i);
             app.start(this);
             app.reset_board();
         }
@@ -295,13 +296,13 @@ public class Gui extends Application {
                             " - Mason Is Sealed: " + app.schedule.isSealed() + "\n";
 
             for (Agent agent : agents) {
-                String agent_information = "\n Agent " + agent.getPlayerColor() + "(ID = " + get_player_id(agent.getPlayerColor()) + "): \n \n" +
-                        " - Used Strategy: " + agent.get_strategy() + "\n" +
-                        " - Rounds played by " + agent.getPlayerColor() + ": " + agent.get_rounds() + "\n" +
-                        " - Total number of dice from " + agent.getPlayerColor() + ": " + agent.get_moves() + "\n" +
-                        " - Pawns in goal: " + get_pawns(agent.getPlayerColor(), IField.field_type.GOAL, pawns) + "\n" +
-                        " - Pawns in house: " + get_pawns(agent.getPlayerColor(), IField.field_type.ENTRY, pawns) + "\n" +
-                        " - Pawns on fields: " + get_pawns(agent.getPlayerColor(), IField.field_type.FIELD, pawns) + "\n";
+                String agent_information = "\n Agent " + agent.getColor() + "(ID = " + get_player_id(agent.getColor()) + "): \n \n" +
+                        " - Used Strategy: " + agent.getStrategy() + "\n" +
+                        " - Rounds played by " + agent.getColor() + ": " + agent.get_rounds() + "\n" +
+                        " - Total number of dice from " + agent.getColor() + ": " + agent.get_moves() + "\n" +
+                        " - Pawns in goal: " + get_pawns(agent.getColor(), IField.field_type.GOAL, pawns) + "\n" +
+                        " - Pawns in house: " + get_pawns(agent.getColor(), IField.field_type.ENTRY, pawns) + "\n" +
+                        " - Pawns on fields: " + get_pawns(agent.getColor(), IField.field_type.FIELD, pawns) + "\n";
                 general_information = general_information + agent_information;
             }
 

@@ -1,6 +1,8 @@
 package de.uol.is.ludo.agents;
 
-import de.uol.is.ludo.*;
+import de.uol.is.ludo.IBoard;
+import de.uol.is.ludo.IField;
+import de.uol.is.ludo.IPawn;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 
@@ -166,6 +168,10 @@ public abstract class Agent implements Steppable {
 
     public int get_rounds() {
         return rounds;
+    }
+
+    public IPawn.player getColor() {
+        return color;
     }
 
 }
