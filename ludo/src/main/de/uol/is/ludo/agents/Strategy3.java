@@ -22,9 +22,30 @@ public class Strategy3 extends Agent {
      */
     @Override
     protected ArrayList<IPawn> chooseFigure(ArrayList<IPawn> pawns) {
-        // TODO sort pawns - by clever strategy
-        optionList.addAll(pawns);
+        optionList.addAll(sortPawnsSortedByCriticalStatus(new ArrayList<>(pawns)));
         return optionList;
+    }
+
+    protected ArrayList<IPawn> sortPawnsSortedByCriticalStatus(ArrayList<IPawn> pawns) {
+        ArrayList<IPawn> resultList = new ArrayList<>();
+
+        for (IPawn pawn : pawns) {
+            int startFiled = Math.max(pawn.get_field().get_field_id() - 6, 0);
+            int endFiled = Math.min(pawn.get_field().get_field_id() - 6, 56);
+            for (int i = startFiled; i < endFiled; i++) {
+                if (board.get_fields()[i].get_pawn() != null) {
+                    if (board.get_fields()[i].get_pawn() != pawn) {
+                        resultList.add(pawn);
+                    }
+                }
+
+            }
+        }
+
+        pawns.removeAll(resultList);
+        resultList.addAll(pawns);
+
+        return resultList;
     }
 
 }
