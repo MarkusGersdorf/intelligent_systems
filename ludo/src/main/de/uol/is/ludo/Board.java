@@ -141,6 +141,7 @@ public class Board extends SimState implements IBoard {
      */
     @Override
     public boolean set_pawn_into_game(IPawn pawn) {
+        // System.out.println("Set " + pawn + " into the game!");
         check_game_over();
         if (game_over) {
             return false;

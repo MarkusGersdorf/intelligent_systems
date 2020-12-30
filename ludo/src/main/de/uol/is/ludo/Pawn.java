@@ -105,14 +105,17 @@ public class Pawn implements IPawn
     }
 
     @Override
-    public void set_player_id(int i)
-    {
+    public void set_player_id(int i) {
         this.player_id = i;
     }
 
     @Override
-    public void set_id(int id)
-    {
+    public void set_id(int id) {
         this.id = id;
+    }
+
+    @Override
+    public int getFieldId() {
+        return field.get_field_id();
     }
 }

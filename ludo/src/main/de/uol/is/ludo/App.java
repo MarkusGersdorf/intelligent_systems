@@ -1,7 +1,6 @@
 package de.uol.is.ludo;
 
-import de.uol.is.ludo.agents.Agent;
-import de.uol.is.ludo.agents.Strategy1;
+import de.uol.is.ludo.agents.*;
 import sim.engine.SimState;
 
 import java.util.ArrayList;
@@ -55,7 +54,12 @@ public class App extends SimState {
     private void initialize_agents() {
         Agent[] agents = new Agent[4];
         for (int i = 0; i < 4; i++) {
-            Agent new_agent = new Strategy1("Strategy " + i, get_player_color(i), board);
+            Agent new_agent;
+            if (i % 2 == 0) {
+                new_agent = new Strategy1("Strategy " + i, get_player_color(i), board);
+            } else {
+                new_agent = new Strategy4("Strategy " + i, get_player_color(i), board);
+            }
             agents[i] = new_agent;
             gui.add_to_console("Agent " + i + " (Strategy " + new_agent.get_strategy() + ")");
         }
