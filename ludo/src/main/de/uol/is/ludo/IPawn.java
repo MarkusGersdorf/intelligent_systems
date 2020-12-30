@@ -2,10 +2,7 @@ package de.uol.is.ludo;
 
 public interface IPawn
 {
-    enum player
-    {
-        RED, BLUE, YELLOW, BLACK;
-    }
+    int getFieldId();
 
     Field get_field();
 
@@ -32,4 +29,8 @@ public interface IPawn
     void set_player_id(int i);
 
     void set_id(int id);
+
+    enum player {
+        RED, BLUE, YELLOW, BLACK
+    }
 }
