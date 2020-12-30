@@ -21,6 +21,8 @@ public class Strategy4 extends Strategy3 {
     }
 
     /**
+     * Randomly choose one of the strategies 1 to 3
+     *
      * @return a list in which the game pieces are returned sorted
      */
     @Override
@@ -28,18 +30,15 @@ public class Strategy4 extends Strategy3 {
         // random strategy
         int random = (int) (Math.random() * (2 + 1) + 0);
         switch (random) {
-            case 0:
-                Collections.shuffle(pawns, new Random()); // Generate a random ranking
-                optionList.addAll(pawns);
-                break;
-            case 1:
+            case 1: // Strategy 2
                 pawns.sort(Comparator.comparing(IPawn::getFieldId)); // sort pawns by field id
                 optionList.addAll(pawns); // Add all other characters to the result, sorted by game progress
                 break;
-            case 2:
+            case 2: // Strategy 3
                 optionList.addAll(sortPawnsSortedByCriticalStatus(pawns));
                 break;
-            default:
+            default: // Strategy 1
+                Collections.shuffle(pawns, new Random()); // Generate a random ranking
                 optionList.addAll(pawns);
 
         }
