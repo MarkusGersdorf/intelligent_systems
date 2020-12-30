@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.Random;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Unit test for simple App.
@@ -53,4 +54,16 @@ public class AppTest {
 
         assertTrue(pawns.get(0) == pawn1 && pawns.get(1) == pawn2 && pawns.get(2) == pawn3);
     }
+
+    @Test
+    public void randomFunction() {
+        for (int i = 0; i < 1000; i++) {
+            int random = (int) (Math.random() * (2 + 1) + 0);
+            if (random < 0 || random > 2) {
+                fail();
+            }
+        }
+        assertTrue(true);
+    }
+
 }
