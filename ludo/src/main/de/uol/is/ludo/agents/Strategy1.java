@@ -10,6 +10,10 @@ import java.util.Random;
 /**
  * This class implements a strategy to play Ludo.
  * Randomly move a piece on the board.
+ *
+ * @author Markus Gersdorf
+ * @author Marcel Peplies
+ * @version 0.1
  */
 public class Strategy1 extends Agent {
 

@@ -21,7 +21,6 @@ public class Board extends SimState implements IBoard {
     private final Pawn[] pawns = new Pawn[16];
     private boolean game_over = false;
     private Agent[] agents;
-
     public Board(long seed) {
         super(seed);
         initialize_board();
@@ -82,7 +81,7 @@ public class Board extends SimState implements IBoard {
     @Override
     public boolean move_pawn(IPawn pawn, int steps) {
         check_game_over();
-        if(pawn.get_field().get_field_type() == IField.field_type.ENTRY) {
+        if (pawn.get_field().get_field_type() == IField.field_type.ENTRY) {
             return false;
         }
         if (game_over) {
@@ -311,4 +310,27 @@ public class Board extends SimState implements IBoard {
     public Agent[] get_agent() {
         return agents;
     }
+
+    /**
+     * The previous field is always returned
+     *
+     * @param field current field
+     * @return previous field
+     */
+    @Override
+    public IField getPreviousField(IField field) {
+
+        int fieldID;
+
+        if (field.get_field_id() - 1 > 39) {
+            fieldID = 0;
+        } else if (field.get_field_id() - 1 < 0) {
+            fieldID = 39;
+        } else {
+            fieldID = field.get_field_id();
+        }
+
+        return fields[fieldID];
+    }
+
 }

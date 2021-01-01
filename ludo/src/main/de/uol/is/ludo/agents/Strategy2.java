@@ -10,6 +10,10 @@ import java.util.Comparator;
 /**
  * This class implements a strategy to play Ludo.
  * The character that is the most advanced is always moved.
+ *
+ * @author Markus Gersdorf
+ * @author Marcel Peplies
+ * @version 0.1
  */
 public class Strategy2 extends Agent {
 

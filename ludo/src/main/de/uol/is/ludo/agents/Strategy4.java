@@ -8,6 +8,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
 
+/**
+ * This class implements a strategy to play Ludo.
+ * This strategy randomly chooses one of the other strategies.
+ *
+ * @author Markus Gersdorf
+ * @author Marcel Peplies
+ * @version 0.1
+ */
 public class Strategy4 extends Strategy3 {
 
     /**
