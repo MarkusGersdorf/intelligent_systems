@@ -221,7 +221,7 @@ public class Gui extends Application {
         reset_win_rates();
         reset_visualization();
         for (int i = 0; i < replay_rate; i++) {
-            System.out.println(i);
+            add_to_console("Spiel " + i + " gestartet!");
             app.start(this);
             app.reset_board();
         }
@@ -236,6 +236,8 @@ public class Gui extends Application {
         int counter_entry_blue = 1;
         int counter_entry_yellow = 1;
         int counter_entry_black = 1;
+
+        add_to_console("Winner is: " + winner);
 
         for (IPawn pawn : pawns) {
             if (pawn.get_player() == IPawn.player.RED) {
@@ -287,7 +289,7 @@ public class Gui extends Application {
                             " - Win-Rate YELLOW: " + ((win_counter_yellow / replay_rate) * 100.0) + "%" + "\n" +
                             " - Win-Rate BLACK: " + ((win_counter_black / replay_rate) * 100.0) + "%" + "\n" +
 
-                            "General Information: \n \n" +
+                            "\n General Information: \n \n" +
                             " - Winner: " + winner + "\n" +
                             " - Mason Time: " + app.schedule.getTime() + "\n" +
                             " - Mason Steps: " + app.schedule.getSteps() + "\n" +

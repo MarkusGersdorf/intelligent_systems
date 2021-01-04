@@ -49,9 +49,7 @@ public class Board extends SimState implements IBoard {
         }
 
         for (Pawn pawn : pawns) {
-            // Set every pawn on entry
             this.entry.set_pawn(pawn);
-            //System.out.println("Set Pawn on Entry");
         }
     }
 
@@ -98,6 +96,7 @@ public class Board extends SimState implements IBoard {
                 fields[pawn.get_field().get_field_id() + steps].set_pawn(pawn);
                 fields[pawn.get_field().get_field_id()].remove_pawn();
                 pawn.set_field(fields[(pawn.get_field().get_field_id() + steps)]);
+                gui.add_to_console("Agent " + pawn.get_player() + " moves Pawn(ID: " + pawn.get_id() + ") " + steps + " steps");
                 return true;
             } else {
                 return false;
@@ -115,6 +114,7 @@ public class Board extends SimState implements IBoard {
             fields[(pawn.get_field().get_field_id() + steps) % 40].set_pawn(pawn);
             fields[(pawn.get_field().get_field_id())].remove_pawn();
             pawn.set_field(fields[(pawn.get_field().get_field_id() + steps) % 40]);
+            gui.add_to_console("Agent " + pawn.get_player() + " moves Pawn(ID: " + pawn.get_id() + ") " + steps + " steps");
             return true;
         }
         // Check, if both pawns are from same player
@@ -124,6 +124,7 @@ public class Board extends SimState implements IBoard {
             fields[(pawn.get_field().get_field_id() + steps) % 40].set_pawn(pawn);
             fields[(pawn.get_field().get_field_id())].remove_pawn();
             pawn.set_field(fields[(pawn.get_field().get_field_id() + steps) % 40]);
+            gui.add_to_console("Agent " + pawn.get_player() + " moves Pawn(ID: " + pawn.get_id() + ") " + steps + " steps");
             return true;
         }
         // Both pawns are from same player and cannot move further into goal
@@ -141,7 +142,6 @@ public class Board extends SimState implements IBoard {
      */
     @Override
     public boolean set_pawn_into_game(IPawn pawn) {
-        // System.out.println("Set " + pawn + " into the game!");
         check_game_over();
         if (game_over) {
             return false;
@@ -150,6 +150,7 @@ public class Board extends SimState implements IBoard {
             fields[pawn.get_starting_pos()].set_pawn(pawn);
             entry.remove_pawn_from_entry(pawn);
             pawn.set_field(fields[pawn.get_starting_pos()]);
+            gui.add_to_console("Agent " + pawn.get_player() + " set Pawn(ID: " + pawn.get_id() + ") " + " into game");
             return true;
         } else {
             return false;
