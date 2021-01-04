@@ -13,6 +13,10 @@ import java.util.ArrayList;
  * n this class the basic logic is implemented, which are necessary for the game Mensch ärgere dich nicht.
  * It is about the fact that with a matching number of dice may be rolled again.
  * Which figure is drawn thereby decides each agent for itself.
+ *
+ * @author Markus Gersdorf
+ * @author Marcel Peplies
+ * @version 0.1
  */
 public abstract class Agent implements Steppable {
 
