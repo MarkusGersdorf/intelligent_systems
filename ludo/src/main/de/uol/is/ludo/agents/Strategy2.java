@@ -10,6 +10,10 @@ import java.util.Comparator;
 /**
  * This class implements a strategy to play Ludo.
  * The character that is the most advanced is always moved.
+ *
+ * @author Markus Gersdorf
+ * @author Marcel Peplies
+ * @version 0.1
  */
 public class Strategy2 extends Agent {
 
@@ -33,7 +37,7 @@ public class Strategy2 extends Agent {
     @Override
     protected ArrayList<IPawn> chooseFigure(ArrayList<IPawn> pawns) {
         // pawns.sort(Comparator.comparing(IPawn::getFieldId).reversed()); // sort pawns by field id
-        pawns.sort(Comparator.comparing(IPawn::getFieldId)); // sort pawns by field id
+        pawns.sort(Comparator.comparing(IPawn::get_moved_steps)); // sort pawns by field id
         optionList.addAll(pawns); // Add all other characters to the result, sorted by game progress
         return optionList;
     }
