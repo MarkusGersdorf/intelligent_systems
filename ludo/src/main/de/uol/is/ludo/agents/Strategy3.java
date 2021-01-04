@@ -54,10 +54,8 @@ public class Strategy3 extends Agent {
             for (int i = 0; i < 6; i++) {
                 field = (Field) board.getPreviousField(field);
                 if (field.get_pawn() != null) {
-                    if (field.get_pawn().get_player() != null) {
-                        if (field.get_pawn().get_player() != color) {
-                            resultList.add(pawn); // this figure can be beaten by an opponent
-                        }
+                    if (field.get_pawn().get_player() != color) {
+                        resultList.add(pawn); // this figure can be beaten by an opponent
                     }
                 }
             }
