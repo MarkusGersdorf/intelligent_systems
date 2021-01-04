@@ -328,4 +328,25 @@ public class Board extends SimState implements IBoard {
     public void set_gui(Gui gui) {
         this.gui = gui;
     }
+
+    /**
+     * The previous field is always returned
+     *
+     * @param field current field
+     * @return previous field
+     */
+    @Override
+    public IField getPreviousField(IField field) {
+        int fieldID;
+
+        if (field.get_field_id() - 1 > 39) {
+            fieldID = 0;
+        } else if (field.get_field_id() - 1 < 0) {
+            fieldID = 39;
+        } else {
+            fieldID = field.get_field_id();
+        }
+
+        return fields[fieldID];
+    }
 }

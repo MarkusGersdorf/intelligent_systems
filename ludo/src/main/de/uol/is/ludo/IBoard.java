@@ -29,4 +29,6 @@ public interface IBoard
     Agent[] get_agent();
 
     void set_gui(Gui gui);
+
+    IField getPreviousField(IField field);
 }

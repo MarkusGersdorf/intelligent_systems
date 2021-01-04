@@ -1,7 +1,6 @@
 package de.uol.is.ludo;
 
-import de.uol.is.ludo.agents.Agent;
-import de.uol.is.ludo.agents.Strategy1;
+import de.uol.is.ludo.agents.*;
 import sim.engine.SimState;
 
 import java.util.ArrayList;
@@ -54,10 +53,14 @@ public class App extends SimState {
 
     private void initialize_agents() {
         Agent[] agents = new Agent[4];
-        for (int i = 0; i < 4; i++) {
-            agents[i] = new Strategy1("Strategy " + i + 1, get_player_color(i), board);
-            gui.add_to_console("Agent " + get_player_color(i) + " was inizialized with strategy" + i + 1);
-        }
+        agents[0] = new Strategy1("Strategy " + 1, get_player_color(0), board);
+        gui.add_to_console("Agent " + get_player_color(0) + " was inizialized with strategy" + 1);
+        agents[1] = new Strategy2("Strategy " + 2, get_player_color(1), board);
+        gui.add_to_console("Agent " + get_player_color(1) + " was inizialized with strategy" + 2);
+        agents[2] = new Strategy3("Strategy " + 3, get_player_color(2), board);
+        gui.add_to_console("Agent " + get_player_color(2) + " was inizialized with strategy" + 3);
+        agents[3] = new Strategy4("Strategy " + 4, get_player_color(3), board);
+        gui.add_to_console("Agent " + get_player_color(3) + " was inizialized with strategy" + 4);
         board.set_agents(agents);
     }
 
