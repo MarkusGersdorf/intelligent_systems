@@ -14,7 +14,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -186,7 +185,6 @@ public class Gui extends Application {
     private TextField multiplier;
 
     private HashMap<String, Circle> circleHashMap = null;
-    private static String[] args;
     private final App app = new App(System.currentTimeMillis());
     private double replay_rate;
     private double win_counter_red;
@@ -194,9 +192,12 @@ public class Gui extends Application {
     private double win_counter_yellow;
     private double win_counter_black;
     private double round_counter = 0;
+    private ArrayList<IPawn> pawns;
+    private String winner;
+    private Agent[] agents;
+
 
     public static void main(String[] args) {
-        Gui.args = args;
         launch();
     }
 
@@ -212,7 +213,7 @@ public class Gui extends Application {
     }
 
     @FXML
-    public void on_play_button() throws IOException {
+    public void on_play_button() {
         if (circleHashMap == null) {
             circleHashMap = init_gui();
         }
@@ -221,13 +222,15 @@ public class Gui extends Application {
         reset_win_rates();
         reset_visualization();
         for (int i = 0; i < replay_rate; i++) {
+            System.out.println((i / replay_rate) * 100 + " %");
             add_to_console("Spiel " + i + " gestartet!");
             app.start(this);
             app.reset_board();
         }
+        set_visualization();
     }
 
-    private void set_visualization(ArrayList<IPawn> pawns, String winner, Agent[] agents) {
+    private void set_visualization() {
         int counter_goal_red = 1;
         int counter_goal_blue = 1;
         int counter_goal_yellow = 1;
@@ -352,9 +355,9 @@ public class Gui extends Application {
                 break;
         }
         round_counter++;
-        if (round_counter == replay_rate) {
-            set_visualization(pawns, winner, agents);
-        }
+        this.pawns = pawns;
+        this.winner = winner;
+        this.agents = agents;
     }
 
     private int get_pawns(IPawn.player player, IField.field_type type, ArrayList<IPawn> pawns) {
