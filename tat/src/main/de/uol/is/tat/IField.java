@@ -10,4 +10,8 @@ public interface IField {
     void set_field_type(field_type ft);
 
     IField[][] initializeField(IField[][] f);
+
+    void set_border_limit(int l);
+
+    int get_border_limit();
 }

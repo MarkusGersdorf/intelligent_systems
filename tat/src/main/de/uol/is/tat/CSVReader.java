@@ -63,6 +63,9 @@ public class CSVReader {
                     if(s.equals("t")) {
                         fields[x][y] = new Field(IField.field_type.TREE);
                     }
+                    if(!s.equals("") && Character.isDigit(s.charAt(0))) {
+                        fields[x][y].set_border_limit(Integer.parseInt(s));
+                    }
                     y++;
                 }
                 x++;

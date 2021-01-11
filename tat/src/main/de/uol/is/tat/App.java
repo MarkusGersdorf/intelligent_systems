@@ -42,6 +42,7 @@ public class App {
             fields.add(reader.convert_csv_to_fields(path[i]));
         }
         fields_to_console(fields);
+
         cons = new Constraints(fields);
     }
 

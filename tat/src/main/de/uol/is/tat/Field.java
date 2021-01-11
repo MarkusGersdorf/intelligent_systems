@@ -2,6 +2,7 @@ package de.uol.is.tat;
 
 public class Field implements IField {
     protected IField.field_type field_type;
+    protected int border_limit;
 
     public Field(IField.field_type ft)
     {
@@ -22,5 +23,15 @@ public class Field implements IField {
     public IField[][] initializeField(IField[][] f) {
         int x = f.length;
         return f;
+    }
+
+    @Override
+    public void set_border_limit(int l) {
+        border_limit = l;
+    }
+
+    @Override
+    public int get_border_limit() {
+        return border_limit;
     }
 }
