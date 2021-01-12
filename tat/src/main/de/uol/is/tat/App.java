@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 
 // TODO: VDC redefinieren
+// TODO: Verkettung von Baum und Zelt (?)
 
 /**
  *
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 
 public class App {
     private static final String[] path = new String[12]; // Anzahl der einzulesenden csv Dateien - müssen Namenskonvention einhalten
-    private static final CSVReader reader = new CSVReader();
+    private static final ICSVReader reader = new CSVReader();
     private static ArrayList<IField[][]> fields = new ArrayList<>();
     private static final IConstraints cons = new Constraints();
     private static boolean constraint_conform = true;

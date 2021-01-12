@@ -4,12 +4,16 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-public class CSVReader {
+public class CSVReader implements ICSVReader {
     private BufferedReader br = null;
     private String line = "";
     private String csvSplitBy = ",";
     private int x;
     private int y;
+
+    public CSVReader() {
+
+    }
 
     public IField[][] convert_csv_to_fields(String path) {
         boolean setY = false;
