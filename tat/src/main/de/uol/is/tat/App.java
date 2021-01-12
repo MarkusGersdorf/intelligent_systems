@@ -6,8 +6,7 @@ import java.util.ArrayList;
 
 
 
-// TODO: FieldType Border eine Variable "ConstraintNumberOfTents" hinzufügen
-// TODO: Fields miteinander verketten
+// TODO: VDC redefinieren
 
 /**
  *
