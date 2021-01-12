@@ -60,11 +60,12 @@ public class CSVReader {
                 y = 0;
                 String[] field = line.split(csvSplitBy);
                 for (String s : field) {
-                    if(s.equals("t")) {
-                        fields[x][y] = new Field(IField.field_type.TREE);
-                    }
                     if(!s.equals("") && Character.isDigit(s.charAt(0))) {
                         fields[x][y].set_border_limit(Integer.parseInt(s));
+                    } else if(s.equals("t")) {
+                        fields[x][y] = new Field(IField.field_type.TREE);
+                    } else if(s.equals("x")) {
+                        fields[x][y] = new Field(IField.field_type.TENT);
                     }
                     y++;
                 }

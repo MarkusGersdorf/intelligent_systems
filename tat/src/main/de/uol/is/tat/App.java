@@ -2,7 +2,6 @@ package de.uol.is.tat;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -28,26 +27,88 @@ import java.util.ArrayList;
  */
 
 public class App {
-    private static final String[] path = new String[10]; // Anzahl der einzulesenden csv Dateien - müssen Namenskonvention einhalten
-    private static CSVReader reader = new CSVReader();
+    private static final String[] path = new String[12]; // Anzahl der einzulesenden csv Dateien - müssen Namenskonvention einhalten
+    private static final CSVReader reader = new CSVReader();
     private static ArrayList<IField[][]> fields = new ArrayList<>();
-    private static IConstraints cons;
+    private static final IConstraints cons = new Constraints();
+    private static boolean constraint_conform = true;
 
     public static void main(String[] args) throws IOException {
         String project_path = new File("").getAbsolutePath();
         String csv_path = project_path.concat("/tat/csv/");
 
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 12; i++) {
             path[i] = csv_path.concat("tents_trees_" + i + ".csv");
             fields.add(reader.convert_csv_to_fields(path[i]));
         }
         fields_to_console(fields);
+        int fieldnumber = 0;
 
-        cons = new Constraints(fields);
+        for(IField[][] field : fields) {
+            constraint_conform = true;
+            // Heuristik
+            check_constraints(field);
+            // wenn nicht alle constraints erfüllt werden, heuristik rekursiv aufrufen
+            if(constraint_conform) {
+                System.out.println("Field " + fieldnumber + " \tErfüllt alle Constraints!");
+            } else {
+                System.out.println("Field " + fieldnumber + " \tErfüllt nicht alle Constraints!");
+            }
+            fieldnumber++;
+        }
     }
 
-    private static void fields_to_console(ArrayList<IField[][]> fields)
-    {
+    private static void check_constraints(IField[][] field) {
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field[0].length; j++) {
+                if (field[i][j].get_field_type() == IField.field_type.BORDER) {
+                    continue;
+                }
+                IField[][] constraint_field = new Field[3][3];
+                if (field[i][j].get_field_type() == IField.field_type.TENT) {
+                    constraint_field = get_smaller_fieldarray(field, i, j);
+                    if(!cons.no_tent_around_tent(constraint_field)) {
+                        constraint_conform = false;
+                        break;
+                    } else if(!cons.one_tree_per_tent(constraint_field)) {
+                        constraint_conform = false;
+                        break;
+                    } else if(!cons.only_n_tents_per_row(field, i, j)) {
+                        constraint_conform = false;
+                        break;
+                    }
+
+                }
+
+                if (field[i][j].get_field_type() == IField.field_type.TREE) {
+                    constraint_field = get_smaller_fieldarray(field, i, j);
+                    if(!cons.one_tent_per_tree(constraint_field)) {
+                        constraint_conform = false;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // 3x3 Felder bekommen
+    private static IField[][] get_smaller_fieldarray(IField[][] field, int i, int j) {
+        IField[][] temp_field = new Field[3][3];
+
+        temp_field[0][0] = field[i-1][j-1];
+        temp_field[0][1] = field[i-1][j];
+        temp_field[0][2] = field[i-1][j+1];
+        temp_field[1][0] = field[i][j-1];
+        temp_field[1][1] = field[i][j];
+        temp_field[1][2] = field[i][j+1];
+        temp_field[2][0] = field[i+1][j-1];
+        temp_field[2][1] = field[i+1][j];
+        temp_field[2][2] = field[i+1][j+1];
+
+        return temp_field;
+    }
+
+    private static void fields_to_console(ArrayList<IField[][]> fields) {
         for(IField[][] f : fields) {
             for (IField[] iFields : f) {
                 for (int j = 0; j < f[0].length; j++) {

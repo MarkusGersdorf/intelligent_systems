@@ -1,69 +1,74 @@
 package de.uol.is.tat;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Constraints implements IConstraints {
     protected ArrayList<IField[][]> fields;
-    public Constraints(ArrayList<IField[][]> f) {
-        this.fields = f;
+    public Constraints() {
+    }
+    @Override
+    public boolean one_tent_per_tree(IField[][] f) {
+        return f[0][1].get_field_type() == IField.field_type.TENT ||
+                f[1][0].get_field_type() == IField.field_type.TENT ||
+                f[1][2].get_field_type() == IField.field_type.TENT ||
+                f[2][1].get_field_type() == IField.field_type.TENT;
     }
 
-    /**
-     *
-     * @param f small field (9x9)
-     * @return true if one tent stands by a tree.
-     */
     @Override
-    public boolean one_tent_per_tree(IField f) {
+    public boolean one_tree_per_tent(IField[][] f) {
+        return f[0][1].get_field_type() == IField.field_type.TREE ||
+                f[1][0].get_field_type() == IField.field_type.TREE ||
+                f[1][2].get_field_type() == IField.field_type.TREE ||
+                f[2][1].get_field_type() == IField.field_type.TREE;
+    }
+
+    @Override
+    public boolean horizontal_vertical_tent_at_tree(IField[][] f) {
         return false;
     }
 
-    /**
-     *
-     * @param f small field (9x9)
-     * @return true if one tree is attached to a tent.
-     */
     @Override
-    public boolean one_tree_per_tent(IField f) {
+    public boolean adjacent_tent_tree(IField[][] f) {
         return false;
     }
 
-    /**
-     *
-     * @param f gives the hole row
-     * @param n number of tents
-     * @return true if the number of tents in the row matches with n.
-     */
     @Override
-    public boolean only_n_tents_per_row(IField f, int n) {
-        return false;
+    public boolean only_n_tents_per_row(IField[][] f, int field_i, int field_j) {
+        int row_limit = f[field_i][0].get_border_limit();
+        int column_limit = f[0][field_j].get_border_limit();
+
+        int number_of_tents_row = 0;
+        int number_of_tents_column = 0;
+
+        for(int i = 0; i < f[0].length; i++) {
+            if(f[field_i][i].get_field_type() == IField.field_type.TENT) {
+                number_of_tents_row++;
+            }
+        }
+
+        for(int i = 0; i < f.length; i++) {
+            if(f[i][field_j].get_field_type() == IField.field_type.TENT) {
+                number_of_tents_column++;
+            }
+        }
+
+        return row_limit == number_of_tents_row && column_limit == number_of_tents_column;
     }
 
-    /**
-     *
-     * @param f small field (9x9)
-     * @return true if there is no other tent in the 9x9 Matrix.
-     */
     @Override
-    public boolean no_tent_around_tent(IField f) {
-        return false;
-    }
+    public boolean no_tent_around_tent(IField[][] f) {
 
-    /**
-     *
-     * @deprecated
-     */
-    @Override
-    public boolean horizontal_vertical_tent_at_tree(IField f) {
-        return false;
-    }
-
-    /**
-     *
-     * @deprecated
-     */
-    @Override
-    public boolean adjacent_tent_tree(IField f) {
-        return false;
+        for(int i = 0; i < f.length; i++) {
+            for(int j = 0; j < f.length; j++) {
+                if(i == 1 && j == 1) {
+                    continue;
+                }
+                if(f[i][j].get_field_type() == IField.field_type.TENT) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

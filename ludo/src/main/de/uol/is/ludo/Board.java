@@ -55,7 +55,6 @@ public class Board extends SimState implements IBoard {
     /**
      * @deprecated
      */
-    @Override
     public void reset() {
         initialize_board();
         game_over = false;
@@ -167,7 +166,6 @@ public class Board extends SimState implements IBoard {
      *
      * @return Entry
      */
-    @Override
     public Entry get_entry() {
         return this.entry;
     }
@@ -177,7 +175,6 @@ public class Board extends SimState implements IBoard {
      *
      * @return ArrayList of IPawn
      */
-    @Override
     public ArrayList<IPawn> get_all_pawns() {
         ArrayList<IPawn> all_pawns = new ArrayList<>();
         Collections.addAll(all_pawns, pawns);
