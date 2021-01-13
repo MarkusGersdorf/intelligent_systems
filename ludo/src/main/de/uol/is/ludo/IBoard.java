@@ -21,4 +21,10 @@ public interface IBoard
     Agent[] get_agent();
 
     IField getPreviousField(IField field);
+
+    void reset();
+
+    Entry get_entry();
+
+    ArrayList<IPawn> get_all_pawns();
 }
