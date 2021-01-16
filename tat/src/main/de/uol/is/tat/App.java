@@ -32,10 +32,29 @@ public class App {
     private static ArrayList<IField[][]> fields = new ArrayList<>();
     private static final IConstraints cons = new Constraints();
     private static boolean constraint_conform = true;
+    private static final Heuristics heuristics = new Heuristics();
 
     public static void main(String[] args) throws IOException {
         String project_path = new File("").getAbsolutePath();
         String csv_path = project_path.concat("/tat/csv/");
+
+        int[][] test =
+                {{1,9,4},
+                        {5,9,8,4},
+                        {5,9,8,4},
+                        {5,9,8,4},
+                        {4,8,9,65,5}};
+
+        System.out.println(test[1][2]);
+        System.out.println(test.length);
+
+
+
+
+
+
+
+
 
         for(int i = 0; i < 12; i++) {
             path[i] = csv_path.concat("tents_trees_" + i + ".csv");
@@ -46,7 +65,7 @@ public class App {
 
         for(IField[][] field : fields) {
             constraint_conform = true;
-            // Heuristik
+            heuristics.mostConstrainedVariable(field);
             check_constraints(field);
             // wenn nicht alle constraints erfüllt werden, heuristik rekursiv aufrufen
             if(constraint_conform) {
