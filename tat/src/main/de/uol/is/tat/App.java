@@ -53,19 +53,18 @@ public class App {
 
 
 
-
-
-
         for(int i = 0; i < 12; i++) {
             path[i] = csv_path.concat("tents_trees_" + i + ".csv");
             fields.add(reader.convert_csv_to_fields(path[i]));
         }
-        fields_to_console(fields);
         int fieldnumber = 0;
 
+        fields_to_console(fields);
         for(IField[][] field : fields) {
             constraint_conform = true;
-            heuristics.mostConstrainedVariable(field);
+            if(fieldnumber != 11) {
+                heuristics.mostConstrainedVariable(field);
+            }
             check_constraints(field);
             // wenn nicht alle constraints erfüllt werden, heuristik rekursiv aufrufen
             if(constraint_conform) {
@@ -75,6 +74,8 @@ public class App {
             }
             fieldnumber++;
         }
+        System.out.println("---------------------------------------");
+        fields_to_console(fields);
     }
 
     private static void check_constraints(IField[][] field) {
