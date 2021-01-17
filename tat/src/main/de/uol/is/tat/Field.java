@@ -1,37 +1,43 @@
 package de.uol.is.tat;
 
+/**
+ * This class represents a field
+ *
+ * @author Thomas Cwill
+ * @version 0.1
+ */
 public class Field implements IField {
-    protected IField.field_type field_type;
-    protected int border_limit;
+    protected IField.field_type fieldType;
+    protected int borderLimit;
 
-    public Field(IField.field_type ft)
-    {
-        this.field_type = ft;
+    public Field(IField.field_type fieldType) {
+        this.fieldType = fieldType;
     }
 
     @Override
-    public field_type get_field_type() {
-        return this.field_type;
+    public field_type getFieldType() {
+        return this.fieldType;
     }
 
     @Override
-    public void set_field_type(IField.field_type ft) {
-        this.field_type = ft;
+    public void setFieldType(IField.field_type fieldType) {
+        this.fieldType = fieldType;
     }
 
     @Override
-    public IField[][] initializeField(IField[][] f) {
-        int x = f.length;
-        return f;
+    public IField[][] initializeField(IField[][] fields) {
+        // TODO: Whats up here? Is it right?
+        int x = fields.length;
+        return fields;
     }
 
     @Override
-    public void set_border_limit(int l) {
-        border_limit = l;
+    public int getBorderLimit() {
+        return this.borderLimit;
     }
 
     @Override
-    public int get_border_limit() {
-        return border_limit;
+    public void setBorderLimit(int boarderLimit) {
+        this.borderLimit = boarderLimit;
     }
 }
