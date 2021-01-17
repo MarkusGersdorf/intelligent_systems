@@ -99,7 +99,6 @@ public class Heuristics {
     }
 
     private boolean checkCoordinatesForConditions(int col, int row, IField[][] field) {
-        int treeCounter = 0;
 
         // Prüfe, ob der Platz frei ist
 
@@ -128,21 +127,6 @@ public class Heuristics {
             return false;
         }
 
-        // Prüfe, ob sich weitere Bäume dort befinden
-
-        if (field[col + 1][row].get_field_type() == IField.field_type.TREE) {
-            treeCounter++;
-        }
-        if (field[col - 1][row].get_field_type() == IField.field_type.TREE) {
-            treeCounter++;
-        }
-        if (field[col][row + 1].get_field_type() == IField.field_type.TREE) {
-            treeCounter++;
-        }
-        if (field[col][row - 1].get_field_type() == IField.field_type.TREE) {
-            treeCounter++;
-        }
-
-        return treeCounter < 2;
+        return true;
     }
 }
