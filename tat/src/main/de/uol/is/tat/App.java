@@ -62,7 +62,7 @@ public class App {
         fields_to_console(fields);
         for(IField[][] field : fields) {
             constraint_conform = true;
-            if(fieldnumber != 11) {
+            if(fieldnumber == 0) {
                 heuristics.mostConstrainedVariable(field);
             }
             check_constraints(field);

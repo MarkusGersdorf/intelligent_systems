@@ -6,17 +6,28 @@ public class TentsTreesObject {
 
     int row;
     int col;
-    boolean tentBuild;
+    ArrayList<Integer> tent = null;
     ArrayList<ArrayList<Integer>> remainingOptions;
 
-    public TentsTreesObject(int col, int row, ArrayList<ArrayList<Integer>> remainingOptions, boolean tentBuild) {
+    public TentsTreesObject(int col, int row, ArrayList<ArrayList<Integer>> remainingOptions) {
         this.row = row;
         this.col = col;
         this.remainingOptions = remainingOptions;
-        this.tentBuild = tentBuild;
     }
 
     public void updateRemainingOptions(ArrayList<ArrayList<Integer>> arrayList) {
         this.remainingOptions = arrayList;
+    }
+
+    public boolean isTentBuild() {
+        return tent != null;
+    }
+
+    public void setTent(ArrayList<Integer> tent) {
+        this.tent = tent;
+    }
+
+    public void deleteTent() {
+        this.tent = null;
     }
 }
