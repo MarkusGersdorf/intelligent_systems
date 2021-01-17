@@ -1,6 +1,4 @@
 package de.uol.is.tat;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,6 +11,7 @@ public class Heuristics {
     int buildTents = 0;
 
     public void mostConstrainedVariable(IField[][] field) {
+        buildTents = 0;
         int currentRemainingOptionsLevel = 1;
         int treesWithHigherRemainingOptionsLevel = 0;
 
@@ -47,7 +46,7 @@ public class Heuristics {
 
     private boolean buildTent(TentsTreesObject object, IField[][] field) {
         if(object.remainingOptions.size() == 0) {
-            checkRemainingOptions(object.col, object.row, field);
+            object.remainingOptions = checkRemainingOptions(object.col, object.row, field);
         }
         for(ArrayList<Integer> arrayList : object.remainingOptions) {
             if(field[arrayList.get(0)][arrayList.get(1)].getFieldType() == IField.field_type.EMPTY) {
@@ -112,56 +111,62 @@ public class Heuristics {
                 TentsTreesObject object = getTreeFromCoordinates(col, row);
                 switch (randomNum) {
                     case 1:
-                        found = deleteTent(col + 1, row, field);
-                        if(found) {
-                            ArrayList<Integer> coordinates = new ArrayList<>();
-                            coordinates.add(col + 1);
-                            coordinates.add(row);
-                            object.setTent(coordinates);
-                            field[col + 1][row].setFieldType(IField.field_type.TENT);
-                            field[col + 1][0].setBorderLimit(field[col + 1][0].getBorderLimit() - 1);
-                            field[0][row].setBorderLimit(field[0][row].getBorderLimit() - 1);
-                            buildTents++;
-                        }
+                            found = deleteTent(col + 1, row, field);
+                            if(found) {
+                                ArrayList<Integer> coordinates = new ArrayList<>();
+                                coordinates.add(col + 1);
+                                coordinates.add(row);
+                                object.setTent(coordinates);
+                                field[col + 1][row].setFieldType(IField.field_type.TENT);
+                                field[col + 1][0].setBorderLimit(field[col + 1][0].getBorderLimit() - 1);
+                                field[0][row].setBorderLimit(field[0][row].getBorderLimit() - 1);
+                                buildTents++;
+                            }
+
                         break;
                     case 2:
-                        found = deleteTent(col - 1, row, field);
-                        if(found) {
-                            ArrayList<Integer> coordinates = new ArrayList<>();
-                            coordinates.add(col - 1);
-                            coordinates.add(row);
-                            object.setTent(coordinates);
-                            field[col - 1][row].setFieldType(IField.field_type.TENT);
-                            field[col - 1][0].setBorderLimit(field[col - 1][0].getBorderLimit() - 1);
-                            field[0][row].setBorderLimit(field[0][row].getBorderLimit() - 1);
-                            buildTents++;
-                        }
+
+                            found = deleteTent(col - 1, row, field);
+                            if (found) {
+                                ArrayList<Integer> coordinates = new ArrayList<>();
+                                coordinates.add(col - 1);
+                                coordinates.add(row);
+                                object.setTent(coordinates);
+                                field[col - 1][row].setFieldType(IField.field_type.TENT);
+                                field[col - 1][0].setBorderLimit(field[col - 1][0].getBorderLimit() - 1);
+                                field[0][row].setBorderLimit(field[0][row].getBorderLimit() - 1);
+                                buildTents++;
+                            }
+
                         break;
                     case 3:
-                        found = deleteTent(col,row + 1, field);
-                        if(found) {
-                            ArrayList<Integer> coordinates = new ArrayList<>();
-                            coordinates.add(col);
-                            coordinates.add(row + 1);
-                            object.setTent(coordinates);
-                            field[col][row + 1].setFieldType(IField.field_type.TENT);
-                            field[0][row + 1].setBorderLimit(field[0][row + 1].getBorderLimit() - 1);
-                            field[col][0].setBorderLimit(field[col][0].getBorderLimit() - 1);
-                            buildTents++;
+                            found = deleteTent(col, row + 1, field);
+                            if (found) {
+                                ArrayList<Integer> coordinates = new ArrayList<>();
+                                coordinates.add(col);
+                                coordinates.add(row + 1);
+                                object.setTent(coordinates);
+                                field[col][row + 1].setFieldType(IField.field_type.TENT);
+                                field[0][row + 1].setBorderLimit(field[0][row + 1].getBorderLimit() - 1);
+                                field[col][0].setBorderLimit(field[col][0].getBorderLimit() - 1);
+                                buildTents++;
+
                         }
                         break;
                     case 4:
-                        found = deleteTent(col,row - 1, field);
-                        if(found) {
-                            ArrayList<Integer> coordinates = new ArrayList<>();
-                            coordinates.add(col);
-                            coordinates.add(row - 1);
-                            object.setTent(coordinates);
-                            field[col][row - 1].setFieldType(IField.field_type.TENT);
-                            field[0][row - 1].setBorderLimit(field[0][row - 1].getBorderLimit() - 1);
-                            field[col][0].setBorderLimit(field[col][0].getBorderLimit() - 1);
-                            buildTents++;
-                        }
+
+                            found = deleteTent(col, row - 1, field);
+                            if (found) {
+                                ArrayList<Integer> coordinates = new ArrayList<>();
+                                coordinates.add(col);
+                                coordinates.add(row - 1);
+                                object.setTent(coordinates);
+                                field[col][row - 1].setFieldType(IField.field_type.TENT);
+                                field[0][row - 1].setBorderLimit(field[0][row - 1].getBorderLimit() - 1);
+                                field[col][0].setBorderLimit(field[col][0].getBorderLimit() - 1);
+                                buildTents++;
+                            }
+
                         break;
                 }
             }
@@ -180,6 +185,9 @@ public class Heuristics {
     }
 
     private boolean deleteTent(int col, int row, IField[][] field) {
+        if(field[col][row].getFieldType() == IField.field_type.BORDER) {
+            return false;
+        }
         if(field[col][0].getBorderLimit() == 0) {
             for(int i = 0; i < field[col].length; i++) {
                 if(field[col][i].getFieldType() == IField.field_type.TENT) {
