@@ -1,20 +1,17 @@
 package de.uol.is.tat;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
 
 
 // TODO: VDC redefinieren
 // TODO: Verkettung von Baum und Zelt (?)
 
 /**
- *
  * (V,D,C) = (
  * V = mxn Matrix (ArrayList<IField[][]>fields</IField[][]>,
  * D = {Border, Blocked, Tree, Tent, Free},
- *
+ * <p>
  * C = (
  * 1: Im Umfeld von Tent und Tree darf nur jeweils einmal der andere vorkommen
  * 2: Tent muss horizontal oder vertikal am Baum liegen
@@ -22,7 +19,7 @@ import java.util.ArrayList;
  * 4: n Tents in einer Reihe
  * 5: Wenn Field = Tent, dann drumherum kein Tent
  * )
- *
+ * <p>
  * )
  */
 
@@ -31,43 +28,39 @@ public class App {
     private static final ICSVReader reader = new CSVReader();
     private static ArrayList<IField[][]> fields = new ArrayList<>();
     private static final IConstraints cons = new Constraints();
-    private static boolean constraint_conform = true;
+    private static boolean constraintConform = true;
     private static final Heuristics heuristics = new Heuristics();
 
-    public static void main(String[] args) throws IOException {
-        String project_path = new File("").getAbsolutePath();
-        String csv_path = project_path.concat("/tat/csv/");
+    public static void main(String[] args) {
+        String projectPath = new File("").getAbsolutePath();
+        String csvPath = projectPath.concat("/tat/csv/");
 
         int[][] test =
-                {{1,9,4},
-                        {5,9,8,4},
-                        {5,9,8,4},
-                        {5,9,8,4},
-                        {4,8,9,65,5}};
+                {{1, 9, 4},
+                        {5, 9, 8, 4},
+                        {5, 9, 8, 4},
+                        {5, 9, 8, 4},
+                        {4, 8, 9, 65, 5}};
 
         System.out.println(test[1][2]);
         System.out.println(test.length);
 
 
-
-
-
-
-        for(int i = 0; i < 12; i++) {
-            path[i] = csv_path.concat("tents_trees_" + i + ".csv");
-            fields.add(reader.convert_csv_to_fields(path[i]));
+        for (int i = 0; i < 12; i++) {
+            path[i] = csvPath.concat("tents_trees_" + i + ".csv");
+            fields.add(reader.convertCsvToFields(path[i]));
         }
         int fieldnumber = 0;
 
-        fields_to_console(fields);
-        for(IField[][] field : fields) {
-            constraint_conform = true;
-            if(fieldnumber == 0) {
+        fieldsToConsole(fields);
+        for (IField[][] field : fields) {
+            constraintConform = true;
+            if (fieldnumber == 0) {
                 heuristics.mostConstrainedVariable(field);
             }
-            check_constraints(field);
+            checkConstraints(field);
             // wenn nicht alle constraints erfüllt werden, heuristik rekursiv aufrufen
-            if(constraint_conform) {
+            if (constraintConform) {
                 System.out.println("Field " + fieldnumber + " \tErfüllt alle Constraints!");
             } else {
                 System.out.println("Field " + fieldnumber + " \tErfüllt nicht alle Constraints!");
@@ -75,35 +68,35 @@ public class App {
             fieldnumber++;
         }
         System.out.println("---------------------------------------");
-        fields_to_console(fields);
+        fieldsToConsole(fields);
     }
 
-    private static void check_constraints(IField[][] field) {
+    private static void checkConstraints(IField[][] field) {
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[0].length; j++) {
-                if (field[i][j].get_field_type() == IField.field_type.BORDER) {
+                if (field[i][j].getFieldType() == IField.field_type.BORDER) {
                     continue;
                 }
-                IField[][] constraint_field = new Field[3][3];
-                if (field[i][j].get_field_type() == IField.field_type.TENT) {
-                    constraint_field = get_smaller_fieldarray(field, i, j);
-                    if(!cons.no_tent_around_tent(constraint_field)) {
-                        constraint_conform = false;
+                IField[][] constraintField;
+                if (field[i][j].getFieldType() == IField.field_type.TENT) {
+                    constraintField = getWindowFromField(field, i, j);
+                    if (!cons.noTentAroundTent(constraintField)) {
+                        constraintConform = false;
                         break;
-                    } else if(!cons.one_tree_per_tent(constraint_field)) {
-                        constraint_conform = false;
+                    } else if (!cons.oneTreePerTent(constraintField)) {
+                        constraintConform = false;
                         break;
-                    } else if(!cons.only_n_tents_per_row(field, i, j)) {
-                        constraint_conform = false;
+                    } else if (!cons.onlyNTentsPerRow(field, i, j)) {
+                        constraintConform = false;
                         break;
                     }
 
                 }
 
-                if (field[i][j].get_field_type() == IField.field_type.TREE) {
-                    constraint_field = get_smaller_fieldarray(field, i, j);
-                    if(!cons.one_tent_per_tree(constraint_field)) {
-                        constraint_conform = false;
+                if (field[i][j].getFieldType() == IField.field_type.TREE) {
+                    constraintField = getWindowFromField(field, i, j);
+                    if (!cons.oneTentPerTree(constraintField)) {
+                        constraintConform = false;
                         break;
                     }
                 }
@@ -111,32 +104,43 @@ public class App {
         }
     }
 
-    // 3x3 Felder bekommen
-    private static IField[][] get_smaller_fieldarray(IField[][] field, int i, int j) {
+    /**
+     * Get 3x3 Window from field
+     *
+     * @param field field
+     * @param i     position column
+     * @param j     position row
+     * @return 3x3 field from type 2D Array
+     */
+    private static IField[][] getWindowFromField(IField[][] field, int i, int j) {
         IField[][] temp_field = new Field[3][3];
 
-        temp_field[0][0] = field[i-1][j-1];
-        temp_field[0][1] = field[i-1][j];
-        temp_field[0][2] = field[i-1][j+1];
-        temp_field[1][0] = field[i][j-1];
+        temp_field[0][0] = field[i - 1][j - 1];
+        temp_field[0][1] = field[i - 1][j];
+        temp_field[0][2] = field[i - 1][j + 1];
+        temp_field[1][0] = field[i][j - 1];
         temp_field[1][1] = field[i][j];
-        temp_field[1][2] = field[i][j+1];
-        temp_field[2][0] = field[i+1][j-1];
-        temp_field[2][1] = field[i+1][j];
-        temp_field[2][2] = field[i+1][j+1];
+        temp_field[1][2] = field[i][j + 1];
+        temp_field[2][0] = field[i + 1][j - 1];
+        temp_field[2][1] = field[i + 1][j];
+        temp_field[2][2] = field[i + 1][j + 1];
 
         return temp_field;
     }
 
-    private static void fields_to_console(ArrayList<IField[][]> fields) {
-        for(IField[][] f : fields) {
+    /**
+     * Print fields to console
+     *
+     * @param fields complete map
+     */
+    private static void fieldsToConsole(ArrayList<IField[][]> fields) {
+        for (IField[][] f : fields) {
             for (IField[] iFields : f) {
                 for (int j = 0; j < f[0].length; j++) {
-                    System.out.print(iFields[j].get_field_type() + "\t");
+                    System.out.print(iFields[j].getFieldType() + "\t");
                 }
                 System.out.println();
             }
         }
-
     }
 }

@@ -5,13 +5,13 @@ public interface IField {
         BORDER, EMPTY, TREE, TENT, BLOCKED
     }
 
-    field_type get_field_type();
+    field_type getFieldType();
 
-    void set_field_type(field_type ft);
+    void setFieldType(field_type ft);
 
     IField[][] initializeField(IField[][] f);
 
-    void set_border_limit(int l);
+    int getBorderLimit();
 
-    int get_border_limit();
+    void setBorderLimit(int l);
 }

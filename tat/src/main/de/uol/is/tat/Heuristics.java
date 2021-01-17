@@ -18,7 +18,7 @@ public class Heuristics {
 
         for (int col = 1; col < field.length; col++) {
             for (int row = 1; row < field[col].length; row++) {
-                if (field[col][row].get_field_type() == IField.field_type.TREE) {
+                if (field[col][row].getFieldType() == IField.field_type.TREE) {
                     trees.add(new TentsTreesObject(col, row, checkRemainingOptions(col, row, field)));
                 }
             }
@@ -227,28 +227,28 @@ public class Heuristics {
 
         // Prüfe, ob der Platz frei ist
 
-        if (field[col][row].get_field_type() != IField.field_type.EMPTY) {
+        if (field[col][row].getFieldType() != IField.field_type.EMPTY) {
             return false;
         }
 
         // Prüfe, ob in der Reihe/Spalte noch Zelte gesetzt werden dürfen
 
-        if(field[col][0].get_border_limit() == 0 || field[0][row].get_border_limit() == 0) {
+        if (field[col][0].getBorderLimit() == 0 || field[0][row].getBorderLimit() == 0) {
             return false;
         }
 
         // Prüfe, ob angrenzent noch ein Zelt ist
 
-        if (field[col + 1][row].get_field_type() == IField.field_type.TENT) {
+        if (field[col + 1][row].getFieldType() == IField.field_type.TENT) {
             return false;
         }
-        if (field[col - 1][row].get_field_type() == IField.field_type.TENT) {
+        if (field[col - 1][row].getFieldType() == IField.field_type.TENT) {
             return false;
         }
-        if (field[col][row + 1].get_field_type() == IField.field_type.TENT) {
+        if (field[col][row + 1].getFieldType() == IField.field_type.TENT) {
             return false;
         }
-        if (field[col][row - 1].get_field_type() == IField.field_type.TENT) {
+        if (field[col][row - 1].getFieldType() == IField.field_type.TENT) {
             return false;
         }
 
