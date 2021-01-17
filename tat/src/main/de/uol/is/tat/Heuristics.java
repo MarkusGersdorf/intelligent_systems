@@ -49,6 +49,8 @@ public class Heuristics {
         for(ArrayList<Integer> arrayList : object.remainingOptions) {
             if(field[arrayList.get(0)][arrayList.get(1)].get_field_type() == IField.field_type.EMPTY) {
                 field[arrayList.get(0)][arrayList.get(1)].set_field_type(IField.field_type.TENT);
+                field[arrayList.get(0)][0].set_border_limit(field[arrayList.get(0)][0].get_border_limit() - 1);
+                field[0][arrayList.get(1)].set_border_limit(field[0][arrayList.get(1)].get_border_limit() - 1);
                 break;
             }
         }
