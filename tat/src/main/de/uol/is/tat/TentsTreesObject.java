@@ -15,6 +15,11 @@ public class TentsTreesObject {
         this.remainingOptions = remainingOptions;
     }
 
+    public TentsTreesObject(int col, int row) {
+        this.row = row;
+        this.col = col;
+    }
+
     public void updateRemainingOptions(ArrayList<ArrayList<Integer>> arrayList) {
         this.remainingOptions = arrayList;
     }
