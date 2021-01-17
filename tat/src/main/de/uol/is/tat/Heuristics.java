@@ -50,10 +50,10 @@ public class Heuristics {
             checkRemainingOptions(object.col, object.row, field);
         }
         for(ArrayList<Integer> arrayList : object.remainingOptions) {
-            if(field[arrayList.get(0)][arrayList.get(1)].get_field_type() == IField.field_type.EMPTY) {
-                field[arrayList.get(0)][arrayList.get(1)].set_field_type(IField.field_type.TENT);
-                field[arrayList.get(0)][0].set_border_limit(field[arrayList.get(0)][0].get_border_limit() - 1);
-                field[0][arrayList.get(1)].set_border_limit(field[0][arrayList.get(1)].get_border_limit() - 1);
+            if(field[arrayList.get(0)][arrayList.get(1)].getFieldType() == IField.field_type.EMPTY) {
+                field[arrayList.get(0)][arrayList.get(1)].setFieldType(IField.field_type.TENT);
+                field[arrayList.get(0)][0].setBorderLimit(field[arrayList.get(0)][0].getBorderLimit() - 1);
+                field[0][arrayList.get(1)].setBorderLimit(field[0][arrayList.get(1)].getBorderLimit() - 1);
                 object.setTent(arrayList);
                 return true;
             }
@@ -118,9 +118,9 @@ public class Heuristics {
                             coordinates.add(col + 1);
                             coordinates.add(row);
                             object.setTent(coordinates);
-                            field[col + 1][row].set_field_type(IField.field_type.TENT);
-                            field[col + 1][0].set_border_limit(field[col + 1][0].get_border_limit() - 1);
-                            field[0][row].set_border_limit(field[0][row].get_border_limit() - 1);
+                            field[col + 1][row].setFieldType(IField.field_type.TENT);
+                            field[col + 1][0].setBorderLimit(field[col + 1][0].getBorderLimit() - 1);
+                            field[0][row].setBorderLimit(field[0][row].getBorderLimit() - 1);
                             buildTents++;
                         }
                         break;
@@ -131,9 +131,9 @@ public class Heuristics {
                             coordinates.add(col - 1);
                             coordinates.add(row);
                             object.setTent(coordinates);
-                            field[col - 1][row].set_field_type(IField.field_type.TENT);
-                            field[col - 1][0].set_border_limit(field[col - 1][0].get_border_limit() - 1);
-                            field[0][row].set_border_limit(field[0][row].get_border_limit() - 1);
+                            field[col - 1][row].setFieldType(IField.field_type.TENT);
+                            field[col - 1][0].setBorderLimit(field[col - 1][0].getBorderLimit() - 1);
+                            field[0][row].setBorderLimit(field[0][row].getBorderLimit() - 1);
                             buildTents++;
                         }
                         break;
@@ -144,9 +144,9 @@ public class Heuristics {
                             coordinates.add(col);
                             coordinates.add(row + 1);
                             object.setTent(coordinates);
-                            field[col][row + 1].set_field_type(IField.field_type.TENT);
-                            field[0][row + 1].set_border_limit(field[0][row + 1].get_border_limit() - 1);
-                            field[col][0].set_border_limit(field[col][0].get_border_limit() - 1);
+                            field[col][row + 1].setFieldType(IField.field_type.TENT);
+                            field[0][row + 1].setBorderLimit(field[0][row + 1].getBorderLimit() - 1);
+                            field[col][0].setBorderLimit(field[col][0].getBorderLimit() - 1);
                             buildTents++;
                         }
                         break;
@@ -157,9 +157,9 @@ public class Heuristics {
                             coordinates.add(col);
                             coordinates.add(row - 1);
                             object.setTent(coordinates);
-                            field[col][row - 1].set_field_type(IField.field_type.TENT);
-                            field[0][row - 1].set_border_limit(field[0][row - 1].get_border_limit() - 1);
-                            field[col][0].set_border_limit(field[col][0].get_border_limit() - 1);
+                            field[col][row - 1].setFieldType(IField.field_type.TENT);
+                            field[0][row - 1].setBorderLimit(field[0][row - 1].getBorderLimit() - 1);
+                            field[col][0].setBorderLimit(field[col][0].getBorderLimit() - 1);
                             buildTents++;
                         }
                         break;
@@ -180,15 +180,15 @@ public class Heuristics {
     }
 
     private boolean deleteTent(int col, int row, IField[][] field) {
-        if(field[col][0].get_border_limit() == 0) {
+        if(field[col][0].getBorderLimit() == 0) {
             for(int i = 0; i < field[col].length; i++) {
-                if(field[col][i].get_field_type() == IField.field_type.TENT) {
+                if(field[col][i].getFieldType() == IField.field_type.TENT) {
                     for(TentsTreesObject object : trees) {
                         if(object.isTentBuild()) {
                             if(object.tent.get(0) == col && object.tent.get(1) == i) {
-                                field[col][i].set_field_type(IField.field_type.EMPTY);
-                                field[col][0].set_border_limit(field[col][0].get_border_limit() + 1);
-                                field[0][i].set_border_limit(field[0][i].get_border_limit() + 1);
+                                field[col][i].setFieldType(IField.field_type.EMPTY);
+                                field[col][0].setBorderLimit(field[col][0].getBorderLimit() + 1);
+                                field[0][i].setBorderLimit(field[0][i].getBorderLimit() + 1);
                                 object.deleteTent();
                                 buildTents--;
                                 return true;
@@ -199,15 +199,15 @@ public class Heuristics {
             }
         }
 
-        if(field[0][row].get_border_limit() == 0) {
+        if(field[0][row].getBorderLimit() == 0) {
             for(int i = 0; i < field.length; i++) {
-                if(field[i][row].get_field_type() == IField.field_type.TENT) {
+                if(field[i][row].getFieldType() == IField.field_type.TENT) {
                     for(TentsTreesObject object : trees) {
                         if(object.isTentBuild()) {
                             if (object.tent.get(0) == i && object.tent.get(1) == row) {
-                                field[i][row].set_field_type(IField.field_type.EMPTY);
-                                field[i][0].set_border_limit(field[i][0].get_border_limit() + 1);
-                                field[0][row].set_border_limit(field[0][row].get_border_limit() + 1);
+                                field[i][row].setFieldType(IField.field_type.EMPTY);
+                                field[i][0].setBorderLimit(field[i][0].getBorderLimit() + 1);
+                                field[0][row].setBorderLimit(field[0][row].getBorderLimit() + 1);
                                 object.deleteTent();
                                 buildTents--;
                                 return true;
