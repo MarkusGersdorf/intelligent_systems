@@ -1,14 +1,13 @@
 package de.uol.is.tat;
 
 import java.util.ArrayList;
-import java.util.function.ObjDoubleConsumer;
 
 public class Heuristics {
     ArrayList<TentsTreesObject> trees = new ArrayList<>();
     ArrayList<TentsTreesObject> progress = new ArrayList<TentsTreesObject>();
     IField[][] field;
 
-    public boolean mostConstrainedVariable(IField[][] matrix, int fieldnumber) {
+    public IField[][] mostConstrainedVariable(IField[][] matrix, int fieldnumber) {
         this.field = matrix;
         int currentRemainingOptionsLevel = 1;
         boolean successfully = false;
@@ -50,10 +49,10 @@ public class Heuristics {
             } else {
                 successfully = false;
             }
-            System.out.println("Aktuell läuft die " + fieldnumber + ". CSV-Datei. Bäume mit Zelt: " + progress.size() + " (" + trees.size() + ")");
+            //System.out.println("Aktuell läuft die " + fieldnumber + ". CSV-Datei. Bäume mit Zelt: " + progress.size() + " (" + trees.size() + ")");
         }
 
-        return true;
+        return field;
     }
 
     /**

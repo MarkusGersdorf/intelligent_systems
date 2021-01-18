@@ -27,6 +27,7 @@ public class App {
     private static final String[] path = new String[12]; // Anzahl der einzulesenden csv Dateien - müssen Namenskonvention einhalten
     private static final ICSVReader reader = new CSVReader();
     private static ArrayList<IField[][]> fields = new ArrayList<>();
+    private static ArrayList<IField[][]> initFields = new ArrayList<>();
     private static final IConstraints cons = new Constraints();
     private static boolean constraintConform = true;
     private static Heuristics heuristics = new Heuristics();
@@ -38,17 +39,20 @@ public class App {
         for (int i = 0; i < 12; i++) {
             path[i] = csvPath.concat("tents_trees_" + i + ".csv");
             fields.add(reader.convertCsvToFields(path[i]));
+            initFields.add(reader.convertCsvToFields(path[i]));
         }
         int fieldnumber = 0;
 
-        fieldsToConsole(fields);
         for (IField[][] field : fields) {
-            constraintConform = true;
-            if(fieldnumber == 0) {
-                heuristics = new Heuristics();
-                heuristics.mostConstrainedVariable(field, fieldnumber);
+            constraintConform = false;
+            IField[][] finish = null;
+            heuristics = new Heuristics();
+            finish = heuristics.mostConstrainedVariable(field, fieldnumber);
+            overwriteBoarders(initFields.get(fieldnumber), finish);
+
+            if (finish != null) {
+                checkConstraints(finish);
             }
-            checkConstraints(field);
             // wenn nicht alle constraints erfüllt werden, heuristik rekursiv aufrufen
             if (constraintConform) {
                 System.out.println("Field " + fieldnumber + " \tErfüllt alle Constraints!");
@@ -57,8 +61,18 @@ public class App {
             }
             fieldnumber++;
         }
-        System.out.println("---------------------------------------");
-        fieldsToConsole(fields);
+    }
+
+    private static IField[][] overwriteBoarders(IField[][] field, IField[][] finish) {
+        for (int col = 0; col < field.length; col++) {
+            finish[col][0] = field[col][0];
+        }
+
+        for (int row = 0; row < field[0].length; row++) {
+            finish[0][row] = field[0][row];
+        }
+
+        return finish;
     }
 
     private static void checkConstraints(IField[][] field) {
@@ -92,6 +106,7 @@ public class App {
                 }
             }
         }
+        constraintConform = true;
     }
 
     /**
