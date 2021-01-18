@@ -1,193 +1,302 @@
 package de.uol.is.tat;
 
-import com.sun.source.tree.NewArrayTree;
-
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * Class for the heuristics
- */
 public class Heuristics {
+    Random rand = new Random();
 
     ArrayList<TentsTreesObject> trees = new ArrayList<>();
+    IField[][] field;
     int buildTents = 0;
-    int restartCounter = 0;
 
-    public void mostConstrainedVariable(IField[][] field) {
-        trees = new ArrayList<>();
-        buildTents = 0;
+    public boolean mostConstrainedVariable(IField[][] matrix) {
+        this.field = matrix;
         int currentRemainingOptionsLevel = 1;
-        int treesWithHigherRemainingOptionsLevel = 0;
 
         for (int col = 1; col < field.length; col++) {
             for (int row = 1; row < field[col].length; row++) {
                 if (field[col][row].getFieldType() == IField.field_type.TREE) {
                     TentsTreesObject tentsTreesObject = new TentsTreesObject(col, row);
-                    tentsTreesObject.updateRemainingOptions(checkRemainingOptions(tentsTreesObject, field));
+                    tentsTreesObject.updateRemainingOptions(checkRemainingOptions(tentsTreesObject));
                     trees.add(tentsTreesObject);
                 }
             }
         }
 
-        while (!allTreeHaveATent(trees)) {
+        while (!oneTentForEachTree()) {
             for (TentsTreesObject object : trees) {
                 if (object.remainingOptions.size() == currentRemainingOptionsLevel && !object.isTentBuild()) {
-                    if (buildTent(object, field)) {
-                        buildTents++;
-                        System.out.println("Build Tent " + buildTents);
-                        reCalculateRemainingOptions(trees, field);
+                    if (buildTent(object)) {
+                        reCalculateRemainingOptions();
                         currentRemainingOptionsLevel = 0;
-                        treesWithHigherRemainingOptionsLevel = 0;
+                        break;
+                    } else {
+                        throw new RuntimeException();
                     }
-                } else {
-                    treesWithHigherRemainingOptionsLevel++;
                 }
             }
-            if (treesWithHigherRemainingOptionsLevel == trees.size()) {
-                currentRemainingOptionsLevel++;
+            currentRemainingOptionsLevel++;
+        }
+        return true;
+    }
+
+    /**
+     * Check for trees without an tent an recalculate their options.
+     */
+    private void reCalculateRemainingOptions() {
+        for (TentsTreesObject object : trees) {
+            if (!object.isTentBuild()) {
+                checkRemainingOptions(object);
             }
-            treesWithHigherRemainingOptionsLevel = 0;
         }
     }
 
-    private boolean buildTent(TentsTreesObject object, IField[][] field) {
+    /**
+     * @param object
+     * @return
+     */
+    private boolean buildTent(TentsTreesObject object) {
         if (object.remainingOptions.size() == 0) {
-            object.remainingOptions = checkRemainingOptions(object.col, object.row, field);
-        }
-        for (ArrayList<Integer> arrayList : object.remainingOptions) {
-            if (field[arrayList.get(0)][arrayList.get(1)].getFieldType() == IField.field_type.EMPTY) {
-                field[arrayList.get(0)][arrayList.get(1)].setFieldType(IField.field_type.TENT);
-                field[arrayList.get(0)][0].setBorderLimit(field[arrayList.get(0)][0].getBorderLimit() - 1);
-                field[0][arrayList.get(1)].setBorderLimit(field[0][arrayList.get(1)].getBorderLimit() - 1);
+            deleteBlockingTent(object);
+            return true;
+        } else {
+            if (object.remainingOptions.size() == 1) {
+                for (ArrayList<Integer> arrayList : object.remainingOptions) {
+                    //TODO Delete if
+                    if(field[arrayList.get(0)][arrayList.get(1)].getFieldType() != IField.field_type.EMPTY) {
+                        boolean wait = true;
+                    }
+                    object.setTent(arrayList);
+                    field[arrayList.get(0)][arrayList.get(1)].setFieldType(IField.field_type.TENT);
+                    decreaseBorderLimit(arrayList.get(0), arrayList.get(1));
+                    buildTents++;
+                    return true;
+                }
+            } else {
+                // Get random remaining options from the remainingOptions-List
+                int randomNum = rand.nextInt((object.remainingOptions.size() - 1) + 1);
+                ArrayList<Integer> arrayList = object.remainingOptions.get(randomNum);
+                //TODO Delete if
+                if(field[arrayList.get(0)][arrayList.get(1)].getFieldType() != IField.field_type.EMPTY) {
+                    boolean wait = true;
+                }
                 object.setTent(arrayList);
+                field[arrayList.get(0)][arrayList.get(1)].setFieldType(IField.field_type.TENT);
+                decreaseBorderLimit(arrayList.get(0), arrayList.get(1));
+                buildTents++;
                 return true;
             }
         }
         return false;
     }
 
-    private void reCalculateRemainingOptions(ArrayList<TentsTreesObject> arrayList, IField[][] field) {
-        for (TentsTreesObject object : arrayList) {
-            if (!object.isTentBuild()) {
-                object.updateRemainingOptions(checkRemainingOptions(object.col, object.row, field));
-            }
-        }
-    }
-
-
-    private ArrayList<ArrayList<Integer>> checkRemainingOptions(TentsTreesObject tentsTreesObject, IField[][] field) {
-        ArrayList<ArrayList<Integer>> remainingOptions = new ArrayList<>();
-
-        // Prüfe alle Felder um den Baum
-
-        if (checkCoordinatesForConditions(col + 1, row, field)) {
-            ArrayList<Integer> arrayList = new ArrayList<>();
-            arrayList.add(col + 1);
-            arrayList.add(row);
-            remainingOptions.add(arrayList);
-        }
-
-        if (checkCoordinatesForConditions(col - 1, row, field)) {
-            ArrayList<Integer> arrayList = new ArrayList<>();
-            arrayList.add(col - 1);
-            arrayList.add(row);
-            remainingOptions.add(arrayList);
-        }
-
-        if (checkCoordinatesForConditions(col, row + 1, field)) {
-            ArrayList<Integer> arrayList = new ArrayList<>();
-            arrayList.add(col);
-            arrayList.add(row + 1);
-            remainingOptions.add(arrayList);
-        }
-
-        if (checkCoordinatesForConditions(col, row - 1, field)) {
-            ArrayList<Integer> arrayList = new ArrayList<>();
-            arrayList.add(col);
-            arrayList.add(row - 1);
-            remainingOptions.add(arrayList);
-        }
-
-        if (remainingOptions.size() == 0) {
-            boolean found = false;
-            while (!found) {
-                Random rand = new Random();
+    private void deleteBlockingTent(TentsTreesObject object) {
+        ArrayList<ArrayList<Integer>> arrayList = checkRemainingOptions(object);
+        boolean cleanUp = false;
+        while (arrayList.size() == 0) {
+            while (!cleanUp) {
                 int randomNum = rand.nextInt((4 - 1) + 1) + 1;
-                TentsTreesObject object = getTreeFromCoordinates(col, row);
                 switch (randomNum) {
                     case 1:
-                        found = deleteTent(col + 1, row, field);
-                        if (found) {
-                            ArrayList<Integer> coordinates = new ArrayList<>();
-                            coordinates.add(col + 1);
-                            coordinates.add(row);
-                            object.setTent(coordinates);
-                            field[col + 1][row].setFieldType(IField.field_type.TENT);
-                            field[col + 1][0].setBorderLimit(field[col + 1][0].getBorderLimit() - 1);
-                            field[0][row].setBorderLimit(field[0][row].getBorderLimit() - 1);
-                            buildTents++;
-                        }
-
+                        cleanUp = cleanUp(object.col + 1, object.row);
                         break;
                     case 2:
-
-                        found = deleteTent(col - 1, row, field);
-                        if (found) {
-                            ArrayList<Integer> coordinates = new ArrayList<>();
-                            coordinates.add(col - 1);
-                            coordinates.add(row);
-                            object.setTent(coordinates);
-                            field[col - 1][row].setFieldType(IField.field_type.TENT);
-                            field[col - 1][0].setBorderLimit(field[col - 1][0].getBorderLimit() - 1);
-                            field[0][row].setBorderLimit(field[0][row].getBorderLimit() - 1);
-                            buildTents++;
-                        }
-
+                        cleanUp = cleanUp(object.col - 1, object.row);
                         break;
                     case 3:
-                        found = deleteTent(col, row + 1, field);
-                        if (found) {
-                            ArrayList<Integer> coordinates = new ArrayList<>();
-                            coordinates.add(col);
-                            coordinates.add(row + 1);
-                            object.setTent(coordinates);
-                            field[col][row + 1].setFieldType(IField.field_type.TENT);
-                            field[0][row + 1].setBorderLimit(field[0][row + 1].getBorderLimit() - 1);
-                            field[col][0].setBorderLimit(field[col][0].getBorderLimit() - 1);
-                            buildTents++;
-
-                        }
+                        cleanUp = cleanUp(object.col, object.row + 1);
                         break;
                     case 4:
-
-                        found = deleteTent(col, row - 1, field);
-                        if (found) {
-                            ArrayList<Integer> coordinates = new ArrayList<>();
-                            coordinates.add(col);
-                            coordinates.add(row - 1);
-                            object.setTent(coordinates);
-                            field[col][row - 1].setFieldType(IField.field_type.TENT);
-                            field[0][row - 1].setBorderLimit(field[0][row - 1].getBorderLimit() - 1);
-                            field[col][0].setBorderLimit(field[col][0].getBorderLimit() - 1);
-                            buildTents++;
-                        }
-
+                        cleanUp = cleanUp(object.col, object.row - 1);
                         break;
                 }
             }
+            checkRemainingOptions(object);
         }
+    }
+
+    private boolean cleanUp(int col, int row) {
+
+        if(field[col][row].getFieldType() == IField.field_type.BORDER) {
+            return false;
+        }
+
+        if(field[col][row].getFieldType() == IField.field_type.TREE) {
+            return false;
+        }
+
+        if(field[col][row].getFieldType() == IField.field_type.BLOCKED) {
+            return false;
+        }
+
+        if (colBorderLimit(col) == 0) {
+            for (int i = 0; i < field[col].length; i++) {
+                if (field[col][i].getFieldType() == IField.field_type.TENT) {
+                    TentsTreesObject tree = getTreeFromTent(col, i);
+                    field[col][i].setFieldType(IField.field_type.EMPTY);
+                    increaseBorderLimit(col, i);
+                    tree.deleteTent();
+                    buildTents--;
+                    return true;
+                }
+            }
+        }
+
+        if (rowBorderLimit(row) == 0) {
+            for (int i = 0; i < field.length; i++) {
+                if (field[i][row].getFieldType() == IField.field_type.TENT) {
+                    TentsTreesObject tree = getTreeFromTent(i, row);
+                    field[i][row].setFieldType(IField.field_type.EMPTY);
+                    increaseBorderLimit(i, row);
+                    tree.deleteTent();
+                    buildTents--;
+                    return true;
+                }
+            }
+        }
+
+        if(field[col + 1][row].getFieldType() == IField.field_type.TENT) {
+            TentsTreesObject tree = getTreeFromTent(col + 1, row);
+            field[col + 1][row].setFieldType(IField.field_type.EMPTY);
+            increaseBorderLimit(col + 1, row);
+            tree.deleteTent();
+            buildTents--;
+            return true;
+        }
+
+        if(field[col - 1][row].getFieldType() == IField.field_type.TENT) {
+            TentsTreesObject tree = getTreeFromTent(col - 1, row);
+            field[col - 1][row].setFieldType(IField.field_type.EMPTY);
+            increaseBorderLimit(col - 1, row);
+            tree.deleteTent();
+            buildTents--;
+            return true;
+        }
+
+        if(field[col][row + 1].getFieldType() == IField.field_type.TENT) {
+            TentsTreesObject tree = getTreeFromTent(col, row + 1);
+            field[col][row + 1].setFieldType(IField.field_type.EMPTY);
+            increaseBorderLimit(col, row + 1);
+            tree.deleteTent();
+            buildTents--;
+            return true;
+        }
+
+        if(field[col][row - 1].getFieldType() == IField.field_type.TENT) {
+            TentsTreesObject tree = getTreeFromTent(col, row - 1);
+            field[col][row - 1].setFieldType(IField.field_type.EMPTY);
+            increaseBorderLimit(col, row - 1);
+            tree.deleteTent();
+            buildTents--;
+            return true;
+        }
+
+        return false;
+    }
+
+    private ArrayList<ArrayList<Integer>> checkRemainingOptions(TentsTreesObject tentsTreesObject) {
+        ArrayList<ArrayList<Integer>> remainingOptions = new ArrayList<>();
+
+        // Above the tree
+        if(checkConditionsForCoordinates(tentsTreesObject.col + 1, tentsTreesObject.row)) {
+            ArrayList<Integer> arrayList = new ArrayList<>();
+            arrayList.add(tentsTreesObject.col + 1);
+            arrayList.add(tentsTreesObject.row);
+            remainingOptions.add(arrayList);
+        }
+
+        // Under the tree
+
+        if(checkConditionsForCoordinates(tentsTreesObject.col - 1, tentsTreesObject.row)) {
+            ArrayList<Integer> arrayList = new ArrayList<>();
+            arrayList.add(tentsTreesObject.col - 1);
+            arrayList.add(tentsTreesObject.row);
+            remainingOptions.add(arrayList);
+        }
+
+        // Right from tree
+
+        if(checkConditionsForCoordinates(tentsTreesObject.col, tentsTreesObject.row + 1)) {
+            ArrayList<Integer> arrayList = new ArrayList<>();
+            arrayList.add(tentsTreesObject.col);
+            arrayList.add(tentsTreesObject.row + 1);
+            remainingOptions.add(arrayList);
+        }
+
+        // Left from tree
+
+        if(checkConditionsForCoordinates(tentsTreesObject.col, tentsTreesObject.row - 1)) {
+            ArrayList<Integer> arrayList = new ArrayList<>();
+            arrayList.add(tentsTreesObject.col);
+            arrayList.add(tentsTreesObject.row - 1);
+            remainingOptions.add(arrayList);
+        }
+
         return remainingOptions;
     }
 
-    private TentsTreesObject getTreeFromCoordinates(int col, int row) {
+    private boolean checkConditionsForCoordinates(int col, int row) {
+
+        if(field[col][row].getFieldType() != IField.field_type.EMPTY) {
+            return false;
+        }
+
+        if(colBorderLimit(col) == 0 || rowBorderLimit(row) == 0) {
+            return false;
+        }
+
+        if(field[col + 1][row].getFieldType() == IField.field_type.TENT) {
+            return false;
+        }
+
+        if(field[col - 1][row].getFieldType() == IField.field_type.TENT) {
+            return false;
+        }
+
+        if(field[col][row + 1].getFieldType() == IField.field_type.TENT) {
+            return false;
+        }
+
+        if(field[col][row - 1].getFieldType() == IField.field_type.TENT) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Help methods
+     */
+
+    private boolean oneTentForEachTree() {
         for (TentsTreesObject object : trees) {
-            if (object.col == col && object.row == row) {
-                return object;
+            if(object.col == 3 && object.row == 4) {
+                boolean wait = true;
+            }
+            if(!object.isTentBuild()) {
+                return false;
             }
         }
-        System.out.println("NullPointer");
-        return null;
+        return true;
+    }
+
+    private int colBorderLimit(int col) {
+        return field[col][0].getBorderLimit();
+    }
+
+    private int rowBorderLimit(int row) {
+        return field[0][row].getBorderLimit();
+    }
+
+    private void decreaseBorderLimit(int col, int row) {
+        field[col][0].setBorderLimit(field[col][0].getBorderLimit() - 1);
+        field[0][row].setBorderLimit(field[0][row].getBorderLimit() - 1);
+    }
+
+    private void increaseBorderLimit(int col, int row) {
+        field[col][0].setBorderLimit(field[col][0].getBorderLimit() + 1);
+        field[0][row].setBorderLimit(field[0][row].getBorderLimit() + 1);
     }
 
     private TentsTreesObject getTreeFromTent(int col, int row) {
@@ -198,157 +307,7 @@ public class Heuristics {
                 }
             }
         }
+
         return null;
-    }
-
-    private boolean deleteTent(int col, int row, IField[][] field) {
-        if (field[col][row].getFieldType() == IField.field_type.BORDER) {
-            return false;
-        }
-        if (field[col][row].getFieldType() == IField.field_type.TREE) {
-            return false;
-        }
-        if (field[col][row].getFieldType() == IField.field_type.BLOCKED) {
-            return false;
-        }
-        //TODO Use getTreeFromCoordinates
-        if (field[col][0].getBorderLimit() == 0) {
-            for (int i = 0; i < field[col].length; i++) {
-                if (field[col][i].getFieldType() == IField.field_type.TENT) {
-                    for (TentsTreesObject object : trees) {
-                        if (object.isTentBuild()) {
-                            if (object.tent.get(0) == col && object.tent.get(1) == i) {
-                                field[col][i].setFieldType(IField.field_type.EMPTY);
-                                field[col][0].setBorderLimit(field[col][0].getBorderLimit() + 1);
-                                field[0][i].setBorderLimit(field[0][i].getBorderLimit() + 1);
-                                object.deleteTent();
-                                buildTents--;
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        //TODO Use getTreeFromCoordinates
-        if (field[0][row].getBorderLimit() == 0) {
-            for (int i = 0; i < field.length; i++) {
-                if (field[i][row].getFieldType() == IField.field_type.TENT) {
-                    for (TentsTreesObject object : trees) {
-                        if (object.isTentBuild()) {
-                            if (object.tent.get(0) == i && object.tent.get(1) == row) {
-                                field[i][row].setFieldType(IField.field_type.EMPTY);
-                                field[i][0].setBorderLimit(field[i][0].getBorderLimit() + 1);
-                                field[0][row].setBorderLimit(field[0][row].getBorderLimit() + 1);
-                                object.deleteTent();
-                                buildTents--;
-                                return true;
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
-
-        if (field[col + 1][row].getFieldType() == IField.field_type.TENT) {
-            TentsTreesObject object = getTreeFromTent(col + 1, row);
-            field[col + 1][row].setFieldType(IField.field_type.EMPTY);
-            field[col + 1][0].setBorderLimit(field[col + 1][0].getBorderLimit() + 1);
-            field[0][row].setBorderLimit(field[0][row].getBorderLimit() + 1);
-            if(object == null) {
-                field[col + 1][row].setFieldType(IField.field_type.EMPTY);
-            } else {
-                object.deleteTent();
-            }
-            buildTents--;
-            return true;
-        }
-
-        if (field[col - 1][row].getFieldType() == IField.field_type.TENT) {
-            TentsTreesObject object = getTreeFromTent(col - 1, row);
-            field[col - 1][row].setFieldType(IField.field_type.EMPTY);
-            field[col - 1][0].setBorderLimit(field[col - 1][0].getBorderLimit() + 1);
-            field[0][row].setBorderLimit(field[0][row].getBorderLimit() + 1);
-            if(object == null) {
-                field[col - 1][row].setFieldType(IField.field_type.EMPTY);
-            } else {
-                object.deleteTent();
-            }
-            buildTents--;
-            return true;
-        }
-
-        if (field[col][row + 1].getFieldType() == IField.field_type.TENT) {
-            TentsTreesObject object = getTreeFromTent(col, row + 1);
-            field[col][row + 1].setFieldType(IField.field_type.EMPTY);
-            field[0][row + 1].setBorderLimit(field[0][row + 1].getBorderLimit() + 1);
-            field[col][0].setBorderLimit(field[col][0].getBorderLimit() + 1);
-            if(object == null) {
-                field[col][row + 1].setFieldType(IField.field_type.EMPTY);
-            } else {
-                object.deleteTent();
-            }
-            buildTents--;
-            return true;
-        }
-
-        if (field[col][row - 1].getFieldType() == IField.field_type.TENT) {
-            TentsTreesObject object = getTreeFromTent(col, row - 1);
-            field[col][row - 1].setFieldType(IField.field_type.EMPTY);
-            field[0][row - 1].setBorderLimit(field[0][row - 1].getBorderLimit() + 1);
-            field[col][0].setBorderLimit(field[col][0].getBorderLimit() + 1);
-            if(object == null) {
-                field[col][row - 1].setFieldType(IField.field_type.EMPTY);
-            } else {
-                object.deleteTent();
-            }
-            buildTents--;
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean checkCoordinatesForConditions(int col, int row, IField[][] field) {
-
-        // Prüfe, ob der Platz frei ist
-
-        if (field[col][row].getFieldType() != IField.field_type.EMPTY) {
-            return false;
-        }
-
-        // Prüfe, ob in der Reihe/Spalte noch Zelte gesetzt werden dürfen
-
-        if (field[col][0].getBorderLimit() == 0 || field[0][row].getBorderLimit() == 0) {
-            return false;
-        }
-
-        // Prüfe, ob angrenzent noch ein Zelt ist
-
-        if (field[col + 1][row].getFieldType() == IField.field_type.TENT) {
-            return false;
-        }
-        if (field[col - 1][row].getFieldType() == IField.field_type.TENT) {
-            return false;
-        }
-        if (field[col][row + 1].getFieldType() == IField.field_type.TENT) {
-            return false;
-        }
-        if (field[col][row - 1].getFieldType() == IField.field_type.TENT) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean allTreeHaveATent(ArrayList<TentsTreesObject> trees) {
-        for (TentsTreesObject object : trees) {
-            if (!object.isTentBuild()) {
-                return false;
-            }
-        }
-        return true;
     }
 }

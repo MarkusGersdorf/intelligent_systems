@@ -55,8 +55,9 @@ public class App {
         fieldsToConsole(fields);
         for (IField[][] field : fields) {
             constraintConform = true;
-            heuristics = new Heuristics();
-            heuristics.mostConstrainedVariable(field);
+            if(fieldnumber < 9) {
+                heuristics.mostConstrainedVariable(field);
+            }
 
             checkConstraints(field);
             // wenn nicht alle constraints erfüllt werden, heuristik rekursiv aufrufen
