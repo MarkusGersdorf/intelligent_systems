@@ -29,7 +29,7 @@ public class App {
     private static ArrayList<IField[][]> fields = new ArrayList<>();
     private static final IConstraints cons = new Constraints();
     private static boolean constraintConform = true;
-    private static final Heuristics heuristics = new Heuristics();
+    private static Heuristics heuristics = new Heuristics();
 
     public static void main(String[] args) {
         String projectPath = new File("").getAbsolutePath();
@@ -44,7 +44,10 @@ public class App {
         fieldsToConsole(fields);
         for (IField[][] field : fields) {
             constraintConform = true;
-            heuristics.mostConstrainedVariable(field, fieldnumber);
+            if(fieldnumber == 0) {
+                heuristics = new Heuristics();
+                heuristics.mostConstrainedVariable(field, fieldnumber);
+            }
             checkConstraints(field);
             // wenn nicht alle constraints erfüllt werden, heuristik rekursiv aufrufen
             if (constraintConform) {
