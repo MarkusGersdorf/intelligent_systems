@@ -5,15 +5,15 @@ import java.util.Random;
 
 public class Heuristics {
     Random rand = new Random();
-
     ArrayList<TentsTreesObject> trees = new ArrayList<>();
+    ArrayList<TentsTreesObject> progress = new ArrayList<TentsTreesObject>();
     IField[][] field;
+    int peak = 0;
     int buildTents = 0;
 
-    public boolean mostConstrainedVariable(IField[][] matrix) {
+    public boolean mostConstrainedVariable(IField[][] matrix, int fieldnumber) {
         this.field = matrix;
         int currentRemainingOptionsLevel = 1;
-
         for (int col = 1; col < field.length; col++) {
             for (int row = 1; row < field[col].length; row++) {
                 if (field[col][row].getFieldType() == IField.field_type.TREE) {
@@ -36,7 +36,26 @@ public class Heuristics {
                     }
                 }
             }
-            currentRemainingOptionsLevel++;
+
+
+            int counter = 0;
+            int counter2 = 0;
+            for (TentsTreesObject object : trees) {
+                counter2++;
+                if (object.isTentBuild()) {
+                    counter++;
+                }
+            }
+            if (peak < counter) {
+                peak = counter;
+            }
+            System.out.println("Aktuell läuft die " + fieldnumber + ". CSV-Datei. Bäume mit Zelt: " + counter + " (" + counter2 + ") --> " + peak);
+
+            if (currentRemainingOptionsLevel == 4) {
+                currentRemainingOptionsLevel = 0;
+            } else {
+                currentRemainingOptionsLevel++;
+            }
         }
         return true;
     }
@@ -47,7 +66,7 @@ public class Heuristics {
     private void reCalculateRemainingOptions() {
         for (TentsTreesObject object : trees) {
             if (!object.isTentBuild()) {
-                checkRemainingOptions(object);
+                object.remainingOptions = checkRemainingOptions(object);
             }
         }
     }
@@ -59,37 +78,27 @@ public class Heuristics {
     private boolean buildTent(TentsTreesObject object) {
         if (object.remainingOptions.size() == 0) {
             deleteBlockingTent(object);
-            return true;
-        } else {
-            if (object.remainingOptions.size() == 1) {
-                for (ArrayList<Integer> arrayList : object.remainingOptions) {
-                    //TODO Delete if
-                    if(field[arrayList.get(0)][arrayList.get(1)].getFieldType() != IField.field_type.EMPTY) {
-                        boolean wait = true;
-                    }
-                    object.setTent(arrayList);
-                    field[arrayList.get(0)][arrayList.get(1)].setFieldType(IField.field_type.TENT);
-                    decreaseBorderLimit(arrayList.get(0), arrayList.get(1));
-                    buildTents++;
-                    return true;
-                }
-            } else {
-                // Get random remaining options from the remainingOptions-List
-                int randomNum = rand.nextInt((object.remainingOptions.size() - 1) + 1);
-                ArrayList<Integer> arrayList = object.remainingOptions.get(randomNum);
-                //TODO Delete if
-                if(field[arrayList.get(0)][arrayList.get(1)].getFieldType() != IField.field_type.EMPTY) {
-                    boolean wait = true;
-                }
+        }
+        if (object.remainingOptions.size() == 1) {
+            for (ArrayList<Integer> arrayList : object.remainingOptions) {
                 object.setTent(arrayList);
                 field[arrayList.get(0)][arrayList.get(1)].setFieldType(IField.field_type.TENT);
                 decreaseBorderLimit(arrayList.get(0), arrayList.get(1));
-                buildTents++;
+                progress.add(object);
                 return true;
             }
+        } else {
+            // Get random remaining options from the remainingOptions-List
+            int randomNum = rand.nextInt((object.remainingOptions.size() - 1) + 1);
+            ArrayList<Integer> arrayList = object.remainingOptions.get(randomNum);
+            object.setTent(arrayList);
+            field[arrayList.get(0)][arrayList.get(1)].setFieldType(IField.field_type.TENT);
+            decreaseBorderLimit(arrayList.get(0), arrayList.get(1));
+            return true;
         }
         return false;
     }
+
 
     private void deleteBlockingTent(TentsTreesObject object) {
         ArrayList<ArrayList<Integer>> arrayList = checkRemainingOptions(object);
@@ -112,21 +121,23 @@ public class Heuristics {
                         break;
                 }
             }
-            checkRemainingOptions(object);
         }
+        object.remainingOptions = arrayList;
     }
 
     private boolean cleanUp(int col, int row) {
 
-        if(field[col][row].getFieldType() == IField.field_type.BORDER) {
+        boolean successfully = false;
+
+        if (field[col][row].getFieldType() == IField.field_type.BORDER) {
             return false;
         }
 
-        if(field[col][row].getFieldType() == IField.field_type.TREE) {
+        if (field[col][row].getFieldType() == IField.field_type.TREE) {
             return false;
         }
 
-        if(field[col][row].getFieldType() == IField.field_type.BLOCKED) {
+        if (field[col][row].getFieldType() == IField.field_type.BLOCKED) {
             return false;
         }
 
@@ -138,8 +149,9 @@ public class Heuristics {
                     increaseBorderLimit(col, i);
                     tree.deleteTent();
                     buildTents--;
-                    return true;
+                    successfully = true;
                 }
+
             }
         }
 
@@ -151,64 +163,64 @@ public class Heuristics {
                     increaseBorderLimit(i, row);
                     tree.deleteTent();
                     buildTents--;
-                    return true;
+                    successfully = true;
                 }
             }
         }
 
-        if(field[col + 1][row].getFieldType() == IField.field_type.TENT) {
+        if (field[col + 1][row].getFieldType() == IField.field_type.TENT) {
             TentsTreesObject tree = getTreeFromTent(col + 1, row);
             field[col + 1][row].setFieldType(IField.field_type.EMPTY);
             increaseBorderLimit(col + 1, row);
             tree.deleteTent();
             buildTents--;
-            return true;
+            successfully = true;
         }
 
-        if(field[col - 1][row].getFieldType() == IField.field_type.TENT) {
+        if (field[col - 1][row].getFieldType() == IField.field_type.TENT) {
             TentsTreesObject tree = getTreeFromTent(col - 1, row);
             field[col - 1][row].setFieldType(IField.field_type.EMPTY);
             increaseBorderLimit(col - 1, row);
             tree.deleteTent();
             buildTents--;
-            return true;
+            successfully = true;
         }
 
-        if(field[col][row + 1].getFieldType() == IField.field_type.TENT) {
+        if (field[col][row + 1].getFieldType() == IField.field_type.TENT) {
             TentsTreesObject tree = getTreeFromTent(col, row + 1);
             field[col][row + 1].setFieldType(IField.field_type.EMPTY);
             increaseBorderLimit(col, row + 1);
             tree.deleteTent();
             buildTents--;
-            return true;
+            successfully = true;
         }
 
-        if(field[col][row - 1].getFieldType() == IField.field_type.TENT) {
+        if (field[col][row - 1].getFieldType() == IField.field_type.TENT) {
             TentsTreesObject tree = getTreeFromTent(col, row - 1);
             field[col][row - 1].setFieldType(IField.field_type.EMPTY);
             increaseBorderLimit(col, row - 1);
             tree.deleteTent();
             buildTents--;
-            return true;
+            successfully = true;
         }
 
-        return false;
+        return successfully;
     }
 
     private ArrayList<ArrayList<Integer>> checkRemainingOptions(TentsTreesObject tentsTreesObject) {
         ArrayList<ArrayList<Integer>> remainingOptions = new ArrayList<>();
 
-        // Above the tree
-        if(checkConditionsForCoordinates(tentsTreesObject.col + 1, tentsTreesObject.row)) {
+        // Under the tree
+        if (checkConditionsForCoordinates(tentsTreesObject.col + 1, tentsTreesObject.row)) {
             ArrayList<Integer> arrayList = new ArrayList<>();
             arrayList.add(tentsTreesObject.col + 1);
             arrayList.add(tentsTreesObject.row);
             remainingOptions.add(arrayList);
         }
 
-        // Under the tree
+        // Above the tree
 
-        if(checkConditionsForCoordinates(tentsTreesObject.col - 1, tentsTreesObject.row)) {
+        if (checkConditionsForCoordinates(tentsTreesObject.col - 1, tentsTreesObject.row)) {
             ArrayList<Integer> arrayList = new ArrayList<>();
             arrayList.add(tentsTreesObject.col - 1);
             arrayList.add(tentsTreesObject.row);
@@ -217,7 +229,7 @@ public class Heuristics {
 
         // Right from tree
 
-        if(checkConditionsForCoordinates(tentsTreesObject.col, tentsTreesObject.row + 1)) {
+        if (checkConditionsForCoordinates(tentsTreesObject.col, tentsTreesObject.row + 1)) {
             ArrayList<Integer> arrayList = new ArrayList<>();
             arrayList.add(tentsTreesObject.col);
             arrayList.add(tentsTreesObject.row + 1);
@@ -226,7 +238,7 @@ public class Heuristics {
 
         // Left from tree
 
-        if(checkConditionsForCoordinates(tentsTreesObject.col, tentsTreesObject.row - 1)) {
+        if (checkConditionsForCoordinates(tentsTreesObject.col, tentsTreesObject.row - 1)) {
             ArrayList<Integer> arrayList = new ArrayList<>();
             arrayList.add(tentsTreesObject.col);
             arrayList.add(tentsTreesObject.row - 1);
@@ -238,27 +250,27 @@ public class Heuristics {
 
     private boolean checkConditionsForCoordinates(int col, int row) {
 
-        if(field[col][row].getFieldType() != IField.field_type.EMPTY) {
+        if (field[col][row].getFieldType() != IField.field_type.EMPTY) {
             return false;
         }
 
-        if(colBorderLimit(col) == 0 || rowBorderLimit(row) == 0) {
+        if (colBorderLimit(col) == 0 || rowBorderLimit(row) == 0) {
             return false;
         }
 
-        if(field[col + 1][row].getFieldType() == IField.field_type.TENT) {
+        if (field[col + 1][row].getFieldType() == IField.field_type.TENT) {
             return false;
         }
 
-        if(field[col - 1][row].getFieldType() == IField.field_type.TENT) {
+        if (field[col - 1][row].getFieldType() == IField.field_type.TENT) {
             return false;
         }
 
-        if(field[col][row + 1].getFieldType() == IField.field_type.TENT) {
+        if (field[col][row + 1].getFieldType() == IField.field_type.TENT) {
             return false;
         }
 
-        if(field[col][row - 1].getFieldType() == IField.field_type.TENT) {
+        if (field[col][row - 1].getFieldType() == IField.field_type.TENT) {
             return false;
         }
 
@@ -271,10 +283,7 @@ public class Heuristics {
 
     private boolean oneTentForEachTree() {
         for (TentsTreesObject object : trees) {
-            if(object.col == 3 && object.row == 4) {
-                boolean wait = true;
-            }
-            if(!object.isTentBuild()) {
+            if (!object.isTentBuild()) {
                 return false;
             }
         }
@@ -307,7 +316,6 @@ public class Heuristics {
                 }
             }
         }
-
         return null;
     }
 }

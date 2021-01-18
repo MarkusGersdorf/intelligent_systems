@@ -6,6 +6,7 @@ public class TentsTreesObject {
 
     int row;
     int col;
+    int choosedOption = 0;
     ArrayList<Integer> tent = null;
     ArrayList<ArrayList<Integer>> remainingOptions;
 
@@ -24,5 +25,13 @@ public class TentsTreesObject {
 
     public void deleteTent() {
         this.tent = null;
+    }
+
+    public void setChoosedOption(int option) {
+        choosedOption = option;
+    }
+
+    public int getChoosedOption() {
+        return choosedOption;
     }
 }
