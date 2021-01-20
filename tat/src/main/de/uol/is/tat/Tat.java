@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * )
  */
 
-public class App {
+public class Tat {
     private static final String[] path = new String[12]; // Anzahl der einzulesenden csv Dateien - müssen Namenskonvention einhalten
     private static final ICSVReader reader = new CSVReader();
     private static ArrayList<IField[][]> fields = new ArrayList<>();
@@ -35,7 +35,7 @@ public class App {
 
     public static void main(String[] args) throws IOException {
         String project_path = new File("").getAbsolutePath();
-        String csv_path = project_path.concat("/tat/csv/");
+        String csv_path = project_path.concat("/tat/src/main/resources/");
 
         for(int i = 0; i < 12; i++) {
             path[i] = csv_path.concat("tents_trees_" + i + ".csv");

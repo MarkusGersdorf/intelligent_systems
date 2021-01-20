@@ -13,7 +13,7 @@ import static org.junit.Assert.fail;
 /**
  * Unit test for simple App.
  */
-public class AppTest {
+public class LudoTest {
     /**
      * Rigorous Test :-)
      */
