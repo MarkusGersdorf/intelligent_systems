@@ -1,4 +1,4 @@
-package uol.is.shopSheduling;
+package uol.is.shopScheduling;
 
 public class ShopScheduling {
     public static void main(String[] args) {
