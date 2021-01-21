@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 // TODO: Magic Numbers entfernen / erklären 
 
-public class App extends SimState {
+public class Ludo extends SimState {
     private static final IBoard board = new Board(System.currentTimeMillis());
     private static int rolled;
     private static final ArrayList<IPawn> red_pawns = board.get_my_pawns(IPawn.player.RED);
@@ -33,7 +33,7 @@ public class App extends SimState {
     private static final ArrayList<IPawn> yellow_pawns = board.get_my_pawns(IPawn.player.YELLOW);
     private static final ArrayList<IPawn> black_pawns = board.get_my_pawns(IPawn.player.BLACK);
 
-    public App(long seed) {
+    public Ludo(long seed) {
         super(seed);
     }
 
@@ -46,7 +46,7 @@ public class App extends SimState {
     }
 
     public static void main(String[] args) {
-        doLoop(App.class, args);
+        doLoop(Ludo.class, args);
         System.exit(0);
     }
 
