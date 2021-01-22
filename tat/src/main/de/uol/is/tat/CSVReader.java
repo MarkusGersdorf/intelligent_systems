@@ -4,12 +4,16 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-public class CSVReader {
+public class CSVReader implements ICSVReader {
     private BufferedReader br = null;
     private String line = "";
     private String csvSplitBy = ",";
     private int x;
     private int y;
+
+    public CSVReader() {
+
+    }
 
     public IField[][] convert_csv_to_fields(String path) {
         boolean setY = false;
@@ -60,11 +64,12 @@ public class CSVReader {
                 y = 0;
                 String[] field = line.split(csvSplitBy);
                 for (String s : field) {
-                    if(s.equals("t")) {
-                        fields[x][y] = new Field(IField.field_type.TREE);
-                    }
                     if(!s.equals("") && Character.isDigit(s.charAt(0))) {
                         fields[x][y].set_border_limit(Integer.parseInt(s));
+                    } else if(s.equals("t")) {
+                        fields[x][y] = new Field(IField.field_type.TREE);
+                    } else if(s.equals("x")) {
+                        fields[x][y] = new Field(IField.field_type.TENT);
                     }
                     y++;
                 }
