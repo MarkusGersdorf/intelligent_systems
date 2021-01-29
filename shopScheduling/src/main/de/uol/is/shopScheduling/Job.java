@@ -16,7 +16,10 @@ public class Job {
 
     @Getter
     private final long id;
-    @Getter
+
     private final ArrayList<Operation> operationArrayList;
 
+    public ArrayList<Operation> getOperationArrayList() {
+        return new ArrayList<>(operationArrayList);
+    }
 }

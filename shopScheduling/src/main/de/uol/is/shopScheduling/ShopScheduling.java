@@ -5,6 +5,7 @@ import org.json.simple.parser.ParseException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 
 public class ShopScheduling {
@@ -22,6 +23,10 @@ public class ShopScheduling {
         // save all jobs into this list
         ArrayList<ArrayList<Job>> listArrayList = new ArrayList<>();
 
+        LinkedHashSet<Long> resourcesSet = new LinkedHashSet<>();
+        ArrayList<Resource> resourceArrayList = new ArrayList<>();
+
+
         // now for each file generate java object
         try {
             for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
@@ -31,6 +36,18 @@ public class ShopScheduling {
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
+
+        // search for resources and generate them
+        for (ArrayList<Job> jobs : listArrayList) {
+            for (Job job : jobs) {
+                job.getOperationArrayList().forEach(e -> resourcesSet.add(e.getResource()));
+            }
+        }
+        // generate resources
+        resourcesSet.forEach(resourceId -> resourceArrayList.add(new Resource("Resource: " + resourceId.toString(), resourceId)));
+
+        // start processing
+        resourceArrayList.forEach(System.out::println);
 
     }
 }
