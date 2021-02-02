@@ -5,15 +5,15 @@ import de.uol.is.shopScheduling.Resource;
 
 import java.util.ArrayList;
 
-public class FifoStrategy extends Strategy {
+public class EddStrategy extends Strategy {
+    // TODO: Thomas und Markus
 
-
-    public FifoStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
+    public EddStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         super(jobArrayList, resource);
     }
 
     @Override
     public void print() {
-        System.out.println("Hallo Welt!");
+
     }
 }
