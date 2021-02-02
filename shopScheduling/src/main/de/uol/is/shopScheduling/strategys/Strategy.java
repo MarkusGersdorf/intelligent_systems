@@ -17,4 +17,17 @@ public abstract class Strategy {
 
     public abstract void print();
 
+    public Resource getResource(long resourceNumber) {
+        if(resourceArrayList.get((int) resourceNumber).getId() == resourceNumber) {
+            return resourceArrayList.get((int)resourceNumber);
+        } else {
+            for(Resource resource : resourceArrayList) {
+                if(resource.getId() == resourceNumber) {
+                    return resource;
+                }
+            }
+        }
+        return null;
+    }
+
 }

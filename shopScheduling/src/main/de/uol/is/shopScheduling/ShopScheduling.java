@@ -1,6 +1,7 @@
 package de.uol.is.shopScheduling;
 
 import de.uol.is.shopScheduling.strategys.FifoStrategy;
+import de.uol.is.shopScheduling.strategys.SptStrategy;
 import de.uol.is.shopScheduling.strategys.Strategy;
 import org.json.simple.parser.ParseException;
 
@@ -57,8 +58,8 @@ public class ShopScheduling {
             new ArrayList<>(resourcesSet).forEach(resource -> resourceArrayList.add(new Resource("Resource" + resource.toString(), resource)));
 
             // call different strategies
-            Strategy strategy = new FifoStrategy(jobs, resourceArrayList);
-            //Strategy strategy = new GreedyStrategy(jobs, resourceArrayList);
+            // Strategy strategy = new FifoStrategy(jobs, resourceArrayList);
+            Strategy strategy = new SptStrategy(jobs, resourceArrayList);
             strategy.print();
         }
 

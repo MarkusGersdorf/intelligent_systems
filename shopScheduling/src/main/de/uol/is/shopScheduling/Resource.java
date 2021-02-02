@@ -22,7 +22,7 @@ public class Resource {
         this.id = id;
     }
 
-    private void addOperation(Operation operation) {
+    public void addOperation(Operation operation) {
         operationQueue.add(operation);
     }
 
