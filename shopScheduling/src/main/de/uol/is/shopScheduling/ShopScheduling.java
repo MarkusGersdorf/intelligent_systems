@@ -1,5 +1,7 @@
 package de.uol.is.shopScheduling;
 
+import de.uol.is.shopScheduling.strategys.FifoStrategy;
+import de.uol.is.shopScheduling.strategys.Strategy;
 import org.json.simple.parser.ParseException;
 
 import java.io.File;
@@ -39,15 +41,26 @@ public class ShopScheduling {
 
         // search for resources and generate them
         for (ArrayList<Job> jobs : listArrayList) {
-            for (Job job : jobs) {
-                job.getOperationArrayList().forEach(e -> resourcesSet.add(e.getResource()));
-            }
-        }
-        // generate resources
-        resourcesSet.forEach(resourceId -> resourceArrayList.add(new Resource("Resource: " + resourceId.toString(), resourceId)));
 
-        // start processing
-        resourceArrayList.forEach(System.out::println);
+            // search resources - for each operation in each job - to generate resources
+            resourcesSet.clear();
+            resourceArrayList.clear();
+
+            for (Job job : jobs) {
+                for (Operation operation : job.getOperationArrayList()) {
+                    resourcesSet.add(operation.getResource());
+                }
+            }
+
+            // generate resources - sort set before
+            // TODO: We don't need to sort the set
+            new ArrayList<>(resourcesSet).forEach(resource -> resourceArrayList.add(new Resource("Resource" + resource.toString(), resource)));
+
+            // call different strategies
+            Strategy strategy = new FifoStrategy(jobs, resourceArrayList);
+            //Strategy strategy = new GreedyStrategy(jobs, resourceArrayList);
+            strategy.print();
+        }
 
     }
 }

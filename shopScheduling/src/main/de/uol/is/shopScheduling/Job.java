@@ -22,4 +22,18 @@ public class Job {
     public ArrayList<Operation> getOperationArrayList() {
         return new ArrayList<>(operationArrayList);
     }
+
+    /**
+     * Duration of the entire job
+     *
+     * @return duration from all operations
+     */
+    public long duration() {
+        long duration = 0L;
+        for (Operation operation : operationArrayList) {
+            duration += operation.getDuration();
+        }
+        return duration;
+    }
+
 }
