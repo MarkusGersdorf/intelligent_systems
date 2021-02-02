@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.TreeSet;
 
 public class ShopScheduling {
     public static void main(String[] args) {
@@ -54,7 +55,7 @@ public class ShopScheduling {
 
             // generate resources - sort set before
             // TODO: We don't need to sort the set
-            new ArrayList<>(resourcesSet).forEach(resource -> resourceArrayList.add(new Resource("Resource" + resource.toString(), resource)));
+            new TreeSet<>(resourcesSet).forEach(resource -> resourceArrayList.add(new Resource("Resource" + resource.toString(), resource)));
 
             // call different strategies
             Strategy strategy = new FifoStrategy(jobs, resourceArrayList);
