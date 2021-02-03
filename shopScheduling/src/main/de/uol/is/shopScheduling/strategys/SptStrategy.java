@@ -23,19 +23,7 @@ public class SptStrategy extends Strategy {
     public SptStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         super(jobArrayList, resource);
         sort();
-        start();
-    }
-
-    /**
-     * In this method, the strategy is applied and the result or solution is produced.
-     * After sorting the jobs by duration, the contained operations are assigned to the machines in order.
-     */
-    public void start() {
-        for(Job job : jobArrayList) {
-            for(Operation operation : job.getOperationArrayList()) {
-                getResource(operation.getResource()).addOperation(operation);
-            }
-        }
+        planning();
     }
 
     /**

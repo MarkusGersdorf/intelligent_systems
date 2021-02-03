@@ -34,7 +34,7 @@ public class Resource {
         return operationQueue.size();
     }
 
-    private Queue<Operation> getOperations() {
+    public Queue<Operation> getOperations() {
         return new LinkedList<>(operationQueue);
     }
 
