@@ -17,13 +17,15 @@ public class SptStrategy extends Strategy {
 
     /**
      * Basic constructor
+     *
      * @param jobArrayList a arrayList which contains all jobs
-     * @param resource a arrayList which contains the usable machines.
+     * @param resource     a arrayList which contains the usable machines.
      */
     public SptStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         super(jobArrayList, resource);
         sort();
         planning();
+        boolean test = true;
     }
 
     /**
@@ -32,6 +34,49 @@ public class SptStrategy extends Strategy {
     @Override
     public void print() {
 
+    }
+
+    public void planning() {
+        System.out.println("New planning");
+        for (Job job : jobArrayList) {
+            long verplanteZeit = 0;
+            for (Operation operation : job.getOperationArrayList()) {
+                Resource maschine = getResource(operation.getResource());
+                long dauerDerOperation = operation.getDuration();
+
+                if (maschine.getOperations().size() == 0) {
+                    operation.setStartTime(verplanteZeit);
+                    operation.setEndTime(verplanteZeit + dauerDerOperation);
+                    verplanteZeit += dauerDerOperation;
+                    maschine.addOperation(operation);
+                } else {
+                    boolean hinzugefügt = false;
+                    boolean blockiert = false;
+
+                    while(!hinzugefügt) {
+                        System.out.println(verplanteZeit);
+                        for (Operation operationInMaschine : maschine.getOperations()) {
+                            if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
+                                    ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime()) ){
+                                verplanteZeit = operationInMaschine.getEndTime();
+                                blockiert = true;
+                                break;
+                            }
+                        }
+
+                        if(!blockiert) {
+                            operation.setStartTime(verplanteZeit);
+                            operation.setEndTime(verplanteZeit + operation.getDuration());
+                            maschine.addOperation(operation);
+                            verplanteZeit += operation.getDuration();
+                            hinzugefügt = true;
+                        } else {
+                            blockiert = false;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**

@@ -31,44 +31,4 @@ public abstract class Strategy {
         return null;
     }
 
-    public void planning() {
-        for(Job job : jobArrayList) {
-            long planedTime = 0;
-            for(Operation operation : job.getOperationArrayList()) {
-                addOperationToResource(getResource(operation.getResource()), operation, planedTime);
-            }
-        }
-    }
-
-    protected void addOperationToResource(Resource resource, Operation new_operation, long planedTime) {
-        boolean added = false;
-
-        if(resource.getOperations().size() == 0) {
-            new_operation.setStartTime(planedTime);
-            new_operation.setEndTime(planedTime + new_operation.getDuration());
-            resource.addOperation(new_operation);
-            added = true;
-        }
-
-        while(!added) {
-            boolean blocked = false;
-            for(Operation operation : resource.getOperations()) {
-                if((operation.getStartTime() >= planedTime && operation.getStartTime() <= planedTime + new_operation.getDuration()) ||
-                   (operation.getEndTime() >= planedTime && operation.getEndTime() <= planedTime + new_operation.getDuration())){
-
-                    blocked = true;
-                    break;
-                }
-            }
-            if(!blocked) {
-                new_operation.setStartTime(planedTime);
-                new_operation.setEndTime(planedTime + new_operation.getDuration());
-                resource.addOperation(new_operation);
-                added = true;
-            } else {
-                planedTime++;
-            }
-        }
-    }
-
 }
