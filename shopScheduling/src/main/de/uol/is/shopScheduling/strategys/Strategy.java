@@ -19,6 +19,7 @@ public abstract class Strategy {
 
     public void print() {
         //System.out.println("Print strategy");
+        print_to_console();
         printDiagram();
     }
 

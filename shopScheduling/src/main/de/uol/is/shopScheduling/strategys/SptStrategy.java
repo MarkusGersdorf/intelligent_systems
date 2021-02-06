@@ -24,6 +24,7 @@ public class SptStrategy extends Strategy {
         super(jobArrayList, resource);
         sort();
         planning();
+        print();
     }
 
     /**
