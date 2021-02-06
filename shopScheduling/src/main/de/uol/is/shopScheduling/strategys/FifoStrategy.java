@@ -10,5 +10,16 @@ public class FifoStrategy extends Strategy {
 
     public FifoStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         super(jobArrayList, resource);
+        sort();
+    }
+
+    public void sort() {
+        jobArrayList.sort((j1, j2) -> {
+            return (int) (j1.getId() - j2.getId()); // Ascending
+        });
+
+        for (Job j : jobArrayList) {
+            System.out.println((j.getId()));
+        }
     }
 }
