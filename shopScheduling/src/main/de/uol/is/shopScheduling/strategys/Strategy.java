@@ -73,7 +73,8 @@ public abstract class Strategy {
 
         for (Resource resource : resourceArrayList) {
             for (int i = (int) minDuration; i < (int) maxDuration; i++) {
-                System.out.print("|" + StringUtils.leftPad(resource.getOperation(i) + "|\t", 7, "X"));
+                String resourceString = resource.getOperation(i) == -1.0 ? " " : "" + i + "";
+                System.out.print("|" + StringUtils.leftPad(resourceString + "|\t", 6, " "));
             }
             System.out.println();
         }
