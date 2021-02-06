@@ -12,8 +12,4 @@ public class EddStrategy extends Strategy {
         super(jobArrayList, resource);
     }
 
-    @Override
-    public void print() {
-
-    }
 }

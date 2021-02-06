@@ -11,9 +11,4 @@ public class FifoStrategy extends Strategy {
     public FifoStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         super(jobArrayList, resource);
     }
-
-    @Override
-    public void print() {
-        System.out.println("Hallo Welt!");
-    }
 }
