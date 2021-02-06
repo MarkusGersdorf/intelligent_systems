@@ -1,7 +1,6 @@
 package de.uol.is.shopScheduling;
 
 import de.uol.is.shopScheduling.strategys.FifoStrategy;
-import de.uol.is.shopScheduling.strategys.SptStrategy;
 import de.uol.is.shopScheduling.strategys.Strategy;
 import org.json.simple.parser.ParseException;
 
@@ -60,10 +59,12 @@ public class ShopScheduling {
 
             // call different strategies
             // Strategy strategy = new FifoStrategy(jobs, resourceArrayList);
-            Strategy strategy = new SptStrategy(jobs, resourceArrayList);
+            //Strategy strategy = new SptStrategy(jobs, resourceArrayList);
             //strategy.print();
-            Strategy fifo = new FifoStrategy(jobs, resourceArrayList);
-            fifo.print();
+            Strategy strategy = new FifoStrategy(jobs, resourceArrayList);
+            //strategy.print();
+            //Strategy fifo = new FifoStrategy(jobs, resourceArrayList);
+            //fifo.print();
         }
 
     }

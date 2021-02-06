@@ -38,6 +38,15 @@ public class Resource {
         return new LinkedList<>(operationQueue);
     }
 
+    public long getOperation(long pointInTime) {
+        for (Operation operation : operationQueue) {
+            if (operation.operationExists(pointInTime)) {
+                return operation.getIndex();
+            }
+        }
+        return -1L;
+    }
+
     private long getDuration() {
         long duration = 0L;
         for (Operation operation : operationQueue) {

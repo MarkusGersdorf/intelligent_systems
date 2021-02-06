@@ -11,6 +11,8 @@ public class FifoStrategy extends Strategy {
     public FifoStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         super(jobArrayList, resource);
         sort();
+        planning();
+        print();
     }
 
     public void sort() {

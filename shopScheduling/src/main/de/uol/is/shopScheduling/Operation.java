@@ -1,7 +1,5 @@
 package de.uol.is.shopScheduling;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,5 +27,12 @@ public class Operation {
         this.index = index;
         this.duration = duration;
         this.resource = resource;
+    }
+
+    public boolean operationExists(long pointInTime) {
+        for (int i = (int) startTime; i < (int) endTime; i++) {
+            if (i == pointInTime) return true;
+        }
+        return false;
     }
 }
