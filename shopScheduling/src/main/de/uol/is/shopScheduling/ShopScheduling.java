@@ -60,11 +60,10 @@ public class ShopScheduling {
 
             // call different strategies
             // Strategy strategy = new FifoStrategy(jobs, resourceArrayList);
-            Strategy strategy = new SptStrategy(jobs, resourceArrayList);
-            //strategy.print();
+            Strategy spt = new SptStrategy(jobs, resourceArrayList);
+            spt.print_to_console();
             Strategy fifo = new FifoStrategy(jobs, resourceArrayList);
-            fifo.print();
+            //fifo.print_to_console();
         }
-
     }
 }
