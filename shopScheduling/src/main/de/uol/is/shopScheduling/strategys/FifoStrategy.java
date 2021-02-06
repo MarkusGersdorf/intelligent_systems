@@ -19,9 +19,5 @@ public class FifoStrategy extends Strategy {
         jobArrayList.sort((j1, j2) -> {
             return (int) (j1.getId() - j2.getId()); // Ascending
         });
-
-        for (Job j : jobArrayList) {
-            System.out.println((j.getId()));
-        }
     }
 }

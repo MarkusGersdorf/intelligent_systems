@@ -22,6 +22,44 @@ public abstract class Strategy {
         printDiagram();
     }
 
+    public void print_to_console() {
+        // Tabelle nach Job sortiert
+        System.out.print("JobID\t\t");
+        Job job = jobArrayList.get(0);
+        int steps = 0;
+        for (Operation op : job.getOperationArrayList()) {
+            System.out.print(" Step " + steps + " \t");
+            steps += 1;
+        }
+        System.out.println();
+        for (Job j : jobArrayList) {
+            System.out.print(j.getId() + "\t\t\t");
+            for (Operation op : j.getOperationArrayList()) {
+                System.out.print(" " + op.getResource() + "," + op.getDuration() + " \t\t");
+            }
+            System.out.println();
+        }
+
+        // Tabelle nach Ressource sortiert
+        /*
+        System.out.print("RessourceID\t");
+        Resource res = resourceArrayList.get(0);
+        int steps = 0;
+        for (Operation op : res.getOperations()) {
+            System.out.print(" Step " + steps + " \t");
+            steps += 1;
+        }
+        System.out.println();
+        for (Resource r : resourceArrayList) {
+            System.out.print(r.getId() + "\t\t\t");
+            for (Operation op : r.getOperations()) {
+                System.out.print(" " + op.getResource() + "," + op.getDuration() + " \t\t");
+            }
+            System.out.println("");
+        }
+        */
+    }
+
     public void printDiagram() {
         long minDuration = Long.MAX_VALUE;
         long maxDuration = Long.MIN_VALUE;
@@ -58,10 +96,10 @@ public abstract class Strategy {
                     verplanteZeit += dauerDerOperation;
                     machine.addOperation(operation);
                 } else {
-                    boolean hinzugefügt = false;
+                    boolean hinzugefuegt = false;
                     boolean blockiert = false;
 
-                    while (!hinzugefügt) {
+                    while (!hinzugefuegt) {
                         //System.out.println(verplanteZeit);
                         for (Operation operationInMaschine : machine.getOperations()) {
                             if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
@@ -77,7 +115,7 @@ public abstract class Strategy {
                             operation.setEndTime(verplanteZeit + operation.getDuration());
                             machine.addOperation(operation);
                             verplanteZeit += operation.getDuration();
-                            hinzugefügt = true;
+                            hinzugefuegt = true;
                         } else {
                             blockiert = false;
                         }
@@ -86,4 +124,5 @@ public abstract class Strategy {
             }
         }
     }
+
 }
