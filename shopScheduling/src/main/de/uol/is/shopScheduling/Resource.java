@@ -22,7 +22,7 @@ public class Resource {
         this.id = id;
     }
 
-    private void addOperation(Operation operation) {
+    public void addOperation(Operation operation) {
         operationQueue.add(operation);
     }
 
@@ -34,7 +34,7 @@ public class Resource {
         return operationQueue.size();
     }
 
-    private Queue<Operation> getOperations() {
+    public Queue<Operation> getOperations() {
         return new LinkedList<>(operationQueue);
     }
 
