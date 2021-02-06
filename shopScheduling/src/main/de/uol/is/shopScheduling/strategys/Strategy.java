@@ -17,7 +17,7 @@ public abstract class Strategy {
     }
 
     public void print() {
-        System.out.println("Print strategy");
+        //System.out.println("Print strategy");
     }
 
     public Resource getResource(long resourceNumber) {
@@ -34,7 +34,7 @@ public abstract class Strategy {
     }
 
     protected void planning() {
-        System.out.println("New planning");
+        //System.out.println("New planning");
         for (Job job : jobArrayList) {
             long verplanteZeit = 0;
             for (Operation operation : job.getOperationArrayList()) {
@@ -51,7 +51,7 @@ public abstract class Strategy {
                     boolean blockiert = false;
 
                     while (!hinzugefügt) {
-                        System.out.println(verplanteZeit);
+                        //System.out.println(verplanteZeit);
                         for (Operation operationInMaschine : maschine.getOperations()) {
                             if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
                                     ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime())) {
