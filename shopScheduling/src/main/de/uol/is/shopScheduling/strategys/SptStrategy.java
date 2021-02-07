@@ -25,19 +25,10 @@ public class SptStrategy extends Strategy {
         super(jobArrayList, resource);
         sort();
         planning();
-        boolean test = true;
-    }
-
-    /**
-     * This method is overridden from the super class. The method is used to output a table with the solutions.
-     */
-    @Override
-    public void print() {
-
+        print();
     }
 
     public void planning() {
-        System.out.println("New planning");
         for (Job job : jobArrayList) {
             long verplanteZeit = 0;
             for (Operation operation : job.getOperationArrayList()) {
@@ -54,7 +45,6 @@ public class SptStrategy extends Strategy {
                     boolean blockiert = false;
 
                     while(!hinzugefügt) {
-                        System.out.println(verplanteZeit);
                         for (Operation operationInMaschine : maschine.getOperations()) {
                             if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
                                     ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime()) ||
