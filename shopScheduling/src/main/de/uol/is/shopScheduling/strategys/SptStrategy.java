@@ -57,7 +57,10 @@ public class SptStrategy extends Strategy {
                         System.out.println(verplanteZeit);
                         for (Operation operationInMaschine : maschine.getOperations()) {
                             if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
-                                    ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime()) ){
+                                    ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime()) ||
+                                    (operationInMaschine.getStartTime() > verplanteZeit && operationInMaschine.getStartTime() < (verplanteZeit + dauerDerOperation)) ||
+                                    (operationInMaschine.getEndTime() > verplanteZeit && operationInMaschine.getEndTime() < (verplanteZeit + dauerDerOperation)) ||
+                                    (verplanteZeit == operationInMaschine.getStartTime() && verplanteZeit + dauerDerOperation == operationInMaschine.getEndTime())) {
                                 verplanteZeit = operationInMaschine.getEndTime();
                                 blockiert = true;
                                 break;
