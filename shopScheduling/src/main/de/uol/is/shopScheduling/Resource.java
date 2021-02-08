@@ -41,7 +41,7 @@ public class Resource {
     public long getOperation(long pointInTime) {
         for (Operation operation : operationQueue) {
             if (operation.operationExists(pointInTime)) {
-                return operation.getIndex();
+                return operation.getJobId();
             }
         }
         return -1L;
