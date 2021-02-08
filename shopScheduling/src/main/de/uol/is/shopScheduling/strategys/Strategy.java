@@ -17,6 +17,8 @@ public abstract class Strategy {
         this.resourceArrayList = resource;
     }
 
+    protected abstract void sort();
+
     public void print() {
         //System.out.println("Print strategy");
         print_to_console();

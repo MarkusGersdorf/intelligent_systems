@@ -30,6 +30,7 @@ public class SptStrategy extends Strategy {
     /**
      * This method is used to sort the jobArrayList by the duration of the operation.
      */
+    @Override
     public void sort() {
         jobArrayList.sort((j1, j2) -> {
             return (int) (j1.duration() - j2.duration()); // Ascending

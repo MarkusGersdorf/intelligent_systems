@@ -12,4 +12,9 @@ public class EddStrategy extends Strategy {
         super(jobArrayList, resource);
     }
 
+    @Override
+    protected void sort() {
+
+    }
+
 }
