@@ -4,7 +4,6 @@ import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
 import de.uol.is.shopScheduling.Resource;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Queue;
 
