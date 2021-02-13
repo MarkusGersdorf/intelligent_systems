@@ -15,6 +15,9 @@ public abstract class Strategy {
     public Strategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         this.jobArrayList = jobArrayList;
         this.resourceArrayList = resource;
+        sort();
+        planning();
+        print();
     }
 
     protected abstract void sort();
@@ -42,25 +45,6 @@ public abstract class Strategy {
             }
             System.out.println();
         }
-
-        // Tabelle nach Ressource sortiert
-        /*
-        System.out.print("RessourceID\t");
-        Resource res = resourceArrayList.get(0);
-        int steps = 0;
-        for (Operation op : res.getOperations()) {
-            System.out.print(" Step " + steps + " \t");
-            steps += 1;
-        }
-        System.out.println();
-        for (Resource r : resourceArrayList) {
-            System.out.print(r.getId() + "\t\t\t");
-            for (Operation op : r.getOperations()) {
-                System.out.print(" " + op.getResource() + "," + op.getDuration() + " \t\t");
-            }
-            System.out.println("");
-        }
-        */
     }
 
     public void printDiagram() {

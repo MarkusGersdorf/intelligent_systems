@@ -11,9 +11,6 @@ public class RandomStrategy extends Strategy {
 
     public RandomStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         super(jobArrayList, resource);
-        sort();
-        planning();
-        print();
     }
 
     @Override
