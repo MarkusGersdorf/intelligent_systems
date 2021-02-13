@@ -3,8 +3,6 @@ package de.uol.is.shopScheduling.solutionObject;
 import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
 import de.uol.is.shopScheduling.Resource;
-import de.uol.is.shopScheduling.strategys.FifoStrategy;
-import de.uol.is.shopScheduling.strategys.Strategy;
 
 import java.util.ArrayList;
 
@@ -71,24 +69,13 @@ public class EvolutionStrategy extends Algorithm {
     }
 
     /**
-     * initialize the population
-     *
-     * @param jobArrayList all jobs
-     * @return init population
-     */
-    private ArrayList<Resource> initialize(ArrayList<Job> jobArrayList) {
-        Strategy strategy = new FifoStrategy(jobArrayList, resourceArrayList);
-        return strategy.getResourceArrayList();
-    }
-
-    /**
      * mutated population
      *
      * @param resourcesOld old population
      * @return mutate population
      */
     private ArrayList<Resource> mutation(ArrayList<Resource> resourcesOld) {
-        // TODO: implement me - mutation must meet requirements!
+
         return new ArrayList<>();
     }
 }
