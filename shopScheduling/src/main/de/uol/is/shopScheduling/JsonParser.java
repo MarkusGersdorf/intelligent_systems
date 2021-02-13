@@ -58,7 +58,7 @@ public class JsonParser {
                 long duration = (long) jsonOperation.get("duration");
                 long resource = (long) jsonOperation.get("resource");
 
-                operationArrayList.add(new Operation(index, duration, resource));
+                operationArrayList.add(new Operation(index, duration, resource, (long) jsonObject.get("id")));
             });
         });
         return jobArrayList;

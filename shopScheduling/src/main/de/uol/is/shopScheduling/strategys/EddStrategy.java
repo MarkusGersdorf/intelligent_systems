@@ -13,7 +13,8 @@ public class EddStrategy extends Strategy {
     }
 
     @Override
-    public void print() {
+    protected void sort() {
 
     }
+
 }

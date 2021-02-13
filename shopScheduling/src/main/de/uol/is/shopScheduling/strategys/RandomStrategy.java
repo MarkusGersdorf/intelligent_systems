@@ -4,11 +4,12 @@ import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Resource;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
-public class FifoStrategy extends Strategy {
+public class RandomStrategy extends Strategy {
 
-
-    public FifoStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
+    public RandomStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         super(jobArrayList, resource);
         sort();
         planning();
@@ -17,8 +18,6 @@ public class FifoStrategy extends Strategy {
 
     @Override
     public void sort() {
-        jobArrayList.sort((j1, j2) -> {
-            return (int) (j1.getId() - j2.getId()); // Ascending
-        });
+        Collections.shuffle(jobArrayList, new Random()); // Generate a random ranking
     }
 }
