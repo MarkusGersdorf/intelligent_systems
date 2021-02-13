@@ -7,8 +7,19 @@ import de.uol.is.shopScheduling.solutionObject.SolutionObject;
 
 import java.util.ArrayList;
 
+/**
+ * Superclass, which is to be used by all heuristics
+ *
+ * @author Joosten Steenhusen, Marcel Peplies
+ */
 public abstract class Strategy extends SolutionObject {
 
+    /**
+     * constructor calls the functions for sorting and planning the heuristics directly after creating the class
+     *
+     * @param jobArrayList List of jobs
+     * @param resource     List of resources
+     */
     public Strategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         this.jobArrayList = jobArrayList;
         this.resourceArrayList = resource;
@@ -18,9 +29,18 @@ public abstract class Strategy extends SolutionObject {
         printDiagram();
     }
 
+    /**
+     * Implemented by the heuristic and by this it is specified in which order
+     * the jobs are selected by the scheduling function
+     */
     protected abstract void sort();
 
+    /**
+     * The planning function uses the list sorted by the heuristics
+     * to create a plan. This function implements all dependencies
+     */
     protected void planning() {
+        // TODO-Marcel&Joosten: Ihr hattet noch änderungen an dieser funktion. Pflegt die bitte ein :-)
         //System.out.println("New planning");
         for (Job job : jobArrayList) {
             long verplanteZeit = 0;
@@ -62,5 +82,4 @@ public abstract class Strategy extends SolutionObject {
             }
         }
     }
-
 }

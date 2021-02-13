@@ -9,6 +9,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 
+/**
+ * This is a solution object. This solution object provides functions to output the solution visually in the console.
+ *
+ * @author Thomas Cwill, Markus Gersdorf
+ * @version 1.0
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class SolutionObject {
@@ -16,6 +22,9 @@ public abstract class SolutionObject {
     protected ArrayList<Job> jobArrayList;
     protected ArrayList<Resource> resourceArrayList;
 
+    /**
+     * Job Shop Scheduling table
+     */
     public void printToConsole() {
         // Tabelle nach Job sortiert
         System.out.print("JobID\t\t");
@@ -35,6 +44,9 @@ public abstract class SolutionObject {
         }
     }
 
+    /**
+     * Job Shop Scheduling diagram
+     */
     public void printDiagram() {
         long minDuration = Long.MAX_VALUE;
         long maxDuration = Long.MIN_VALUE;
