@@ -71,4 +71,28 @@ public abstract class SolutionObject {
             System.out.print("|" + StringUtils.leftPad(i + "|\t", 6, "0"));
         }
     }
+
+    /**
+     * Check for constraints
+     * @return true, if all constraints are fulfilled
+     */
+    public boolean check_for_constraints() {
+        return true;
+    }
+
+    /**
+     * Check if one job (and his operations) is processed on one machine at a time
+     * @return
+     */
+    protected boolean one_job_at_a_time() {
+        return true;
+    }
+
+    /**
+     * Check if all operations are in ascending id order
+     * @return
+     */
+    protected boolean check_ascending_operation_order() {
+        return true;
+    }
 }

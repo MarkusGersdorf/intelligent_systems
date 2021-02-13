@@ -1,6 +1,7 @@
 package de.uol.is.shopScheduling.solutionObject;
 
 import de.uol.is.shopScheduling.Job;
+import de.uol.is.shopScheduling.Operation;
 import de.uol.is.shopScheduling.Resource;
 
 import java.util.ArrayList;
@@ -15,6 +16,17 @@ public class BABAlgorithm extends Algorithm {
 
     @Override
     public void optimize() {
+        for (Job j : jobArrayList) {
+            for (Operation o : j.getOperationArrayList()) {
 
+            }
+        }
+    }
+
+
+
+
+    private boolean constraint_makespan() {
+        return true;
     }
 }
