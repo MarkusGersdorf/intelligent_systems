@@ -88,7 +88,7 @@ public class EvolutionStrategy extends Algorithm {
                 // set queue with new values
                 resource.setOperationQueue(new LinkedList<>(operationArrayList));
             }
-        } while (!check_for_constraints());
+        } while (!check_for_constraints(solutionList));
 
         return solutionList;
     }

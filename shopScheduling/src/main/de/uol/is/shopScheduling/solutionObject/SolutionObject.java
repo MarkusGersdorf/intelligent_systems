@@ -74,9 +74,10 @@ public abstract class SolutionObject {
 
     /**
      * Check for constraints
+     *
      * @return true, if all constraints are fulfilled
      */
-    public boolean check_for_constraints() {
+    public boolean check_for_constraints(ArrayList<Resource> resourceArrayList) {
         return true;
     }
 
