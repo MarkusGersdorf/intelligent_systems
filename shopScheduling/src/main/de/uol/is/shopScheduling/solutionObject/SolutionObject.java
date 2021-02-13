@@ -4,6 +4,7 @@ import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
 import de.uol.is.shopScheduling.Resource;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 public abstract class SolutionObject {
 
     protected ArrayList<Job> jobArrayList;
+    @Getter
     protected ArrayList<Resource> resourceArrayList;
 
     /**
