@@ -37,6 +37,7 @@ public class EvolutionStrategy extends Algorithm {
         resourceArrayList = initialize(jobArrayList);
 
         while (searchCounter < 1000) {
+            searchCounter++;
             // generate mutation
             ArrayList<Resource> mutation = mutation(resourceArrayList);
 
@@ -85,7 +86,7 @@ public class EvolutionStrategy extends Algorithm {
      * @return mutate population
      */
     private ArrayList<Resource> mutation(ArrayList<Resource> resourcesOld) {
-        // TODO: implement me
+        // TODO: implement me - mutation must meet requirements!
         return new ArrayList<>();
     }
 }
