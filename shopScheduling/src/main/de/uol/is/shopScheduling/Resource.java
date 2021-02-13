@@ -15,6 +15,8 @@ public class Resource {
     @Setter
     private long id;
 
+    @Getter
+    @Setter
     private Queue<Operation> operationQueue = new LinkedList<>();
 
     public Resource(String name, long id) {

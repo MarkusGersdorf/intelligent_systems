@@ -5,6 +5,8 @@ import de.uol.is.shopScheduling.Operation;
 import de.uol.is.shopScheduling.Resource;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 
 /**
  * Evolutionary 1+1 algorithm
@@ -13,7 +15,6 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class EvolutionStrategy extends Algorithm {
-
 
     /**
      * Basic constructor
@@ -75,7 +76,20 @@ public class EvolutionStrategy extends Algorithm {
      * @return mutate population
      */
     private ArrayList<Resource> mutation(ArrayList<Resource> resourcesOld) {
+        ArrayList<Resource> solutionList = new ArrayList<>(resourcesOld);
 
-        return new ArrayList<>();
+        // do while because we want to mutate one time
+        do {
+            for (Resource resource : solutionList) {
+                // queue to array list
+                ArrayList<Operation> operationArrayList = new ArrayList<>(resource.getOperationQueue());
+                // shuffle list
+                Collections.shuffle(operationArrayList);
+                // set queue with new values
+                resource.setOperationQueue(new LinkedList<>(operationArrayList));
+            }
+        } while (!check_for_constraints());
+
+        return solutionList;
     }
 }
