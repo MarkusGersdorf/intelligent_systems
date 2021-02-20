@@ -101,6 +101,9 @@ public abstract class SolutionObject {
         return true;
     }
 
+        @// TODO: 20.02.2021  1. In der Maschine nach überschreitungen schauen || 2. Reihenfolge im Job checken.
+
+
     /**
      * Check if one job (and his operations) is processed on one machine at a time
      * @return

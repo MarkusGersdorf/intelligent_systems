@@ -57,11 +57,13 @@ public abstract class Strategy extends SolutionObject {
                     boolean hinzugefuegt = false;
                     boolean blockiert = false;
 
-                    while (!hinzugefuegt) {
-                        //System.out.println(verplanteZeit);
+                    while(!hinzugefuegt) {
                         for (Operation operationInMaschine : machine.getOperations()) {
                             if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
-                                    ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime())) {
+                                    ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime()) ||
+                                    (operationInMaschine.getStartTime() > verplanteZeit && operationInMaschine.getStartTime() < (verplanteZeit + dauerDerOperation)) ||
+                                    (operationInMaschine.getEndTime() > verplanteZeit && operationInMaschine.getEndTime() < (verplanteZeit + dauerDerOperation)) ||
+                                    (verplanteZeit == operationInMaschine.getStartTime() && verplanteZeit + dauerDerOperation == operationInMaschine.getEndTime())) {
                                 verplanteZeit = operationInMaschine.getEndTime();
                                 blockiert = true;
                                 break;
