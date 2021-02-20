@@ -37,7 +37,8 @@ public class Metaheuristic extends Algorithm {
             // Maybe something better?
             Collections.shuffle(new_resources_array_list);
 
-            if (total_processing_time(new_resources_array_list) < total_processing_time(resourceArrayList)) {
+            if (check_for_constraints(new_resources_array_list) &&
+                    total_processing_time(new_resources_array_list) < total_processing_time(resourceArrayList)) {
                 resourceArrayList = new_resources_array_list;
                 success = true;
                 break;
