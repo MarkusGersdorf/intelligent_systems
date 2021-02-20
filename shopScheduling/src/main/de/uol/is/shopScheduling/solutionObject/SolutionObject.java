@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 /**
  * This is a solution object. This solution object provides functions to output the solution visually in the console.
  *
- * @author Thomas Cwill, Markus Gersdorf
- * @version 1.0
+ * @author Thomas Cwill, Markus Gersdorf, Joosten Steenhusen, Marcel Peplies
+ * @version 2.0
  */
 @AllArgsConstructor
 @NoArgsConstructor
@@ -98,25 +99,85 @@ public abstract class SolutionObject {
      * @return true, if all constraints are fulfilled
      */
     protected boolean check_for_constraints(ArrayList<Resource> resourceArrayList) {
-        return true;
+        return one_job_at_a_time(resourceArrayList) && check_ascending_operation_order(resourceArrayList);
     }
-
-        @// TODO: 20.02.2021  1. In der Maschine nach überschreitungen schauen || 2. Reihenfolge im Job checken.
 
 
     /**
      * Check if one job (and his operations) is processed on one machine at a time
-     * @return
+     *
+     * @return True if one job (and his Operations) is processed on one machine at a time
      */
-    protected boolean one_job_at_a_time() {
+    protected boolean one_job_at_a_time(ArrayList<Resource> resourceArrayList) {
+        for (Resource resource : resourceArrayList) {
+            for (Operation operation : resource.getOperations()) {
+                for (Operation operation_check : resource.getOperations()) {
+                    // If the same Job = break.
+                    if (operation.getJobId() == operation_check.getJobId()) {
+                        break;
+                    }
+
+                    // Same start or end point not allowed
+                    if (operation.getStartTime() == operation_check.getStartTime() || operation.getEndTime() == operation_check.getEndTime()) {
+                        return false;
+                    }
+
+                    // Other Operation begins before the Start and ends in the middle of the Operation = not allowed.
+                    if (operation.getStartTime() > operation_check.getStartTime() && operation.getStartTime() < operation_check.getEndTime()) {
+                        return false;
+                    }
+
+                    // Other Operation begins before the End and goes over the end of the Operation = not allowed.
+                    if (operation.getEndTime() > operation_check.getStartTime() && operation.getEndTime() < operation_check.getEndTime()) {
+                        return false;
+                    }
+
+                    // Other Operation starts and ends between the Operation = not allowed.
+                    if (operation.getStartTime() > operation_check.getStartTime() && operation.getEndTime() > operation_check.getEndTime()) {
+                        return false;
+                    }
+
+                    // Other Operation starts before the Operation and ends after the Operation = not allowed
+                    if (operation.getStartTime() < operation_check.getStartTime() && operation.getEndTime() < operation_check.getEndTime()) {
+                        return false;
+                    }
+                }
+            }
+        }
         return true;
     }
 
     /**
      * Check if all operations are in ascending id order
-     * @return
+     *
+     * @return True if all operations are in the correct order.
      */
-    protected boolean check_ascending_operation_order() {
+    protected boolean check_ascending_operation_order(ArrayList<Resource> resourceArrayList) {
+        for (Job job : jobArrayList) {
+            long jobId = job.getId();
+            long plannedTime = 0;
+            for (Operation operation : job.getOperationArrayList()) {
+                long resourceId = operation.getResource();
+                for (Operation operationInResource : getOperationsListFromResource(resourceId)) {
+                    if (operationInResource.getJobId() == jobId) {
+                        if (plannedTime > operationInResource.getStartTime()) {
+                            return false;
+                        } else {
+                            plannedTime = operationInResource.getStartTime();
+                        }
+                    }
+                }
+            }
+        }
         return true;
+    }
+
+    public Queue<Operation> getOperationsListFromResource(long resourceId) {
+        for (Resource resource : resourceArrayList) {
+            if (resource.getId() == resourceId) {
+                return resource.getOperationQueue();
+            }
+        }
+        return null;
     }
 }
