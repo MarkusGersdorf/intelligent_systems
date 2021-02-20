@@ -25,8 +25,8 @@ public abstract class Strategy extends SolutionObject {
         this.resourceArrayList = resource;
         sort();
         planning();
-        printToConsole();
-        printDiagram();
+        //printToConsole();
+        //printDiagram();
     }
 
     /**

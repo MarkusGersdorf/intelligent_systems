@@ -1,7 +1,7 @@
 package de.uol.is.shopScheduling;
 
-import de.uol.is.shopScheduling.strategys.RandomStrategy;
-import de.uol.is.shopScheduling.strategys.Strategy;
+import de.uol.is.shopScheduling.solutionObject.Algorithm;
+import de.uol.is.shopScheduling.solutionObject.EvolutionStrategy;
 import org.json.simple.parser.ParseException;
 
 import java.io.File;
@@ -61,7 +61,9 @@ public class ShopScheduling {
             // Strategy strategy = new FifoStrategy(jobs, resourceArrayList);
             //Strategy spt = new SptStrategy(jobs, resourceArrayList);
             //Strategy fifo = new FifoStrategy(jobs, resourceArrayList);
-            Strategy random = new RandomStrategy(jobs, resourceArrayList);
+            //Strategy random = new RandomStrategy(jobs, resourceArrayList);
+            Algorithm algorithm = new EvolutionStrategy(jobs, resourceArrayList);
+
         }
     }
 }

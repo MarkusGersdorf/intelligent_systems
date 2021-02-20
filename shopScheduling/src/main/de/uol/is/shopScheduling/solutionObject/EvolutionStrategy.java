@@ -24,6 +24,8 @@ public class EvolutionStrategy extends Algorithm {
      */
     public EvolutionStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         super(jobArrayList, resource);
+        optimize();
+        printDiagram();
     }
 
     /**
@@ -38,7 +40,7 @@ public class EvolutionStrategy extends Algorithm {
             searchCounter++;
             // generate mutation
             ArrayList<Resource> mutation = mutation(resourceArrayList);
-
+            System.out.println("System still working");
             // override old Array List
             if (calcDuration(resourceArrayList) <= calcDuration(mutation)) {
                 resourceArrayList = new ArrayList<>(mutation);
@@ -54,9 +56,10 @@ public class EvolutionStrategy extends Algorithm {
      */
     private ArrayList<Resource> mutation(ArrayList<Resource> resourcesOld) {
         ArrayList<Resource> solutionList = new ArrayList<>(resourcesOld);
-
+        int counter = 0;
         // do while because we want to mutate one time
         do {
+            counter++;
             for (Resource resource : solutionList) {
                 // queue to array list
                 ArrayList<Operation> operationArrayList = new ArrayList<>(resource.getOperationQueue());
