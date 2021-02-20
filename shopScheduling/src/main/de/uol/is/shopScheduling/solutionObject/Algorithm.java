@@ -7,12 +7,22 @@ import de.uol.is.shopScheduling.strategys.Strategy;
 
 import java.util.ArrayList;
 
+/**
+ * All optimization methods inherit from this class
+ *
+ * @author Markus Gersdorf, Thomas Cwill
+ * @version 1.0
+ */
 public abstract class Algorithm extends SolutionObject {
+
     public Algorithm(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         this.jobArrayList = jobArrayList;
-        this.resourceArrayList = resource;
+        this.resourceArrayList = initialize(this.jobArrayList);
     }
 
+    /**
+     * Optimize the existing plan
+     */
     protected abstract void optimize();
 
     /**

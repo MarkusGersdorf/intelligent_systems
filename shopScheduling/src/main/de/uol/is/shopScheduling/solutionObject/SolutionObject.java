@@ -25,6 +25,26 @@ public abstract class SolutionObject {
     protected ArrayList<Resource> resourceArrayList;
 
     /**
+     * Calculate the finesse of the solution
+     *
+     * @param fitnessArrayList Solution for which the fitness is to be calculated
+     * @return fitness value
+     */
+    protected int calcDuration(ArrayList<Resource> fitnessArrayList) {
+        long minDuration = Long.MAX_VALUE;
+        long maxDuration = Long.MIN_VALUE;
+
+        // calculate for each resource max start and end time find maximal range
+        for (Resource resource : fitnessArrayList) {
+            for (Operation operation : resource.getOperations()) {
+                minDuration = Long.min(minDuration, operation.getStartTime());
+                maxDuration = Long.max(maxDuration, operation.getEndTime());
+            }
+        }
+        return (int) (maxDuration - minDuration);
+    }
+
+    /**
      * Job Shop Scheduling table
      */
     public void printToConsole() {
@@ -77,9 +97,12 @@ public abstract class SolutionObject {
      *
      * @return true, if all constraints are fulfilled
      */
-    public boolean check_for_constraints(ArrayList<Resource> resourceArrayList) {
+    protected boolean check_for_constraints(ArrayList<Resource> resourceArrayList) {
         return true;
     }
+
+        @// TODO: 20.02.2021  1. In der Maschine nach überschreitungen schauen || 2. Reihenfolge im Job checken.
+
 
     /**
      * Check if one job (and his operations) is processed on one machine at a time
