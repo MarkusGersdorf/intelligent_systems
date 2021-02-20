@@ -2,7 +2,7 @@ package de.uol.is.shopScheduling.solutionObject;
 
 import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Resource;
-import de.uol.is.shopScheduling.strategys.FifoStrategy;
+import de.uol.is.shopScheduling.strategys.RandomStrategy;
 import de.uol.is.shopScheduling.strategys.Strategy;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public abstract class Algorithm extends SolutionObject {
      * @return init population
      */
     protected ArrayList<Resource> initialize(ArrayList<Job> jobArrayList, ArrayList<Resource> resourceArrayList) {
-        Strategy strategy = new FifoStrategy(jobArrayList, resourceArrayList);
+        Strategy strategy = new RandomStrategy(new ArrayList<>(jobArrayList), new ArrayList<>(resourceArrayList));
         return strategy.getResourceArrayList();
     }
 }
