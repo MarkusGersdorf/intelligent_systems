@@ -34,39 +34,16 @@ public class EvolutionStrategy extends Algorithm {
     protected void optimize() {
         int searchCounter = 0;
 
-        // initialize
-        resourceArrayList = initialize(jobArrayList);
-
         while (searchCounter < 1000) {
             searchCounter++;
             // generate mutation
             ArrayList<Resource> mutation = mutation(resourceArrayList);
 
             // override old Array List
-            if (calcFitness(resourceArrayList) <= calcFitness(mutation)) {
+            if (calcDuration(resourceArrayList) <= calcDuration(mutation)) {
                 resourceArrayList = new ArrayList<>(mutation);
             }
         }
-    }
-
-    /**
-     * Calculate the finesse of the solution
-     *
-     * @param fitnessArrayList Solution for which the fitness is to be calculated
-     * @return fitness value
-     */
-    private int calcFitness(ArrayList<Resource> fitnessArrayList) {
-        long minDuration = Long.MAX_VALUE;
-        long maxDuration = Long.MIN_VALUE;
-
-        // calculate for each resource max start and end time find maximal range
-        for (Resource resource : fitnessArrayList) {
-            for (Operation operation : resource.getOperations()) {
-                minDuration = Long.min(minDuration, operation.getStartTime());
-                maxDuration = Long.max(maxDuration, operation.getEndTime());
-            }
-        }
-        return (int) (maxDuration - minDuration);
     }
 
     /**
