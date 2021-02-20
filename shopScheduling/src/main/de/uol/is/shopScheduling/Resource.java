@@ -49,7 +49,7 @@ public class Resource {
         return -1L;
     }
 
-    private long getDuration() {
+    public long getDuration() {
         long duration = 0L;
         for (Operation operation : operationQueue) {
             duration += operation.getDuration();
