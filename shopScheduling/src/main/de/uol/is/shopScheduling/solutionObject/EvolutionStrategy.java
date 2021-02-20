@@ -39,16 +39,18 @@ public class EvolutionStrategy extends Algorithm {
 
         while (searchCounter < 10) {
             searchCounter++;
+            ArrayList<Job> test = jobArrayList;
+            Collections.copy(test, jobArrayList);
             // generate mutation
-            ArrayList<Resource> mutation = new RandomStrategy(new ArrayList<>(jobArrayList), new ArrayList<>(resourceArrayList)).getResourceArrayList();
+            ArrayList<Resource> mutation = new RandomStrategy(test, resourceArrayList).getResourceArrayList();
             //System.out.println("System still working");
             // override old Array List
             int durationMutation = calcDuration(mutation);
             int durationActualSolution = calcDuration(resourceArrayList);
 
             if (durationMutation <= durationActualSolution) {
-                resourceArrayList = new ArrayList<>(mutation);
-                System.out.println("Fitness: " + calcDuration(resourceArrayList));
+                //resourceArrayList = new ArrayList<>(mutation);
+                System.out.println("Fitness: " + calcDuration(mutation));
             }
         }
     }
