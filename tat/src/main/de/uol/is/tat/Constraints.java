@@ -8,9 +8,6 @@ package de.uol.is.tat;
  */
 public class Constraints implements IConstraints {
 
-    public Constraints() {
-    }
-
     /**
      * Check for this tree if a tent is available
      *
@@ -37,18 +34,6 @@ public class Constraints implements IConstraints {
                 f[1][0].getFieldType() == IField.field_type.TREE ||
                 f[1][2].getFieldType() == IField.field_type.TREE ||
                 f[2][1].getFieldType() == IField.field_type.TREE;
-    }
-
-    @Override
-    @Deprecated
-    public boolean horizontalVerticalTentAtTree(IField[][] f) {
-        return false;
-    }
-
-    @Override
-    @Deprecated
-    public boolean adjacentTentTree(IField[][] f) {
-        return false;
     }
 
     /**

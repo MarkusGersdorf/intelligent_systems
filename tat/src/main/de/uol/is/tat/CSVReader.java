@@ -12,15 +12,10 @@ import java.io.IOException;
  */
 public class CSVReader implements ICSVReader {
     private BufferedReader br = null;
-    // TODO-Thomas: rework this parameters, maybe to local variables
     private String line = "";
     private String csvSplitBy = ",";
     private int x;
     private int y;
-
-    public CSVReader() {
-
-    }
 
     /**
      * Covert csv file to field array

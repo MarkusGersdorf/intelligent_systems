@@ -2,12 +2,23 @@ package de.uol.is.tat;
 
 import java.util.ArrayList;
 
+/**
+ * Within this class the used heuristics are implemented.
+ *
+ * @author Marcel Peplies
+ */
 public class Heuristics {
     ArrayList<TentsTreesObject> trees = new ArrayList<>();
     ArrayList<TentsTreesObject> progress = new ArrayList<TentsTreesObject>();
     IField[][] field;
 
-    public IField[][] mostConstrainedVariable(IField[][] matrix, int fieldnumber) {
+    /**
+     * This method is used to apply the heuristic "mostConstrainedVariable" to a matrix.
+     *
+     * @param matrix This is the initial matrix in which the heuristic is to be applied.
+     * @return A completely revised solution is returned as a matrix.
+     */
+    public IField[][] mostConstrainedVariable(IField[][] matrix) {
         this.field = matrix;
         int currentRemainingOptionsLevel = 1;
         boolean successfully = false;
@@ -22,14 +33,11 @@ public class Heuristics {
             }
         }
 
-        // Only used for 10.csv & 11.csv
-        preprocessing(field);
-
         while (!oneTentForEachTree()) {
-            for(TentsTreesObject object : trees) {
+            for (TentsTreesObject object : trees) {
                 if (object.remainingOptions.size() == currentRemainingOptionsLevel && !object.isTentBuild()) {
                     successfully = buildTent(object);
-                    if(successfully) {
+                    if (successfully) {
                         reCalculateRemainingOptions();
                         currentRemainingOptionsLevel = 0;
                         break;
@@ -40,8 +48,8 @@ public class Heuristics {
                 }
             }
 
-            if(!successfully) {
-                if(currentRemainingOptionsLevel < 4) {
+            if (!successfully) {
+                if (currentRemainingOptionsLevel < 4) {
                     currentRemainingOptionsLevel++;
                 } else {
                     currentRemainingOptionsLevel = 0;
@@ -49,7 +57,6 @@ public class Heuristics {
             } else {
                 successfully = false;
             }
-            //System.out.println("Aktuell läuft die " + fieldnumber + ". CSV-Datei. Bäume mit Zelt: " + progress.size() + " (" + trees.size() + ")");
         }
 
         return field;
@@ -67,8 +74,12 @@ public class Heuristics {
     }
 
     /**
-     * @param object
-     * @return
+     * This method tries to set a tent for the passed TentsTreesObject. If no possible options are available, the
+     * process for resetting operations is triggered (resetProgress). If there are still possible options available,
+     * they are selected in order and the necessary adjustments such as reducing the boundary values are made.
+     *
+     * @param object A TentsTreesObject for which a tent is to be set.
+     * @return Returns false if no tent could be set and returns true if it was possible.
      */
     private boolean buildTent(TentsTreesObject object) {
         if (object.remainingOptions.size() == 0) {
@@ -84,14 +95,29 @@ public class Heuristics {
         return true;
     }
 
-
+    /**
+     * If the case arises that there are no more possibilities to set a tent for a tree, this method is called. The
+     * method is based on backpropagation. First, the last tent that has been set is pulled from the Progress-ArrayList.
+     * There are 3 possibilities which are considered within the method.
+     *
+     * 1st possibility: It is still the initial option, which has been used first. Then the very first option from the
+     * associated ArrayList of the possible options is selected again.
+     *
+     * 2nd possibility: It is no longer the initial solution. It is looked how many solutions have been used and the
+     * next possibility is checked.
+     *
+     * 3rd possibility: There are no further possibilities that can be selected as an alternative. Then the marquee is
+     * deleted and all associated values are reset. In the Progress-ArrayList the next element is used.
+     *
+     * The process runs until the actual marquee, which could not be set and why this method was called, can be set.
+     */
     private void resetProgress() {
         int progressSize = progress.size();
         for (int i = progressSize - 1; i > 0; i--) {
             TentsTreesObject object = progress.get(i);
             int remainingOptionsSize = object.remainingOptions.size();
             int choosedOption = object.getChoosedOption();
-            if(remainingOptionsSize >= 1 && choosedOption == - 1) {
+            if (remainingOptionsSize >= 1 && choosedOption == -1) {
                 object.deleteTent();
                 object.setChoosedOption(object.getChoosedOption() + 1);
                 object.setTent(object.remainingOptions.get(object.choosedOption));
@@ -117,6 +143,13 @@ public class Heuristics {
 
     }
 
+    /**
+     * For the passed object, a check is made to see where else a tent can be placed on the tree.
+     *
+     * @param tentsTreesObject A TentsTreesObject for which the options are to be checked.
+     * @return Returns an ArrayList with ArrayLists, each containing 2 values for the Col and Row values for the
+     * possible options.
+     */
     private ArrayList<ArrayList<Integer>> checkRemainingOptions(TentsTreesObject tentsTreesObject) {
         ArrayList<ArrayList<Integer>> remainingOptions = new ArrayList<>();
 
@@ -158,6 +191,14 @@ public class Heuristics {
         return remainingOptions;
     }
 
+    /**
+     * This method checks for passed Col and Row values whether a marquee may be set at this point. The consideration
+     * happens under consideration of the conditions.
+     *
+     * @param col Column value of a field on which a tent may be placed.
+     * @param row Row value of a field on which a tent may be placed.
+     * @return Returns a boolean value whether a tent could be set or not.
+     */
     private boolean checkConditionsForCoordinates(int col, int row) {
 
         if (field[col][row].getFieldType() != IField.field_type.EMPTY) {
@@ -187,146 +228,11 @@ public class Heuristics {
         return true;
     }
 
-    private void preprocessing(IField[][] field) {
-        for(int col = 1; col < field.length; col++) {
-            for(int row = 1; row < field[col].length; row++) {
-                if(row == 20 && col == 13) {
-                    boolean wait = true;
-                }
-                if(row == 22 && col == 13) {
-                    boolean wait = true;
-                }
-                if(field[col][row].getFieldType() == IField.field_type.TENT) {
-                    ArrayList<TentsTreesObject> treeObjects = new ArrayList<>();
-
-                    // Under the tree
-                    if(field[col + 1][row].getFieldType() == IField.field_type.TREE) {
-                        TentsTreesObject object = getTreeFromCoordinates(col + 1, row);
-                        if(!object.isTentBuild()) {
-                            treeObjects.add(object);
-                        }
-                    }
-
-                    // Above the tree
-                    if(field[col - 1][row].getFieldType() == IField.field_type.TREE) {
-                        TentsTreesObject object = getTreeFromCoordinates(col  - 1, row);
-                        if(!object.isTentBuild()) {
-                            treeObjects.add(object);
-                        }
-                    }
-
-                    // Right from tree
-                    if(field[col][row + 1].getFieldType() == IField.field_type.TREE) {
-                        TentsTreesObject object = getTreeFromCoordinates(col, row + 1);
-                        if(!object.isTentBuild()) {
-                            treeObjects.add(object);
-                        }
-                    }
-
-                    // Left from tree
-                    if(field[col][row - 1].getFieldType() == IField.field_type.TREE) {
-                        TentsTreesObject object = getTreeFromCoordinates(col, row - 1);
-                        if(!object.isTentBuild()) {
-                            treeObjects.add(object);
-                        }
-                    }
-
-                    if(treeObjects.size() == 1) {
-                        if(treeObjects.get(0) != null) {
-                            ArrayList<Integer> arrayList = new ArrayList<>();
-                            arrayList.add(col);
-                            arrayList.add(row);
-                            treeObjects.get(0).setTent(arrayList);
-                            treeObjects.get(0).setChoosedOption(-1);
-                            progress.add(treeObjects.get(0));
-                        }
-                    }
-                    if(treeObjects.size() > 1) {
-                        ArrayList<ArrayList<ArrayList<Integer>>> arrayList = new ArrayList<>();
-
-                        // Check for each tree, are their other remaining starter tents
-                        int objectCounter = 0;
-                        for(TentsTreesObject object : treeObjects) {
-                            ArrayList<ArrayList<Integer>> tentsForTrees = new ArrayList<>();
-
-                            // Counter to identify with tree are checked
-                            ArrayList<Integer> objectCounterArrayList = new ArrayList<>();
-                            objectCounterArrayList.add(objectCounter);
-                            tentsForTrees.add(objectCounterArrayList);
-
-                            // Check for other tents for this tree
-                            if(field[object.col + 1][object.row].getFieldType() == IField.field_type.TENT &&
-                                    object.col + 1 != col &&
-                                    object.row != row) {
-                                ArrayList<Integer> coordinates = new ArrayList<>();
-                                coordinates.add(object.col + 1);
-                                coordinates.add(object.row);
-                                tentsForTrees.add(coordinates);
-                            }
-
-                            if(field[object.col - 1][object.row].getFieldType() == IField.field_type.TENT &&
-                                    object.col - 1 != col &&
-                                    object.row != row) {
-                                ArrayList<Integer> coordinates = new ArrayList<>();
-                                coordinates.add(object.col - 1);
-                                coordinates.add(object.row);
-                                tentsForTrees.add(coordinates);
-                            }
-
-                            if(field[object.col][object.row + 1].getFieldType() == IField.field_type.TENT &&
-                                    object.col != col &&
-                                    object.row + 1 != row) {
-                                ArrayList<Integer> coordinates = new ArrayList<>();
-                                coordinates.add(object.col);
-                                coordinates.add(object.row + 1);
-                                tentsForTrees.add(coordinates);
-                            }
-
-                            if(field[object.col][object.row - 1].getFieldType() == IField.field_type.TENT &&
-                                    object.col != col &&
-                                    object.row - 1!= row) {
-                                ArrayList<Integer> coordinates = new ArrayList<>();
-                                coordinates.add(object.col);
-                                coordinates.add(object.row - 1);
-                                tentsForTrees.add(coordinates);
-                            }
-
-                            arrayList.add(tentsForTrees);
-                            objectCounter++;
-                        }
-
-                        for(ArrayList<ArrayList<Integer>> tentsForTrees : arrayList) {
-                            if(tentsForTrees.size() > 1) {
-                                objectCounter = tentsForTrees.get(0).get(0);
-                                TentsTreesObject object = treeObjects.get(objectCounter);
-                                if(getTreeFromTent(tentsForTrees.get(1).get(0), tentsForTrees.get(1).get(1)) == null) {
-                                    object.tent = tentsForTrees.get(1);
-                                    object.setChoosedOption(-1);
-                                    progress.add(object);
-                                }
-                            } else {
-                                objectCounter = tentsForTrees.get(0).get(0);
-                                TentsTreesObject object = treeObjects.get(objectCounter);
-                                if(getTreeFromTent(col, row) == null) {
-                                    ArrayList<Integer> coordinates = new ArrayList<>();
-                                    coordinates.add(col);
-                                    coordinates.add(row);
-                                    object.tent = coordinates;
-                                    object.setChoosedOption(-1);
-                                    progress.add(object);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     /**
-     * Help methods
+     * This method checks if there is a tent for each tree.
+     *
+     * @return Returns a boolean value whenever each tree had an tent.
      */
-
     private boolean oneTentForEachTree() {
         for (TentsTreesObject object : trees) {
             if (!object.isTentBuild()) {
@@ -336,41 +242,45 @@ public class Heuristics {
         return true;
     }
 
+    /**
+     * Returns the margin value, how many values may still be placed within the column.
+     *
+     * @param col A column value in which column the edge value is needed.
+     * @return Returns the number how many tents may still be placed in the column.
+     */
     private int colBorderLimit(int col) {
         return field[col][0].getBorderLimit();
     }
 
+    /**
+     * Returns the margin value, how many values may still be placed within the row.
+     *
+     * @param row A row value in which row the edge value is needed.
+     * @return Returns the number how many tents may still be placed in the row.
+     */
     private int rowBorderLimit(int row) {
         return field[0][row].getBorderLimit();
     }
 
+    /**
+     * Gets a column value and a row value and decrements the associated margin values.
+     *
+     * @param col Column value
+     * @param row Row value
+     */
     private void decreaseBorderLimit(int col, int row) {
         field[col][0].setBorderLimit(field[col][0].getBorderLimit() - 1);
         field[0][row].setBorderLimit(field[0][row].getBorderLimit() - 1);
     }
 
+    /**
+     * Gets a column value and a row value and increase the associated margin values.
+     *
+     * @param col Column value
+     * @param row Row value
+     */
     private void increaseBorderLimit(int col, int row) {
         field[col][0].setBorderLimit(field[col][0].getBorderLimit() + 1);
         field[0][row].setBorderLimit(field[0][row].getBorderLimit() + 1);
-    }
-
-    private TentsTreesObject getTreeFromTent(int col, int row) {
-        for (TentsTreesObject object : trees) {
-            if (object.isTentBuild()) {
-                if (object.tent.get(0) == col && object.tent.get(1) == row) {
-                    return object;
-                }
-            }
-        }
-        return null;
-    }
-
-    private TentsTreesObject getTreeFromCoordinates(int col, int row) {
-        for(TentsTreesObject object : trees) {
-            if(object.col == col && object.row == row) {
-                return object;
-            }
-        }
-        return null;
     }
 }

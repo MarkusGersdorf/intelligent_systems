@@ -1,5 +1,8 @@
 package de.uol.is.tat;
 
+/**
+ * Interface for a Field class
+ */
 public interface IField {
     enum field_type {
         BORDER, EMPTY, TREE, TENT, BLOCKED
@@ -8,8 +11,6 @@ public interface IField {
     field_type getFieldType();
 
     void setFieldType(field_type ft);
-
-    IField[][] initializeField(IField[][] f);
 
     int getBorderLimit();
 
