@@ -61,7 +61,7 @@ public class Board extends SimState implements IBoard {
     }
 
     /**
-     * Method simulates a die
+     * Method simulates rolling a die
      *
      * @return integer between 1-6
      */
@@ -71,7 +71,8 @@ public class Board extends SimState implements IBoard {
     }
 
     /**
-     * Main method of board, which moves the pawns on the board
+     * Main method of board, which moves the pawns on the board. It will return false, if the move is not possible,
+     * this prevents faulty agents or wrong player moving
      *
      * @param pawn  given pawn from agent
      * @param steps given steps from agent (die)
@@ -129,7 +130,7 @@ public class Board extends SimState implements IBoard {
     }
 
     /**
-     * This method sets given pawn into the board
+     * This method sets a pawn into the board. That pawn needs to be given by the agent or player as parameter
      *
      * @param pawn given by agent
      * @return true if successful

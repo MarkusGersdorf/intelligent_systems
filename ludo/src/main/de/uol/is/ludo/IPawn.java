@@ -1,5 +1,11 @@
 package de.uol.is.ludo;
 
+/**
+ * Interface for Pawn
+ *
+ * @author Thomas Cwil
+ * @author Joosten Steenhusen
+ */
 public interface IPawn
 {
     int getFieldId();

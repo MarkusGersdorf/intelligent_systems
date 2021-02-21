@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * This class represents a field
  *
- * @author Thomas Cwill
+ * @author Thomas Cwil
  * @version 0.1
  */
 @Data

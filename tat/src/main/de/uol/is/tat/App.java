@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 /**
  * This class is the main class of Task 2 (Tents & Trees). The program is started within this class.
- * <p>
+ *
  * (V,D,C) = (
  * V = mxn Matrix (ArrayList<IField[][]>fields<IField[][]>,
  * D = {Border, Blocked, Tree, Tent, Free},
- * <p>
+ *
  * C = (
  * 1: Im Umfeld von Tent und Tree darf nur jeweils einmal der andere vorkommen
  * 2: Tent muss horizontal oder vertikal am Baum liegen
@@ -17,8 +17,10 @@ import java.util.ArrayList;
  * 4: n Tents in einer Reihe
  * 5: Wenn Field = Tent, dann drumherum kein Tent
  * )
- * <p>
  * )
+ *
+ * @author Thomas Cwil
+ * @author Joosten Steenhusen
  */
 public class App {
     private static final IConstraints cons = new Constraints();
@@ -28,6 +30,9 @@ public class App {
     private static ArrayList<IField[][]> fields = new ArrayList<>();
     private static boolean constraintConform = true;
 
+    /**
+     * Main method
+     */
     public static void main(String[] args) {
         int fieldNumber = 0;
         String projectPath = new File("").getAbsolutePath();
@@ -77,7 +82,7 @@ public class App {
     }
 
     /**
-     *The individual constraints are available in the 'Constraint' class. The task of this method is to iterate step by
+     * The individual constraints are available in the 'Constraint' class. The task of this method is to iterate step by
      * step over the matrix and to check the conditions depending on the respective field type. If even one constraint
      * is not fulfilled, the global variable is set to false to adjust the later output.
      *
