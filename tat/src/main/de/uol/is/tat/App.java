@@ -31,7 +31,7 @@ public class App {
     public static void main(String[] args) {
         int fieldNumber = 0;
         String projectPath = new File("").getAbsolutePath();
-        String csvPath = projectPath.concat("/tat/csv/");
+        String csvPath = projectPath.concat("\\tat\\src\\main\\resources\\");
 
         for (int i = 0; i < 10; i++) {
             path[i] = csvPath.concat("tents_trees_" + i + ".csv");
