@@ -15,6 +15,8 @@ public class Resource {
     @Setter
     private long id;
 
+    @Getter
+    @Setter
     private Queue<Operation> operationQueue = new LinkedList<>();
 
     public Resource(String name, long id) {
@@ -47,7 +49,7 @@ public class Resource {
         return -1L;
     }
 
-    private long getDuration() {
+    public long getDuration() {
         long duration = 0L;
         for (Operation operation : operationQueue) {
             duration += operation.getDuration();

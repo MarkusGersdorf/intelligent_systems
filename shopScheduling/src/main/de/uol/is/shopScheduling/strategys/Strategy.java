@@ -3,90 +3,44 @@ package de.uol.is.shopScheduling.strategys;
 import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
 import de.uol.is.shopScheduling.Resource;
-import org.apache.commons.lang3.StringUtils;
+import de.uol.is.shopScheduling.solutionObject.SolutionObject;
 
 import java.util.ArrayList;
 
-public abstract class Strategy {
+/**
+ * Superclass, which is to be used by all heuristics
+ *
+ * @author Joosten Steenhusen, Marcel Peplies
+ */
+public abstract class Strategy extends SolutionObject {
 
-    protected ArrayList<Job> jobArrayList;
-    protected ArrayList<Resource> resourceArrayList;
-
+    /**
+     * constructor calls the functions for sorting and planning the heuristics directly after creating the class
+     *
+     * @param jobArrayList List of jobs
+     * @param resource     List of resources
+     */
     public Strategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         this.jobArrayList = jobArrayList;
         this.resourceArrayList = resource;
+        sort();
+        planning();
+        //printToConsole();
+        //printDiagram();
     }
 
+    /**
+     * Implemented by the heuristic and by this it is specified in which order
+     * the jobs are selected by the scheduling function
+     */
     protected abstract void sort();
 
-    public void print() {
-        //System.out.println("Print strategy");
-        print_to_console();
-        printDiagram();
-    }
-
-    public void print_to_console() {
-        // Tabelle nach Job sortiert
-        System.out.print("JobID\t\t");
-        Job job = jobArrayList.get(0);
-        int steps = 0;
-        for (Operation op : job.getOperationArrayList()) {
-            System.out.print(" Step " + steps + " \t");
-            steps += 1;
-        }
-        System.out.println();
-        for (Job j : jobArrayList) {
-            System.out.print(j.getId() + "\t\t\t");
-            for (Operation op : j.getOperationArrayList()) {
-                System.out.print(" " + op.getResource() + "," + op.getDuration() + " \t\t");
-            }
-            System.out.println();
-        }
-
-        // Tabelle nach Ressource sortiert
-        /*
-        System.out.print("RessourceID\t");
-        Resource res = resourceArrayList.get(0);
-        int steps = 0;
-        for (Operation op : res.getOperations()) {
-            System.out.print(" Step " + steps + " \t");
-            steps += 1;
-        }
-        System.out.println();
-        for (Resource r : resourceArrayList) {
-            System.out.print(r.getId() + "\t\t\t");
-            for (Operation op : r.getOperations()) {
-                System.out.print(" " + op.getResource() + "," + op.getDuration() + " \t\t");
-            }
-            System.out.println("");
-        }
-        */
-    }
-
-    public void printDiagram() {
-        long minDuration = Long.MAX_VALUE;
-        long maxDuration = Long.MIN_VALUE;
-
-        for (Resource resource : resourceArrayList) {
-            for (Operation operation : resource.getOperations()) {
-                minDuration = Long.min(minDuration, operation.getStartTime());
-                maxDuration = Long.max(maxDuration, operation.getEndTime());
-            }
-        }
-
-        for (Resource resource : resourceArrayList) {
-            for (int i = (int) minDuration; i < (int) maxDuration; i++) {
-                String resourceString = resource.getOperation(i) == -1.0 ? " " : "" + resource.getOperation(i) + "";
-                System.out.print("|" + StringUtils.leftPad(resourceString + "|\t", 6, " "));
-            }
-            System.out.println();
-        }
-        for (int i = (int) minDuration; i < (int) maxDuration; i++) {
-            System.out.print("|" + StringUtils.leftPad(i + "|\t", 6, "0"));
-        }
-    }
-
+    /**
+     * The planning function uses the list sorted by the heuristics
+     * to create a plan. This function implements all dependencies
+     */
     protected void planning() {
+        // TODO-Marcel&Joosten: Ihr hattet noch änderungen an dieser funktion. Pflegt die bitte ein :-)
         //System.out.println("New planning");
         for (Job job : jobArrayList) {
             long verplanteZeit = 0;
@@ -103,11 +57,13 @@ public abstract class Strategy {
                     boolean hinzugefuegt = false;
                     boolean blockiert = false;
 
-                    while (!hinzugefuegt) {
-                        //System.out.println(verplanteZeit);
+                    while(!hinzugefuegt) {
                         for (Operation operationInMaschine : machine.getOperations()) {
                             if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
-                                    ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime())) {
+                                    ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime()) ||
+                                    (operationInMaschine.getStartTime() > verplanteZeit && operationInMaschine.getStartTime() < (verplanteZeit + dauerDerOperation)) ||
+                                    (operationInMaschine.getEndTime() > verplanteZeit && operationInMaschine.getEndTime() < (verplanteZeit + dauerDerOperation)) ||
+                                    (verplanteZeit == operationInMaschine.getStartTime() && verplanteZeit + dauerDerOperation == operationInMaschine.getEndTime())) {
                                 verplanteZeit = operationInMaschine.getEndTime();
                                 blockiert = true;
                                 break;
@@ -128,5 +84,4 @@ public abstract class Strategy {
             }
         }
     }
-
 }

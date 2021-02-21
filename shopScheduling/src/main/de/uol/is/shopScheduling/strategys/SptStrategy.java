@@ -22,9 +22,6 @@ public class SptStrategy extends Strategy {
      */
     public SptStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
         super(jobArrayList, resource);
-        sort();
-        planning();
-        print();
     }
 
     /**
