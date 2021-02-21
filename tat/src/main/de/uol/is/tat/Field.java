@@ -1,37 +1,24 @@
 package de.uol.is.tat;
 
+import lombok.Data;
+
+/**
+ * This class represents a field
+ *
+ * @author Thomas Cwill
+ * @version 0.1
+ */
+@Data
 public class Field implements IField {
-    protected IField.field_type field_type;
-    protected int border_limit;
+    protected IField.field_type fieldType;
+    protected int borderLimit;
 
-    public Field(IField.field_type ft)
-    {
-        this.field_type = ft;
-    }
-
-    @Override
-    public field_type get_field_type() {
-        return this.field_type;
-    }
-
-    @Override
-    public void set_field_type(IField.field_type ft) {
-        this.field_type = ft;
-    }
-
-    @Override
-    public IField[][] initializeField(IField[][] f) {
-        int x = f.length;
-        return f;
-    }
-
-    @Override
-    public void set_border_limit(int l) {
-        border_limit = l;
-    }
-
-    @Override
-    public int get_border_limit() {
-        return border_limit;
+    /**
+     * Simple constructor which assigns the passed FieldType to the FieldType variable.
+     *
+     * @param fieldType Describes what type the field is.
+     */
+    public Field(IField.field_type fieldType) {
+        this.fieldType = fieldType;
     }
 }

@@ -1,20 +1,15 @@
 package de.uol.is.tat;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-
-
-// TODO: VDC redefinieren
-// TODO: Verkettung von Baum und Zelt (?)
-
 /**
- *
+ * This class is the main class of Task 2 (Tents & Trees). The program is started within this class.
+ * <p>
  * (V,D,C) = (
- * V = mxn Matrix (ArrayList<IField[][]>fields</IField[][]>,
+ * V = mxn Matrix (ArrayList<IField[][]>fields<IField[][]>,
  * D = {Border, Blocked, Tree, Tent, Free},
- *
+ * <p>
  * C = (
  * 1: Im Umfeld von Tent und Tree darf nur jeweils einmal der andere vorkommen
  * 2: Tent muss horizontal oder vertikal am Baum liegen
@@ -22,101 +17,144 @@ import java.util.ArrayList;
  * 4: n Tents in einer Reihe
  * 5: Wenn Field = Tent, dann drumherum kein Tent
  * )
- *
+ * <p>
  * )
  */
-
-public class Tat {
-    private static final String[] path = new String[12]; // Anzahl der einzulesenden csv Dateien - müssen Namenskonvention einhalten
-    private static final ICSVReader reader = new CSVReader();
-    private static ArrayList<IField[][]> fields = new ArrayList<>();
+public class App {
     private static final IConstraints cons = new Constraints();
-    private static boolean constraint_conform = true;
+    private static final ICSVReader reader = new CSVReader();
+    private static final String[] path = new String[10];
+    private static ArrayList<IField[][]> initFields = new ArrayList<>();
+    private static ArrayList<IField[][]> fields = new ArrayList<>();
+    private static boolean constraintConform = true;
 
-    public static void main(String[] args) throws IOException {
-        String project_path = new File("").getAbsolutePath();
-        String csv_path = project_path.concat("/tat/src/main/resources/");
+    public static void main(String[] args) {
+        int fieldNumber = 0;
+        String projectPath = new File("").getAbsolutePath();
+        String csvPath = projectPath.concat("/tat/csv/");
 
-        for(int i = 0; i < 12; i++) {
-            path[i] = csv_path.concat("tents_trees_" + i + ".csv");
-            fields.add(reader.convert_csv_to_fields(path[i]));
+        for (int i = 0; i < 10; i++) {
+            path[i] = csvPath.concat("tents_trees_" + i + ".csv");
+            fields.add(reader.convertCsvToFields(path[i]));
+            initFields.add(reader.convertCsvToFields(path[i]));
         }
-        fields_to_console(fields);
-        int fieldnumber = 0;
 
-        for(IField[][] field : fields) {
-            constraint_conform = true;
-            // Heuristik
-            check_constraints(field);
-            // wenn nicht alle constraints erfüllt werden, heuristik rekursiv aufrufen
-            if(constraint_conform) {
-                System.out.println("Field " + fieldnumber + " \tErfüllt alle Constraints!");
+        for (IField[][] field : fields) {
+            constraintConform = false;
+            Heuristics heuristics = new Heuristics();
+            IField[][] finish = heuristics.mostConstrainedVariable(field);
+            overwriteBoarders(initFields.get(fieldNumber), finish);
+            checkConstraints(finish);
+
+            if (constraintConform) {
+                System.out.println("Field " + fieldNumber + " \tErfüllt alle Constraints!");
             } else {
-                System.out.println("Field " + fieldnumber + " \tErfüllt nicht alle Constraints!");
+                System.out.println("Field " + fieldNumber + " \tErfüllt nicht alle Constraints!");
             }
-            fieldnumber++;
+
+            fieldsToConsole(field);
+            fieldNumber++;
         }
     }
 
-    private static void check_constraints(IField[][] field) {
+    /**
+     * Initially, the data is read from the CSV files and transferred to a matrix, including the boundary values to
+     * know how many tents may still be added to the respective horizontal or vertical row. However, within the
+     * heuristics these values are changed. However, in order to be able to check the decisions made afterwards, the
+     * initial boundary values must be restored in the result. This task is taken over by the method.
+     *
+     * @param field This is the initial untreated matrix.
+     * @param finish This is the matrix in which the result has been generated.
+     */
+    private static void overwriteBoarders(IField[][] field, IField[][] finish) {
+        for (int col = 0; col < field.length; col++) {
+            finish[col][0] = field[col][0];
+        }
+
+        for (int row = 0; row < field[0].length; row++) {
+            finish[0][row] = field[0][row];
+        }
+    }
+
+    /**
+     *The individual constraints are available in the 'Constraint' class. The task of this method is to iterate step by
+     * step over the matrix and to check the conditions depending on the respective field type. If even one constraint
+     * is not fulfilled, the global variable is set to false to adjust the later output.
+     *
+     * @param field This is the matrix in which the result has been generated.
+     */
+    private static void checkConstraints(IField[][] field) {
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[0].length; j++) {
-                if (field[i][j].get_field_type() == IField.field_type.BORDER) {
+                if (field[i][j].getFieldType() == IField.field_type.BORDER) {
                     continue;
                 }
-                IField[][] constraint_field = new Field[3][3];
-                if (field[i][j].get_field_type() == IField.field_type.TENT) {
-                    constraint_field = get_smaller_fieldarray(field, i, j);
-                    if(!cons.no_tent_around_tent(constraint_field)) {
-                        constraint_conform = false;
+                IField[][] constraintField;
+                if (field[i][j].getFieldType() == IField.field_type.TENT) {
+                    constraintField = getWindowFromField(field, i, j);
+                    if (!cons.noTentAroundTent(constraintField)) {
+                        constraintConform = false;
                         break;
-                    } else if(!cons.one_tree_per_tent(constraint_field)) {
-                        constraint_conform = false;
+                    } else if (!cons.oneTreePerTent(constraintField)) {
+                        constraintConform = false;
                         break;
-                    } else if(!cons.only_n_tents_per_row(field, i, j)) {
-                        constraint_conform = false;
+                    } else if (!cons.onlyNTentsPerRow(field, i, j)) {
+                        constraintConform = false;
                         break;
                     }
 
                 }
 
-                if (field[i][j].get_field_type() == IField.field_type.TREE) {
-                    constraint_field = get_smaller_fieldarray(field, i, j);
-                    if(!cons.one_tent_per_tree(constraint_field)) {
-                        constraint_conform = false;
+                if (field[i][j].getFieldType() == IField.field_type.TREE) {
+                    constraintField = getWindowFromField(field, i, j);
+                    if (!cons.oneTentPerTree(constraintField)) {
+                        constraintConform = false;
                         break;
                     }
                 }
             }
         }
+        constraintConform = true;
     }
 
-    // 3x3 Felder bekommen
-    private static IField[][] get_smaller_fieldarray(IField[][] field, int i, int j) {
+    /**
+     * This method is used to generate a section around a certain point within the matrix. The result is a 3 x 3 matrix
+     * and in the center is the given point.
+     *
+     * @param field This is the matrix in which the result has been generated.
+     * @param i     position column
+     * @param j     position row
+     * @return 3x3 field from type 2D Array
+     */
+    private static IField[][] getWindowFromField(IField[][] field, int i, int j) {
         IField[][] temp_field = new Field[3][3];
 
-        temp_field[0][0] = field[i-1][j-1];
-        temp_field[0][1] = field[i-1][j];
-        temp_field[0][2] = field[i-1][j+1];
-        temp_field[1][0] = field[i][j-1];
+        temp_field[0][0] = field[i - 1][j - 1];
+        temp_field[0][1] = field[i - 1][j];
+        temp_field[0][2] = field[i - 1][j + 1];
+        temp_field[1][0] = field[i][j - 1];
         temp_field[1][1] = field[i][j];
-        temp_field[1][2] = field[i][j+1];
-        temp_field[2][0] = field[i+1][j-1];
-        temp_field[2][1] = field[i+1][j];
-        temp_field[2][2] = field[i+1][j+1];
+        temp_field[1][2] = field[i][j + 1];
+        temp_field[2][0] = field[i + 1][j - 1];
+        temp_field[2][1] = field[i + 1][j];
+        temp_field[2][2] = field[i + 1][j + 1];
 
         return temp_field;
     }
 
-    private static void fields_to_console(ArrayList<IField[][]> fields) {
-        for(IField[][] f : fields) {
-            for (IField[] iFields : f) {
-                for (int j = 0; j < f[0].length; j++) {
-                    System.out.print(iFields[j].get_field_type() + "\t");
-                }
-                System.out.println();
+    /**
+     * A simple output to make the generated result visible via the console.
+     *
+     * @param field This is the matrix in which the result has been generated.
+     */
+    private static void fieldsToConsole(IField[][] field) {
+        for (IField[] iFields : field) {
+            for (int j = 0; j < field[0].length; j++) {
+                System.out.print(iFields[j].getFieldType() + "\t");
             }
+            System.out.println();
         }
-
+        System.out.println();
     }
 }
+
