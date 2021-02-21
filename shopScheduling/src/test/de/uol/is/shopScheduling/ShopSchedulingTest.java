@@ -5,7 +5,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 public class ShopSchedulingTest {
-
     /**
      * Rigorous Test :-)
      */
@@ -13,5 +12,4 @@ public class ShopSchedulingTest {
     public void shouldAnswerWithTrue() {
         assertTrue(true);
     }
-
 }
