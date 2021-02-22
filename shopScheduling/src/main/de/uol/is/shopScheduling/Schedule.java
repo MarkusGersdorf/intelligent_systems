@@ -18,7 +18,6 @@ public class Schedule implements ISchedule {
 
         for (Long resource : resourcesList) {
             resourceHashMap.put(new Resource("Resource ", resource), new ArrayList<>());
-            // TODO: Operations hinzufügen?
         }
     }
 
@@ -78,7 +77,6 @@ public class Schedule implements ISchedule {
         }
         return null;
     }
-
 
     public Operation getPreviousJobOperation(Operation operation) {
         for (ArrayList<Operation> operationArrayList : resourceHashMap.values()) {

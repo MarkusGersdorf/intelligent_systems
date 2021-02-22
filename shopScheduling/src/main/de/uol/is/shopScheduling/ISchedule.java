@@ -1,7 +1,5 @@
 package de.uol.is.shopScheduling;
 
-import java.util.Set;
-
 public interface ISchedule {
     void addOperation(Operation operation);
 
@@ -12,4 +10,15 @@ public interface ISchedule {
     Operation getPreviousOperation(Operation operation);
 
     Operation getNextOperation(Operation operation);
+
+    Operation getPreviousJobOperation(Operation operation);
+
+    Operation getNextJobOperation(Operation operation);
+
+    Long durationFromTo(Operation startOperation, Operation endOperation);
+
+    Long durationTo(Operation endOperation, boolean inclusive);
+
+    Long durationTo(Operation endOperation);
+
 }
