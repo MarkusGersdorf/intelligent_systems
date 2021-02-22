@@ -1,7 +1,6 @@
 package de.uol.is.shopScheduling.strategys;
 
 import de.uol.is.shopScheduling.Job;
-import de.uol.is.shopScheduling.Resource;
 
 import java.util.ArrayList;
 
@@ -17,11 +16,11 @@ public class SptStrategy extends Strategy {
     /**
      * Basic constructor
      *
-     * @param jobArrayList a arrayList which contains all jobs
-     * @param resource     a arrayList which contains the usable machines.
+     * @param jobArrayList       a arrayList which contains all jobs
+     * @param resourcesArrayList a arrayList which contains the usable machines.
      */
-    public SptStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
-        super(jobArrayList, resource);
+    public SptStrategy(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
+        super(jobArrayList, resourcesArrayList);
     }
 
     /**
