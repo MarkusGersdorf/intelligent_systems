@@ -55,7 +55,10 @@ public abstract class SolutionObject {
      * @return true, if all constraints are fulfilled
      */
     protected boolean check_for_constraints(ArrayList<Resource> resourceArrayList) {
-        return one_job_at_a_time(resourceArrayList) && check_ascending_operation_order(resourceArrayList);
+
+
+        //return one_job_at_a_time(resourceArrayList) && check_ascending_operation_order(resourceArrayList);
+        return false;
     }
 
 
@@ -108,24 +111,13 @@ public abstract class SolutionObject {
      *
      * @return True if all operations are in the correct order.
      */
-    protected boolean check_ascending_operation_order(ArrayList<Resource> resourceArrayList) {
-        for (Job job : jobArrayList) {
-            long jobId = job.getId();
-            long plannedTime = 0;
-            for (Operation operation : job.getOperationArrayList()) {
-                long resourceId = operation.getResource();
-                for (Operation operationInResource : schedule.getOperations(resourceId)) {
-                    if (operationInResource.getJobId() == jobId) {
-                        if (plannedTime > operationInResource.getStartTime()) {
-                            return false;
-                        } else {
-                            plannedTime = operationInResource.getStartTime();
-                        }
-                    }
-                }
-            }
+    protected boolean check_ascending_operation_order(Operation operation) {
+        Operation nextOperation = schedule.getNextOperation(operation);
+
+        if (nextOperation != null) {
+            return nextOperation.getStartTime() < operation.getEndTime();
         }
-        return true;
+        return false;
     }
 
 }
