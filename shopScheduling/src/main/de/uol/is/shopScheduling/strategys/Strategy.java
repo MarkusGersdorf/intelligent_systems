@@ -36,25 +36,21 @@ public abstract class Strategy extends SolutionObject {
      * to create a plan. This function implements all dependencies
      */
     protected void planning() {
-        // TODO-Marcel&Joosten: Ihr hattet noch änderungen an dieser funktion. Pflegt die bitte ein :-)
-        //System.out.println("New planning");
         for (Job job : jobArrayList) {
             long verplanteZeit = 0;
             for (Operation operation : job.getOperationArrayList()) {
-                Resource machine = resourceArrayList.get((int) operation.getResource());
                 long dauerDerOperation = operation.getDuration();
-
-                if (machine.getOperations().size() == 0) {
+                if (schedule.getMakespan() == 0) {
                     operation.setStartTime(verplanteZeit);
                     operation.setEndTime(verplanteZeit + dauerDerOperation);
                     verplanteZeit += dauerDerOperation;
-                    machine.addOperation(operation);
+                    schedule.addOperation(operation);
                 } else {
                     boolean hinzugefuegt = false;
                     boolean blockiert = false;
 
                     while (!hinzugefuegt) {
-                        for (Operation operationInMaschine : machine.getOperations()) {
+                        for (Operation operationInMaschine : schedule.getOperations(operation.getResource())) {
                             if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
                                     ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime()) ||
                                     (operationInMaschine.getStartTime() > verplanteZeit && operationInMaschine.getStartTime() < (verplanteZeit + dauerDerOperation)) ||
@@ -69,7 +65,7 @@ public abstract class Strategy extends SolutionObject {
                         if (!blockiert) {
                             operation.setStartTime(verplanteZeit);
                             operation.setEndTime(verplanteZeit + operation.getDuration());
-                            machine.addOperation(operation);
+                            schedule.getResource(operation.getResource()).addOperation(operation);
                             verplanteZeit += operation.getDuration();
                             hinzugefuegt = true;
                         } else {
