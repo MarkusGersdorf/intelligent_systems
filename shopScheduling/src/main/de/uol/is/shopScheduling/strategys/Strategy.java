@@ -23,6 +23,7 @@ public abstract class Strategy extends SolutionObject {
     public Strategy(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
         super(jobArrayList, resourcesArrayList);
         planning();
+        schedule.print();
     }
 
     /**

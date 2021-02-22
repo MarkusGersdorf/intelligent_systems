@@ -30,10 +30,12 @@ public class ShopScheduling {
 
         // now for each file generate java object
         try {
+            /*
             for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
                 FifoStrategy fifoStrategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
             }
-
+            */
+            FifoStrategy fifoStrategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

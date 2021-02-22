@@ -143,7 +143,9 @@ public class Schedule implements ISchedule {
         ArrayList<Operation> operations = resourceHashMap.get(resource);
 
         if (operations != null) {
-            return operations.get(operations.size() - 1).getStartTime() - operations.get(0).getStartTime();
+            if (operations.size() > 0) {
+                return operations.get(operations.size() - 1).getStartTime() - operations.get(0).getStartTime();
+            }
         }
 
         return 0L;
@@ -173,6 +175,14 @@ public class Schedule implements ISchedule {
             }
         }
         return null;
+    }
+
+    public void print() {
+        for (Resource r : resourceHashMap.keySet()) {
+            for (Operation o : r.getOperations()) {
+                System.out.println("Res: " + r.getId() + " - Op: " + o.getStartTime());
+            }
+        }
     }
 
 }
