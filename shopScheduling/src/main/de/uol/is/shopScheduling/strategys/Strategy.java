@@ -23,7 +23,11 @@ public abstract class Strategy extends SolutionObject {
     public Strategy(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
         super(jobArrayList, resourcesArrayList);
         planning();
-        schedule.print();
+        for (int i = 0; i < 9; i++) {
+            for (Operation o : schedule.getOperations((long) i)) {
+                check_ascending_operation_order(o);
+            }
+        }
     }
 
     /**
@@ -38,11 +42,9 @@ public abstract class Strategy extends SolutionObject {
      */
     protected void planning() {
         for (Job job : jobArrayList) {
-            long verplanteZeit = 0;
             for (Operation operation : job.getOperationArrayList()) {
                 schedule.addOperationToResource(schedule.getResource(operation.getResource()), operation);
-
-                System.out.println(schedule.getResource(operation.getResource()).getDuration());
+                // TODO: implementieren
             }
         }
     }
