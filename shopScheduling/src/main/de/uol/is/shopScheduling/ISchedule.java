@@ -21,4 +21,8 @@ public interface ISchedule {
 
     Long durationTo(Operation endOperation);
 
+    Long getMakespan(Resource resource);
+
+    Long getMakespan();
+
 }

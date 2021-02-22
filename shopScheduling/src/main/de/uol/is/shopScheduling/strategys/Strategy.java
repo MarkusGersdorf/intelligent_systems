@@ -17,16 +17,12 @@ public abstract class Strategy extends SolutionObject {
     /**
      * constructor calls the functions for sorting and planning the heuristics directly after creating the class
      *
-     * @param jobArrayList List of jobs
-     * @param resource     List of resources
+     * @param jobArrayList       List of jobs
+     * @param resourcesArrayList List of resources
      */
-    public Strategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
-        this.jobArrayList = jobArrayList;
-        this.resourceArrayList = resource;
-        sort();
+    public Strategy(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
+        super(jobArrayList, resourcesArrayList);
         planning();
-        //printToConsole();
-        //printDiagram();
     }
 
     /**
@@ -57,7 +53,7 @@ public abstract class Strategy extends SolutionObject {
                     boolean hinzugefuegt = false;
                     boolean blockiert = false;
 
-                    while(!hinzugefuegt) {
+                    while (!hinzugefuegt) {
                         for (Operation operationInMaschine : machine.getOperations()) {
                             if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
                                     ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime()) ||

@@ -139,4 +139,22 @@ public class Schedule implements ISchedule {
         return duration;
     }
 
+    public Long getMakespan(Resource resource) {
+        ArrayList<Operation> operations = resourceHashMap.get(resource);
+
+        if (operations != null) {
+            return operations.get(operations.size() - 1).getStartTime() - operations.get(0).getStartTime();
+        }
+
+        return 0L;
+    }
+
+    public Long getMakespan() {
+        long makespan = 0L;
+        for (Resource resource : resourceHashMap.keySet()) {
+            makespan += getMakespan(resource);
+        }
+        return makespan;
+    }
+
 }
