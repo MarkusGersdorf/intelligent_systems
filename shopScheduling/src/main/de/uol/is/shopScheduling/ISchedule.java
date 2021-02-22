@@ -1,5 +1,7 @@
 package de.uol.is.shopScheduling;
 
+import java.util.ArrayList;
+
 public interface ISchedule {
     void addOperation(Operation operation);
 
@@ -24,5 +26,9 @@ public interface ISchedule {
     Long getMakespan(Resource resource);
 
     Long getMakespan();
+
+    Resource getResource(Long resourceId);
+
+    ArrayList<Operation> getOperations(Long resourceId);
 
 }

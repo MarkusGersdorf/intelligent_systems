@@ -157,4 +157,22 @@ public class Schedule implements ISchedule {
         return makespan;
     }
 
+    public Resource getResource(Long resourceId) {
+        for (Resource resource : resourceHashMap.keySet()) {
+            if (resource.getId() == resourceId) {
+                return resource;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Operation> getOperations(Long resourceId) {
+        for (Resource resource : resourceHashMap.keySet()) {
+            if (resource.getId() == resourceId) {
+                return resourceHashMap.get(resource);
+            }
+        }
+        return null;
+    }
+
 }
