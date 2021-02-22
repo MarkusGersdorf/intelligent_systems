@@ -157,7 +157,7 @@ public class Schedule implements ISchedule {
         return makespan;
     }
 
-    public Resource getResource(Long resourceId) {
+    public Resource getResource(long resourceId) {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == resourceId) {
                 return resource;
@@ -166,7 +166,7 @@ public class Schedule implements ISchedule {
         return null;
     }
 
-    public ArrayList<Operation> getOperations(Long resourceId) {
+    public ArrayList<Operation> getOperations(long resourceId) {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == resourceId) {
                 return resourceHashMap.get(resource);

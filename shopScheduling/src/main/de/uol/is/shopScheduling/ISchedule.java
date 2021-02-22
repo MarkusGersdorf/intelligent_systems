@@ -27,8 +27,8 @@ public interface ISchedule {
 
     Long getMakespan();
 
-    Resource getResource(Long resourceId);
+    Resource getResource(long resourceId);
 
-    ArrayList<Operation> getOperations(Long resourceId);
+    ArrayList<Operation> getOperations(long resourceId);
 
 }
