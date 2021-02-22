@@ -26,7 +26,7 @@ public class JsonParser {
      * @throws IOException    while the file is being processed
      * @throws ParseException while the file is being processed
      */
-    public ArrayList<Job> parseJsonResources(File fileName) throws IOException, ParseException {
+    public ArrayList<Job> parseJsonJobs(File fileName) throws IOException, ParseException {
         // parsing file "JSONExample.json"
         Object obj = new JSONParser().parse(new FileReader(fileName));
 
@@ -64,8 +64,33 @@ public class JsonParser {
         return jobArrayList;
     }
 
-    public ArrayList<Long> getNumberOfResources(File fileName) {
+    /**
+     * A file is processed here. Each resources is saved with the associated work
+     *
+     * @param fileName file to be processed
+     * @return A list of jobs to be performed
+     * @throws IOException    while the file is being processed
+     * @throws ParseException while the file is being processed
+     */
+    public ArrayList<Long> parseJsonResources(File fileName) throws IOException, ParseException {
+        // parsing file "JSONExample.json"
+        Object obj = new JSONParser().parse(new FileReader(fileName));
 
-        return new ArrayList<>();
+        // typecasting obj to JSONObject
+        JSONObject jo = (JSONObject) obj;
+
+        // getting firstName and lastName
+        JSONArray jobs = (JSONArray) jo.get("resources");
+
+        // save all jobs from one file into this list
+        ArrayList<Long> resourcesArrayList = new ArrayList<>();
+
+        jobs.stream().iterator().forEachRemaining(e -> {
+            JSONObject jsonObject = (JSONObject) e;
+            resourcesArrayList.add((Long) jsonObject.get("id"));
+
+        });
+
+        return resourcesArrayList;
     }
 }
