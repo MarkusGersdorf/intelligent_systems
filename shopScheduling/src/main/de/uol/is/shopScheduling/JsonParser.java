@@ -63,4 +63,9 @@ public class JsonParser {
         });
         return jobArrayList;
     }
+
+    public ArrayList<Long> getNumberOfResources(File fileName) {
+
+        return new ArrayList<>();
+    }
 }
