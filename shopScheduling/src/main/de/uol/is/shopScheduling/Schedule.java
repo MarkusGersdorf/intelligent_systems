@@ -1,5 +1,6 @@
 package de.uol.is.shopScheduling;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -7,32 +8,36 @@ import java.util.Set;
 public class Schedule implements ISchedule {
 
 
-    private HashMap<Resource, ArrayList<Operation>> resourceQueueHashMap = new HashMap<>();
+    private final HashMap<Resource, ArrayList<Operation>> resourceHashMap = new HashMap<>();
+
+    public Schedule(ArrayList<Long> resourcesList) {
+        initResources(resourcesList);
+    }
 
 
     private void initResources(ArrayList<Long> resourcesList) {
 
         for (Long resource : resourcesList) {
-            resourceQueueHashMap.put(new Resource("Resource ", resource), new ArrayList<>());
+            resourceHashMap.put(new Resource("Resource ", resource), new ArrayList<>());
             // TODO: Operations hinzufügen?
         }
     }
 
     public void addOperation(Operation operation) {
-        Set<Resource> resources = resourceQueueHashMap.keySet();
+        Set<Resource> resources = resourceHashMap.keySet();
         for (Resource res : resources) {
             if (res.getId() == operation.getResource()) {
-                resourceQueueHashMap.get(res).add(operation);
+                resourceHashMap.get(res).add(operation);
                 break;
             }
         }
     }
 
     public void addOperation(int index, Operation operation) {
-        Set<Resource> resources = resourceQueueHashMap.keySet();
+        Set<Resource> resources = resourceHashMap.keySet();
         for (Resource res : resources) {
             if (res.getId() == operation.getResource()) {
-                resourceQueueHashMap.get(res).add(index, operation);
+                resourceHashMap.get(res).add(index, operation);
                 break;
             }
         }
@@ -40,10 +45,10 @@ public class Schedule implements ISchedule {
 
 
     public void removeOperation(Operation operation) {
-        Set<Resource> resources = resourceQueueHashMap.keySet();
+        Set<Resource> resources = resourceHashMap.keySet();
         for (Resource res : resources) {
             if (res.getId() == operation.getResource()) {
-                resourceQueueHashMap.get(res).remove(operation);
+                resourceHashMap.get(res).remove(operation);
                 // TODO: update times from other operations
                 break;
             }
@@ -51,12 +56,12 @@ public class Schedule implements ISchedule {
     }
 
     public Operation getPreviousOperation(Operation operation) {
-        Set<Resource> resources = resourceQueueHashMap.keySet();
+        Set<Resource> resources = resourceHashMap.keySet();
         for (Resource res : resources) {
             if (res.getId() == operation.getResource()) {
-                int idx = resourceQueueHashMap.get(res).indexOf(operation);
-                if (resourceQueueHashMap.get(res).get(idx - 1) != null) {
-                    return resourceQueueHashMap.get(res).get(idx - 1);
+                int idx = resourceHashMap.get(res).indexOf(operation);
+                if (resourceHashMap.get(res).get(idx - 1) != null) {
+                    return resourceHashMap.get(res).get(idx - 1);
                 }
             }
         }
@@ -64,17 +69,15 @@ public class Schedule implements ISchedule {
     }
 
     public Operation getNextOperation(Operation operation) {
-        Set<Resource> resources = resourceQueueHashMap.keySet();
+        Set<Resource> resources = resourceHashMap.keySet();
         for (Resource res : resources) {
             if (res.getId() == operation.getResource()) {
-                int idx = resourceQueueHashMap.get(res).indexOf(operation);
-                if (resourceQueueHashMap.get(res).get(idx + 1) != null) {
-                    return resourceQueueHashMap.get(res).get(idx + 1);
+                int idx = resourceHashMap.get(res).indexOf(operation);
+                if (resourceHashMap.get(res).get(idx + 1) != null) {
+                    return resourceHashMap.get(res).get(idx + 1);
                 }
             }
         }
         return null;
     }
-
-
 }
