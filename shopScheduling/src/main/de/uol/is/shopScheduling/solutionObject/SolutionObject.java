@@ -6,7 +6,6 @@ import de.uol.is.shopScheduling.Resource;
 import de.uol.is.shopScheduling.Schedule;
 
 import java.util.ArrayList;
-import java.util.Queue;
 
 /**
  * This is a solution object. This solution object provides functions to output the solution visually in the console.
@@ -115,7 +114,7 @@ public abstract class SolutionObject {
             long plannedTime = 0;
             for (Operation operation : job.getOperationArrayList()) {
                 long resourceId = operation.getResource();
-                for (Operation operationInResource : getOperationsListFromResource(resourceId)) {
+                for (Operation operationInResource : schedule.getOperations(resourceId)) {
                     if (operationInResource.getJobId() == jobId) {
                         if (plannedTime > operationInResource.getStartTime()) {
                             return false;
@@ -129,12 +128,4 @@ public abstract class SolutionObject {
         return true;
     }
 
-    public Queue<Operation> getOperationsListFromResource(long resourceId) {
-        for (Resource resource : resourceArrayList) {
-            if (resource.getId() == resourceId) {
-                return resource.getOperationQueue();
-            }
-        }
-        return null;
-    }
 }
