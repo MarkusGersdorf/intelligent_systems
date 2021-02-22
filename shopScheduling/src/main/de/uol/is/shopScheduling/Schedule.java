@@ -179,7 +179,7 @@ public class Schedule implements ISchedule {
 
     public void print() {
         for (Resource r : resourceHashMap.keySet()) {
-            for (Operation o : r.getOperations()) {
+            for (Operation o : resourceHashMap.get(r)) {
                 System.out.println("Res: " + r.getId() + " - Operation Start Time: " + o.getStartTime());
             }
         }
@@ -194,7 +194,7 @@ public class Schedule implements ISchedule {
         ArrayList<Operation> resourceArrayList = resourceHashMap.get(resource);
         long maxEndPoint = 0L;
         for (Operation o : resourceArrayList) {
-            maxEndPoint = Long.min(maxEndPoint, o.getEndTime());
+            maxEndPoint = Long.max(maxEndPoint, o.getEndTime());
         }
 
         operation.setStartTime(Long.max(maxEndPoint, startPointOperation) + 1);
