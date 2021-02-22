@@ -40,40 +40,9 @@ public abstract class Strategy extends SolutionObject {
         for (Job job : jobArrayList) {
             long verplanteZeit = 0;
             for (Operation operation : job.getOperationArrayList()) {
-                long dauerDerOperation = operation.getDuration();
-                if (schedule.getMakespan() == 0) {
-                    operation.setStartTime(verplanteZeit);
-                    operation.setEndTime(verplanteZeit + dauerDerOperation);
-                    verplanteZeit += dauerDerOperation;
-                    schedule.addOperation(operation);
-                } else {
-                    boolean hinzugefuegt = false;
-                    boolean blockiert = false;
+                schedule.addOperationToResource(schedule.getResource(operation.getResource()), operation);
 
-                    while (!hinzugefuegt) {
-                        for (Operation operationInMaschine : schedule.getOperations(operation.getResource())) {
-                            if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
-                                    ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime()) ||
-                                    (operationInMaschine.getStartTime() > verplanteZeit && operationInMaschine.getStartTime() < (verplanteZeit + dauerDerOperation)) ||
-                                    (operationInMaschine.getEndTime() > verplanteZeit && operationInMaschine.getEndTime() < (verplanteZeit + dauerDerOperation)) ||
-                                    (verplanteZeit == operationInMaschine.getStartTime() && verplanteZeit + dauerDerOperation == operationInMaschine.getEndTime())) {
-                                verplanteZeit = operationInMaschine.getEndTime();
-                                blockiert = true;
-                                break;
-                            }
-                        }
-
-                        if (!blockiert) {
-                            operation.setStartTime(verplanteZeit);
-                            operation.setEndTime(verplanteZeit + operation.getDuration());
-                            schedule.getResource(operation.getResource()).addOperation(operation);
-                            verplanteZeit += operation.getDuration();
-                            hinzugefuegt = true;
-                        } else {
-                            blockiert = false;
-                        }
-                    }
-                }
+                System.out.println(schedule.getResource(operation.getResource()).getDuration());
             }
         }
     }

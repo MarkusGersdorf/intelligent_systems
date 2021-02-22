@@ -180,21 +180,27 @@ public class Schedule implements ISchedule {
     public void print() {
         for (Resource r : resourceHashMap.keySet()) {
             for (Operation o : r.getOperations()) {
-                System.out.println("Res: " + r.getId() + " - Op: " + o.getStartTime());
+                System.out.println("Res: " + r.getId() + " - Operation Start Time: " + o.getStartTime());
             }
         }
     }
 
-    public void addToResource(Resource resource, Operation operation) {
-        Operation previous = getPreviousJobOperation(operation);
+    public void addOperationToResource(Resource resource, Operation operation) {
+        long startPointOperation = 0L;
+        if (getPreviousJobOperation(operation) != null) {
+            startPointOperation = getPreviousJobOperation(operation).getEndTime();
+        }
+
         ArrayList<Operation> resourceArrayList = resourceHashMap.get(resource);
         long maxEndPoint = 0L;
         for (Operation o : resourceArrayList) {
             maxEndPoint = Long.min(maxEndPoint, o.getEndTime());
         }
 
-        operation.setStartTime(Long.max(maxEndPoint, previous.getEndTime()) + 1);
+        operation.setStartTime(Long.max(maxEndPoint, startPointOperation) + 1);
+        operation.setEndTime((Long.max(maxEndPoint, startPointOperation) + 1) + operation.getDuration());
 
+        addOperation(operation);
     }
 
 }
