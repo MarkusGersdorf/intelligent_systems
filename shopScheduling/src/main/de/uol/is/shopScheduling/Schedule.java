@@ -185,4 +185,16 @@ public class Schedule implements ISchedule {
         }
     }
 
+    public void addToResource(Resource resource, Operation operation) {
+        Operation previous = getPreviousJobOperation(operation);
+        ArrayList<Operation> resourceArrayList = resourceHashMap.get(resource);
+        long maxEndPoint = 0L;
+        for (Operation o : resourceArrayList) {
+            maxEndPoint = Long.min(maxEndPoint, o.getEndTime());
+        }
+
+        operation.setStartTime(Long.max(maxEndPoint, previous.getEndTime()) + 1);
+
+    }
+
 }
