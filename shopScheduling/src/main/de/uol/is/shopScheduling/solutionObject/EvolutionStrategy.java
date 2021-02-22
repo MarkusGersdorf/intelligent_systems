@@ -3,7 +3,6 @@ package de.uol.is.shopScheduling.solutionObject;
 import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
 import de.uol.is.shopScheduling.Resource;
-import de.uol.is.shopScheduling.strategys.RandomStrategy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,13 +19,12 @@ public class EvolutionStrategy extends Algorithm {
     /**
      * Basic constructor
      *
-     * @param jobArrayList a arrayList which contains all jobs
-     * @param resource     a arrayList which contains the usable machines.
+     * @param jobArrayList       a arrayList which contains all jobs
+     * @param resourcesArrayList a arrayList which contains the usable machines.
      */
-    public EvolutionStrategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
-        super(jobArrayList, resource);
+    public EvolutionStrategy(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
+        super(jobArrayList, resourcesArrayList);
         optimize();
-        //printDiagram();
     }
 
     /**
@@ -42,16 +40,16 @@ public class EvolutionStrategy extends Algorithm {
             ArrayList<Job> test = jobArrayList;
             Collections.copy(test, jobArrayList);
             // generate mutation
-            ArrayList<Resource> mutation = new RandomStrategy(test, resourceArrayList).getResourceArrayList();
+            //ArrayList<Resource> mutation = new RandomStrategy(test, resourceArrayList).getResourceArrayList();
             //System.out.println("System still working");
             // override old Array List
-            int durationMutation = calcDuration(mutation);
-            int durationActualSolution = calcDuration(resourceArrayList);
+            //int durationMutation = calcDuration(mutation);
+            //int durationActualSolution = calcDuration(resourceArrayList);
 
-            if (durationMutation <= durationActualSolution) {
-                //resourceArrayList = new ArrayList<>(mutation);
-                System.out.println("Fitness: " + calcDuration(mutation));
-            }
+            //if (durationMutation <= durationActualSolution) {
+            //resourceArrayList = new ArrayList<>(mutation);
+            //   System.out.println("Fitness: " + calcDuration(mutation));
+            //}
         }
     }
 

@@ -1,12 +1,9 @@
 package de.uol.is.shopScheduling.solutionObject;
 
 import de.uol.is.shopScheduling.Job;
-import de.uol.is.shopScheduling.Operation;
 import de.uol.is.shopScheduling.Resource;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 
 
 // Initialize solution (done)
@@ -15,13 +12,13 @@ import java.util.LinkedList;
 
 public class Metaheuristic extends Algorithm {
 
-    public Metaheuristic(ArrayList<Job> jobArrayList, ArrayList<Resource> resourceArrayList) {
-        super(jobArrayList, resourceArrayList);
+    public Metaheuristic(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
+        super(jobArrayList, resourcesArrayList);
     }
 
     @Override
     protected void optimize() {
-        ArrayList<Resource> new_resources_array_list = new ArrayList<>();
+       /* ArrayList<Resource> new_resources_array_list = new ArrayList<>();
         int runs = 0;
         boolean success = false;
 
@@ -51,7 +48,7 @@ public class Metaheuristic extends Algorithm {
         }
         else {
             System.out.println("[-] Optimierung war nicht erfolgreich");
-        }
+        }*/
     }
 
     protected double total_processing_time(ArrayList<Resource> resources) {
