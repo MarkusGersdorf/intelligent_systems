@@ -50,7 +50,7 @@ public abstract class SolutionObject {
      * Job Shop Scheduling diagram
      */
     public void printDiagram() {
-
+        schedule.printDiagram();
     }
 
     /**
@@ -62,14 +62,7 @@ public abstract class SolutionObject {
         boolean orderPreviousOk = true;
         boolean orderNextOk = true;
 
-        Resource resource = schedule.getResource(operation.getResource());
-        ArrayList<Operation> operationArrayList = schedule.getOperations(resource);
-
-        if (operationArrayList == null) {
-            System.out.printf("Error");
-        }
-
-        for (Operation op : operationArrayList) {
+        for (Operation op : schedule.getOperations(schedule.getResource(operation.getResource()))) {
             Operation previousResourceOperation = schedule.getPreviousResourceOperation(op);
             Operation nextResourceOperation = schedule.getNextResourceOperation(op);
 

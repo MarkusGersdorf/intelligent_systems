@@ -1,5 +1,7 @@
 package de.uol.is.shopScheduling;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -63,14 +65,13 @@ public class Schedule implements ISchedule {
     }
 
     public Operation getPreviousResourceOperation(Operation operation) {
-        Set<Resource> resources = resourceHashMap.keySet();
-        for (Resource res : resources) {
-            if (res.getId() == operation.getResource()) {
-                int idx = resourceHashMap.get(res).indexOf(operation);
-                if (idx < resourceHashMap.get(res).size() && idx > 0) {
-                    if (resourceHashMap.get(res).get(idx - 1) != null) {
-                        return resourceHashMap.get(res).get(idx - 1);
-                    }
+        for (Resource resource : resourceHashMap.keySet()) {
+            if (resource.getId() == operation.getResource()) {
+                ArrayList<Operation> operationArrayList = resourceHashMap.get(resource);
+                if (operationArrayList.size() > 1 && operationArrayList.indexOf(operation) > 0) {
+                    return operationArrayList.get(operationArrayList.indexOf(operation) - 1);
+                } else {
+                    return null;
                 }
             }
         }
@@ -78,14 +79,13 @@ public class Schedule implements ISchedule {
     }
 
     public Operation getNextResourceOperation(Operation operation) {
-        Set<Resource> resources = resourceHashMap.keySet();
-        for (Resource res : resources) {
-            if (res.getId() == operation.getResource()) {
-                int idx = resourceHashMap.get(res).indexOf(operation);
-                if (resourceHashMap.get(res).size() > idx + 1) {
-                    if (resourceHashMap.get(res).get(idx) != null && resourceHashMap.get(res).get(idx + 1) != null) {
-                        return resourceHashMap.get(res).get(idx + 1);
-                    }
+        for (Resource resource : resourceHashMap.keySet()) {
+            if (resource.getId() == operation.getResource()) {
+                ArrayList<Operation> operationArrayList = resourceHashMap.get(resource);
+                if (operationArrayList.size() > operationArrayList.indexOf(operation) + 1) {
+                    return operationArrayList.get(operationArrayList.indexOf(operation) + 1);
+                } else {
+                    return null;
                 }
             }
         }
@@ -95,7 +95,7 @@ public class Schedule implements ISchedule {
     public Operation getPreviousJobOperation(Operation operation) {
         for (ArrayList<Operation> operationArrayList : resourceHashMap.values()) {
             for (Operation op : operationArrayList) {
-                if (op.getResource() - 1 == operation.getResource() && op.getJobId() == operation.getJobId())
+                if (op.getIndex() == operation.getIndex() - 1 && op.getJobId() == operation.getJobId())
                     return op;
             }
         }
@@ -169,7 +169,7 @@ public class Schedule implements ISchedule {
 
         if (operations != null) {
             if (operations.size() > 0) {
-                return operations.get(operations.size() - 1).getStartTime() - operations.get(0).getStartTime();
+                return operations.get(operations.size() - 1).getEndTime() - operations.get(0).getStartTime();
             }
         }
 
@@ -177,11 +177,16 @@ public class Schedule implements ISchedule {
     }
 
     public long getMakespan() {
-        long makespan = 0L;
+        long minStartTime = Long.MAX_VALUE;
+        long maxEndTime = Long.MIN_VALUE;
+
         for (Resource resource : resourceHashMap.keySet()) {
-            makespan += getMakespan(resource);
+            for (Operation operation : resourceHashMap.get(resource)) {
+                minStartTime = Long.min(minStartTime, operation.getStartTime());
+                maxEndTime = Long.max(maxEndTime, operation.getEndTime());
+            }
         }
-        return makespan;
+        return maxEndTime - minStartTime;
     }
 
     public Resource getResource(long resourceId) {
@@ -206,6 +211,15 @@ public class Schedule implements ISchedule {
         return getOperations(resource.getId());
     }
 
+    public Operation getOperation(Resource resource, long pointInTime) {
+        for (Operation operation : resourceHashMap.get(resource)) {
+            if (operation.operationExists(pointInTime)) {
+                return operation;
+            }
+        }
+        return null;
+    }
+
     public void print() {
         for (Resource r : resourceHashMap.keySet()) {
             for (Operation o : resourceHashMap.get(r)) {
@@ -214,20 +228,64 @@ public class Schedule implements ISchedule {
         }
     }
 
+    public void printDiagram() {
+        long minDuration = Long.MAX_VALUE;
+        long maxDuration = Long.MIN_VALUE;
+
+        for (Resource resource : resourceHashMap.keySet()) {
+            for (Operation operation : resourceHashMap.get(resource)) {
+                minDuration = Long.min(minDuration, operation.getStartTime());
+                maxDuration = Long.max(maxDuration, operation.getEndTime());
+            }
+        }
+
+        for (Resource resource : resourceHashMap.keySet()) {
+            for (int i = (int) minDuration; i < (int) maxDuration; i++) {
+                String resourceString = getOperation(resource, i) == null ? " " : "" + getOperation(resource, i).getJobId() + "";
+                System.out.print("|" + StringUtils.leftPad(resourceString + "|\t", 6, " "));
+            }
+            System.out.println();
+        }
+        for (int i = (int) minDuration; i < (int) maxDuration; i++) {
+            System.out.print("|" + StringUtils.leftPad(i + "|\t", 6, "0"));
+        }
+        System.out.println();
+    }
+
     public void addOperationToResource(Resource resource, Operation operation) {
         long startPointOperation = 0L;
+        long maxEndPoint = 0L;
+
         if (getPreviousJobOperation(operation) != null) {
             startPointOperation = getPreviousJobOperation(operation).getEndTime();
         }
 
-        ArrayList<Operation> resourceArrayList = resourceHashMap.get(resource);
-        long maxEndPoint = 0L;
-        for (Operation o : resourceArrayList) {
-            maxEndPoint = Long.max(maxEndPoint, o.getEndTime());
+        if (getPreviousResourceOperation(operation) != null) {
+            maxEndPoint = getPreviousResourceOperation(operation).getEndTime();
         }
 
         operation.setStartTime(Long.max(maxEndPoint, startPointOperation) + 1);
-        operation.setEndTime((Long.max(maxEndPoint, startPointOperation) + 1) + operation.getDuration());
+        operation.setEndTime(operation.getStartTime() + operation.getDuration());
+
+
+        // TODO: Update other items - but how should we do it?
+        /*// update start point from next Job Operation
+        if (getNextJobOperation(operation) != null) {
+            if (operation.getEndTime() > getNextJobOperation(operation).getStartTime()) {
+                getNextJobOperation(operation).setStartTime(operation.getEndTime() + 1);
+
+                ArrayList<Operation> operationArrayList = resourceHashMap.get(getResource(operation.getResource()));
+                if (operationArrayList != null) {
+                    for (Operation o : operationArrayList) {
+                        if (getNextResourceOperation(o) != null) {
+                            if (getNextResourceOperation(o).getStartTime() < o.getEndTime()) {
+                                getNextResourceOperation(o).setStartTime(o.getEndTime() + 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
 
         addOperation(operation);
     }

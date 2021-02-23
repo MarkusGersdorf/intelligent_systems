@@ -38,8 +38,14 @@ public class ShopScheduling {
             }
             */
             FifoStrategy fifoStrategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+            fifoStrategy.printDiagram();
+            System.out.println("----------------------------------------------------------------");
+            System.out.println("----------------------------------------------------------------");
             System.out.println("Fifo-Strategy: " + fifoStrategy.getMakespan());
             RandomStrategy randomStrategy = new RandomStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+            //randomStrategy.printDiagram();
+            System.out.println("----------------------------------------------------------------");
+            System.out.println("----------------------------------------------------------------");
             System.out.println("Random-Strategy: " + randomStrategy.getMakespan());
             SptStrategy sptStrategy = new SptStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
             System.out.println("Spt-Strategy: " + sptStrategy.getMakespan());
