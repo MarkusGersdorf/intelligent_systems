@@ -234,9 +234,47 @@ public class Schedule implements ISchedule {
         return null;
     }
 
-    public void printTable() {
+    public void print_to_console() {
+        // Tabelle nach Job sortiert
+        /*
+        System.out.print("JobID\t\t");
+        Job job = jobArrayList.get(0);
+        int steps = 0;
+        for (Operation op : job.getOperationArrayList()) {
+            System.out.print(" Step " + steps + " \t");
+            steps += 1;
+        }
+        System.out.println();
+        for (Job j : jobArrayList) {
+            System.out.print(j.getId() + "\t\t\t");
+            for (Operation op : j.getOperationArrayList()) {
+                System.out.print(" " + op.getResource() + "," + op.getDuration() + " \t\t");
+            }
+            System.out.println();
+        }
+        */
+        // Tabelle nach Ressource sortiert
 
+        System.out.print("RessourceID\t");
+        for(Resource res : resourceHashMap.keySet()) {
+            int steps = 0;
+            for (Operation op : resourceHashMap.get(res)) {
+                System.out.print(" Step " + steps + " \t");
+                steps += 1;
+            }
+            break;
+        }
+        System.out.println();
+        // TODO: Liste sortieren (TreeMap)
+        for (Resource r : resourceHashMap.keySet()) {
+            System.out.print(r.getId() + "\t\t\t");
+            for (Operation op : resourceHashMap.get(r)) {
+                System.out.print(" " + op.getResource() + "," + op.getDuration() + " \t\t");
+            }
+            System.out.println("");
+        }
     }
+
 
     public void printDiagram() {
         long minDuration = Long.MAX_VALUE;

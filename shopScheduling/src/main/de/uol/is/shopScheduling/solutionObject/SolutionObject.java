@@ -43,7 +43,7 @@ public abstract class SolutionObject {
      * Job Shop Scheduling table
      */
     public void printToConsole() {
-
+        schedule.print_to_console();
     }
 
     /**
