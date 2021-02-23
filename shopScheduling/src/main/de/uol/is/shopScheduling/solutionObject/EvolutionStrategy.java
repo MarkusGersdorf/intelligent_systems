@@ -3,6 +3,7 @@ package de.uol.is.shopScheduling.solutionObject;
 import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
 import de.uol.is.shopScheduling.Resource;
+import de.uol.is.shopScheduling.strategys.RandomStrategy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +17,8 @@ import java.util.LinkedList;
  */
 public class EvolutionStrategy extends Algorithm {
 
+    private ArrayList<Long> resourcesArrayList;
+
     /**
      * Basic constructor
      *
@@ -24,6 +27,7 @@ public class EvolutionStrategy extends Algorithm {
      */
     public EvolutionStrategy(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
         super(jobArrayList, resourcesArrayList);
+        this.resourcesArrayList = resourcesArrayList;
         optimize();
     }
 
@@ -35,21 +39,22 @@ public class EvolutionStrategy extends Algorithm {
     protected void optimize() {
         int searchCounter = 0;
 
+        RandomStrategy best = new RandomStrategy(jobArrayList, resourcesArrayList);
+
         while (searchCounter < 10) {
             searchCounter++;
             ArrayList<Job> test = jobArrayList;
             Collections.copy(test, jobArrayList);
             // generate mutation
-            //ArrayList<Resource> mutation = new RandomStrategy(test, resourceArrayList).getResourceArrayList();
-            //System.out.println("System still working");
-            // override old Array List
-            //int durationMutation = calcDuration(mutation);
-            //int durationActualSolution = calcDuration(resourceArrayList);
 
-            //if (durationMutation <= durationActualSolution) {
-            //resourceArrayList = new ArrayList<>(mutation);
-            //   System.out.println("Fitness: " + calcDuration(mutation));
-            //}
+            RandomStrategy mutation = new RandomStrategy(jobArrayList, resourcesArrayList);
+            System.out.println("System still working");
+            // override old Array List
+
+            if (mutation.getMakespan() <= best.getMakespan()) {
+                best = mutation;
+                System.out.println("Fitness: " + best.getMakespan());
+            }
         }
     }
 

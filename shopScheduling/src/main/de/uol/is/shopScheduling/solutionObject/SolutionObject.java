@@ -120,4 +120,8 @@ public abstract class SolutionObject {
         return false;
     }
 
+    public long getMakespan() {
+        return schedule.getMakespan();
+    }
+
 }
