@@ -64,7 +64,7 @@ public abstract class SolutionObject {
             Operation nextResourceOperation = schedule.getNextOperation(op);
 
             if (previousResourceOperation != null) {
-                orderPreviousOk = nextResourceOperation.getStartTime() > op.getEndTime();
+                orderPreviousOk = previousResourceOperation.getEndTime() < op.getStartTime();
             }
 
             if (nextResourceOperation != null) {
