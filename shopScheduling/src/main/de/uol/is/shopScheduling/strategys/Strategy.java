@@ -36,9 +36,24 @@ public abstract class Strategy extends SolutionObject {
      * to create a plan. This function implements all dependencies
      */
     protected void planning(ArrayList<Operation> operationArrayList) {
+        long getMaxId = 0;
+
+        ArrayList<Operation> solutionList = new ArrayList<>();
+
         for (Operation operation : operationArrayList) {
+            getMaxId = Long.max(getMaxId, operation.getIndex());
+        }
+
+        for (int i = 0; i < getMaxId; i++) {
+            for (Operation operation : operationArrayList) {
+                if (operation.getIndex() == i) {
+                    solutionList.add(operation);
+                }
+            }
+        }
+
+        for (Operation operation : solutionList) {
             schedule.addOperationToResource(schedule.getResource(operation.getResource()), operation);
-            // TODO: implementieren
         }
     }
 
