@@ -3,6 +3,7 @@ package de.uol.is.shopScheduling.solutionObject;
 import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Resource;
 import de.uol.is.shopScheduling.strategys.RandomStrategy;
+import de.uol.is.shopScheduling.strategys.Strategy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +15,8 @@ import java.util.Collections;
  * @version 1.0
  */
 public class EvolutionStrategy extends Algorithm {
+
+    private long bestMakespan;
 
     /**
      * Basic constructor
@@ -35,11 +38,13 @@ public class EvolutionStrategy extends Algorithm {
         int searchCounter = 0;
 
         RandomStrategy best = new RandomStrategy(jobArrayList, resourcesArrayList);
-        long bestMakespan = best.getMakespan();
+        bestMakespan = best.getMakespan();
+
+        ArrayList<Strategy> strategies = new ArrayList<>();
 
         System.out.println("ES-init Fitness: " + bestMakespan);
 
-        while (searchCounter < 1) {
+        while (searchCounter < 1000) {
             searchCounter++;
             ArrayList<Job> test = jobArrayList;
             Collections.copy(test, jobArrayList);
@@ -50,12 +55,15 @@ public class EvolutionStrategy extends Algorithm {
             long mutationMakespan = mutation.getMakespan();
 
             if (mutationMakespan <= bestMakespan) {
-                best = mutation;
+                strategies.add(mutation);
                 bestMakespan = mutationMakespan;
                 System.out.println("Fitness: " + best.getMakespan());
             }
         }
+        schedule = strategies.get(strategies.size() - 1).getSchedule();
     }
+
+    public long get_best_makespan() { return this.bestMakespan; }
 
     /**
      * mutated population

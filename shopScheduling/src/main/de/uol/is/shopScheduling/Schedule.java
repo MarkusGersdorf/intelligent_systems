@@ -234,12 +234,8 @@ public class Schedule implements ISchedule {
         return null;
     }
 
-    public void print() {
-        for (Resource r : resourceHashMap.keySet()) {
-            for (Operation o : resourceHashMap.get(r)) {
-                System.out.println("Res: " + r.getId() + " - Operation Start Time: " + o.getStartTime());
-            }
-        }
+    public void printTable() {
+
     }
 
     public void printDiagram() {
