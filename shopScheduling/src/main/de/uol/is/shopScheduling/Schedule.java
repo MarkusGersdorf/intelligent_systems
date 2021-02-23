@@ -179,6 +179,11 @@ public class Schedule implements ISchedule {
         return null;
     }
 
+    public ArrayList<Operation> getOperations(Resource resource) {
+        getOperations(resource.getId());
+        return null;
+    }
+
     public void print() {
         for (Resource r : resourceHashMap.keySet()) {
             for (Operation o : resourceHashMap.get(r)) {

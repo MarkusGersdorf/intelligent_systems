@@ -1,13 +1,11 @@
 package de.uol.is.shopScheduling.solutionObject;
 
 import de.uol.is.shopScheduling.Job;
-import de.uol.is.shopScheduling.Operation;
 import de.uol.is.shopScheduling.Resource;
 import de.uol.is.shopScheduling.strategys.RandomStrategy;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 
 /**
  * Evolutionary 1+1 algorithm
@@ -65,21 +63,8 @@ public class EvolutionStrategy extends Algorithm {
      * @return mutate population
      */
     private ArrayList<Resource> mutation(ArrayList<Resource> resourcesOld) {
-        ArrayList<Resource> solutionList = new ArrayList<>(resourcesOld);
-        int counter = 0;
-        // do while because we want to mutate one time
-        do {
-            counter++;
-            for (Resource resource : solutionList) {
-                // queue to array list
-                ArrayList<Operation> operationArrayList = new ArrayList<>(resource.getOperationQueue());
-                // shuffle list
-                Collections.shuffle(operationArrayList);
-                // set queue with new values
-                resource.setOperationQueue(new LinkedList<>(operationArrayList));
-            }
-        } while (!check_for_constraints(solutionList));
 
-        return solutionList;
+
+        return null;
     }
 }

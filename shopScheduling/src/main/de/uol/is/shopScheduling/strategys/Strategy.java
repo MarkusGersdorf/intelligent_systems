@@ -2,7 +2,6 @@ package de.uol.is.shopScheduling.strategys;
 
 import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
-import de.uol.is.shopScheduling.Resource;
 import de.uol.is.shopScheduling.solutionObject.SolutionObject;
 
 import java.util.ArrayList;
@@ -23,11 +22,7 @@ public abstract class Strategy extends SolutionObject {
     public Strategy(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
         super(jobArrayList, resourcesArrayList);
         planning();
-        for (int i = 0; i < 9; i++) {
-            for (Operation o : schedule.getOperations((long) i)) {
-                check_ascending_operation_order(o);
-            }
-        }
+        checkConstraints(true);
     }
 
     /**
@@ -47,5 +42,30 @@ public abstract class Strategy extends SolutionObject {
                 // TODO: implementieren
             }
         }
+    }
+
+    /**
+     * Check constraints from scheduling plan
+     *
+     * @param print when true error messages will be printed
+     * @return true if constraints success else false
+     */
+    protected boolean checkConstraints(boolean print) {
+        for (int i = 0; i < 9; i++) {
+            for (Operation o : schedule.getOperations(i)) {
+                if (!checkAscendingOperationOrder(o)) {
+                    if (print) {
+                        System.err.println("Ascending order not ok!" + " Startpoint: " + o.getStartTime() + " - OperationId: " + o.getIndex() + " - JobId: " + o.getJobId());
+                    }
+                    return false;
+                }
+                if (!checkIneJobAtOnePointInTime(o)) {
+                    if (print) {
+                        System.err.println("There is more as one job in one time!" + " Startpoint: " + o.getStartTime() + " - OperationId: " + o.getIndex() + " - JobId: " + o.getJobId());
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

@@ -50,60 +50,28 @@ public abstract class SolutionObject {
     }
 
     /**
-     * Check for constraints
-     *
-     * @return true, if all constraints are fulfilled
-     */
-    protected boolean check_for_constraints(ArrayList<Resource> resourceArrayList) {
-
-
-        //return one_job_at_a_time(resourceArrayList) && check_ascending_operation_order(resourceArrayList);
-        return false;
-    }
-
-
-    /**
      * Check if one job (and his operations) is processed on one machine at a time
      *
      * @return True if one job (and his Operations) is processed on one machine at a time
      */
-    protected boolean one_job_at_a_time(ArrayList<Resource> resourceArrayList) {
-        for (Resource resource : resourceArrayList) {
-            for (Operation operation : resource.getOperations()) {
-                for (Operation operation_check : resource.getOperations()) {
-                    // If the same Job = break.
-                    if (operation.getJobId() == operation_check.getJobId()) {
-                        break;
-                    }
+    protected boolean checkIneJobAtOnePointInTime(Operation operation) {
+        boolean orderPreviousOk = true;
+        boolean orderNextOk = true;
 
-                    // Same start or end point not allowed
-                    if (operation.getStartTime() == operation_check.getStartTime() || operation.getEndTime() == operation_check.getEndTime()) {
-                        return false;
-                    }
 
-                    // Other Operation begins before the Start and ends in the middle of the Operation = not allowed.
-                    if (operation.getStartTime() > operation_check.getStartTime() && operation.getStartTime() < operation_check.getEndTime()) {
-                        return false;
-                    }
+        for (Operation op : schedule.getResource(operation.getResource()).getOperations()) {
+            Operation previousResourceOperation = schedule.getPreviousOperation(op);
+            Operation nextResourceOperation = schedule.getNextOperation(op);
 
-                    // Other Operation begins before the End and goes over the end of the Operation = not allowed.
-                    if (operation.getEndTime() > operation_check.getStartTime() && operation.getEndTime() < operation_check.getEndTime()) {
-                        return false;
-                    }
+            if (previousResourceOperation != null) {
+                orderPreviousOk = nextResourceOperation.getStartTime() > op.getEndTime();
+            }
 
-                    // Other Operation starts and ends between the Operation = not allowed.
-                    if (operation.getStartTime() > operation_check.getStartTime() && operation.getEndTime() > operation_check.getEndTime()) {
-                        return false;
-                    }
-
-                    // Other Operation starts before the Operation and ends after the Operation = not allowed
-                    if (operation.getStartTime() < operation_check.getStartTime() && operation.getEndTime() < operation_check.getEndTime()) {
-                        return false;
-                    }
-                }
+            if (nextResourceOperation != null) {
+                orderNextOk = nextResourceOperation.getStartTime() > op.getEndTime();
             }
         }
-        return true;
+        return orderPreviousOk && orderNextOk;
     }
 
     /**
@@ -111,13 +79,13 @@ public abstract class SolutionObject {
      *
      * @return True if all operations are in the correct order.
      */
-    protected boolean check_ascending_operation_order(Operation operation) {
+    protected boolean checkAscendingOperationOrder(Operation operation) {
         Operation nextOperation = schedule.getNextOperation(operation);
 
         if (nextOperation != null) {
-            return nextOperation.getStartTime() < operation.getEndTime();
+            return nextOperation.getStartTime() > operation.getEndTime();
         }
-        return false;
+        return true; // there is no next operation
     }
 
     public long getMakespan() {
