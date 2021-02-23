@@ -1,7 +1,6 @@
 package de.uol.is.shopScheduling.optimizationMethods;
 
 import de.uol.is.shopScheduling.Job;
-import de.uol.is.shopScheduling.Resource;
 import de.uol.is.shopScheduling.strategys.RandomStrategy;
 import de.uol.is.shopScheduling.strategys.Strategy;
 
@@ -15,8 +14,6 @@ import java.util.Collections;
  * @version 1.0
  */
 public class EvolutionStrategy extends Algorithm {
-
-    private long bestMakespan;
 
     /**
      * Basic constructor
@@ -37,14 +34,14 @@ public class EvolutionStrategy extends Algorithm {
     protected void optimize(ArrayList<Long> resourcesArrayList) {
         int searchCounter = 0;
 
+        // init solution
         RandomStrategy best = new RandomStrategy(jobArrayList, resourcesArrayList);
-        bestMakespan = best.getMakespan();
+        long bestMakespan = best.getMakespan();
 
         ArrayList<Strategy> strategies = new ArrayList<>();
-
         System.out.println("ES-init Fitness: " + bestMakespan);
 
-        while (searchCounter < 1) {
+        while (searchCounter < 100) {
             searchCounter++;
             ArrayList<Job> test = jobArrayList;
             Collections.copy(test, jobArrayList);
@@ -55,29 +52,15 @@ public class EvolutionStrategy extends Algorithm {
             long mutationMakespan = mutation.getMakespan();
 
             if (mutationMakespan <= bestMakespan) {
-                strategies.add(mutation);
+                strategies.add(mutation); // add solutions to a list
                 bestMakespan = mutationMakespan;
                 System.out.println("Fitness: " + best.getMakespan());
             }
         }
         if (strategies.size() > 0) {
-            schedule = strategies.get(strategies.size() - 1).getSchedule();
+            schedule = strategies.get(strategies.size() - 1).getSchedule(); // select last solution
         } else {
-            schedule = best.getSchedule();
+            schedule = best.getSchedule(); // select init solution
         }
-    }
-
-    public long get_best_makespan() { return this.bestMakespan; }
-
-    /**
-     * mutated population
-     *
-     * @param resourcesOld old population
-     * @return mutate population
-     */
-    private ArrayList<Resource> mutation(ArrayList<Resource> resourcesOld) {
-
-
-        return null;
     }
 }
