@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Resources are controlled here. If something is added then everything around it is adjusted if necessary.
@@ -33,9 +32,13 @@ public class Schedule implements ISchedule {
         }
     }
 
+    /**
+     * Add operation to resource
+     *
+     * @param operation operation object with initialized resourceId
+     */
     public void addOperation(Operation operation) {
-        Set<Resource> resourceSet = resourceHashMap.keySet();
-        for (Resource resource : resourceSet) {
+        for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == operation.getResource()) {
                 resourceHashMap.get(resource).add(operation);
                 break;
@@ -43,9 +46,14 @@ public class Schedule implements ISchedule {
         }
     }
 
+    /**
+     * * Add operation to resource
+     *
+     * @param index     index where the operation should be added
+     * @param operation operation object with initialized resourceId
+     */
     public void addOperation(int index, Operation operation) {
-        Set<Resource> resourceSet = resourceHashMap.keySet();
-        for (Resource resource : resourceSet) {
+        for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == operation.getResource()) {
                 resourceHashMap.get(resource).add(index, operation);
                 break;
@@ -53,10 +61,13 @@ public class Schedule implements ISchedule {
         }
     }
 
-
+    /**
+     * Remove operation from resource
+     *
+     * @param operation operation object with initialized resourceId
+     */
     public void removeOperation(Operation operation) {
-        Set<Resource> resourceSet = resourceHashMap.keySet();
-        for (Resource resource : resourceSet) {
+        for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == operation.getResource()) {
                 resourceHashMap.get(resource).remove(operation);
                 break;
@@ -64,6 +75,12 @@ public class Schedule implements ISchedule {
         }
     }
 
+    /**
+     * Get last element from resource without inserted current
+     *
+     * @param operation operation object with initialized resourceId
+     * @return last inserted operation or null when the resource list is empty
+     */
     public Operation getLastInsertedElement(Operation operation) {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == operation.getResource()) {
@@ -78,6 +95,12 @@ public class Schedule implements ISchedule {
         return null;
     }
 
+    /**
+     * Get previous operation on the same resource
+     *
+     * @param operation operation for which is asked
+     * @return previous operation or null when there is none
+     */
     public Operation getPreviousResourceOperation(Operation operation) {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == operation.getResource()) {
@@ -92,6 +115,12 @@ public class Schedule implements ISchedule {
         return null;
     }
 
+    /**
+     * Get next operation on the same resource
+     *
+     * @param operation operation for which is asked
+     * @return next operation or null when there is none
+     */
     public Operation getNextResourceOperation(Operation operation) {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == operation.getResource()) {
@@ -106,6 +135,12 @@ public class Schedule implements ISchedule {
         return null;
     }
 
+    /**
+     * Get previous operation with the same jobId
+     *
+     * @param operation operation for which is asked
+     * @return previous operation or null when there is none
+     */
     public Operation getPreviousJobOperation(Operation operation) {
         for (ArrayList<Operation> operationArrayList : resourceHashMap.values()) {
             for (Operation op : operationArrayList) {
@@ -116,6 +151,12 @@ public class Schedule implements ISchedule {
         return null;
     }
 
+    /**
+     * Get next operation with the same jobId
+     *
+     * @param operation operation for which is asked
+     * @return next operation or null when there is none
+     */
     public Operation getNextJobOperation(Operation operation) {
         for (ArrayList<Operation> operationArrayList : resourceHashMap.values()) {
             for (Operation op : operationArrayList) {
@@ -126,7 +167,13 @@ public class Schedule implements ISchedule {
         return null;
     }
 
-
+    /**
+     * Duration  from one operation to another
+     *
+     * @param startOperation operation to start to measure the duration
+     * @param endOperation   operation to stop the duration measurement
+     * @return duration
+     */
     public long durationFromTo(Operation startOperation, Operation endOperation) {
         long duration = 0L;
         for (ArrayList<Operation> operationArrayList : resourceHashMap.values()) {
@@ -139,17 +186,22 @@ public class Schedule implements ISchedule {
     }
 
     /**
-     * duration to a Operation
+     * Duration to a Operation
      *
-     * @param endOperation
-     * @param inclusive    inclusive endOperation
-     * @return
+     * @param endOperation operation to stop the duration measurement
+     * @param inclusive    inclusive endOperation while parameter is true
+     * @return duration
      */
     public long durationTo(Operation endOperation, boolean inclusive) {
         return (inclusive) ? durationFrom(endOperation) + endOperation.getDuration() : durationFrom(endOperation);
     }
 
-
+    /**
+     * Duration to a Operation
+     *
+     * @param endOperation operation to stop the duration measurement
+     * @return duration
+     */
     public long durationTo(Operation endOperation) {
         long duration = 0L;
         for (ArrayList<Operation> operationArrayList : resourceHashMap.values()) {
@@ -162,10 +214,23 @@ public class Schedule implements ISchedule {
         return duration;
     }
 
+    /**
+     * Duration from a Operation
+     *
+     * @param startOperation operation to start the duration measurement
+     * @param inclusive      inclusive endOperation while parameter is true
+     * @return duration
+     */
     public long durationFrom(Operation startOperation, boolean inclusive) {
         return (inclusive) ? durationFrom(startOperation) + startOperation.getDuration() : durationFrom(startOperation);
     }
 
+    /**
+     * Duration from a Operation
+     *
+     * @param startOperation operation to start the duration measurement
+     * @return duration
+     */
     public long durationFrom(Operation startOperation) {
         long duration = 0L;
         for (ArrayList<Operation> operationArrayList : resourceHashMap.values()) {
@@ -178,6 +243,12 @@ public class Schedule implements ISchedule {
         return duration;
     }
 
+    /**
+     * Get makespan from one resource
+     *
+     * @param resource resource for which makespan should be calculated
+     * @return makespan
+     */
     public long getMakespan(Resource resource) {
         ArrayList<Operation> operations = resourceHashMap.get(resource);
 
@@ -190,6 +261,11 @@ public class Schedule implements ISchedule {
         return 0L;
     }
 
+    /**
+     * Get makespan from the whole scheduler
+     *
+     * @return makespan
+     */
     public long getMakespan() {
         long minStartTime = Long.MAX_VALUE;
         long maxEndTime = Long.MIN_VALUE;

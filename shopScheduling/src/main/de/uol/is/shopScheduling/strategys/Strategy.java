@@ -53,7 +53,7 @@ public abstract class Strategy extends SolutionObject {
         }
 
         for (Operation operation : solutionList) {
-            schedule.addOperationToResource(schedule.getResource(operation.getResource()), operation);
+            schedule.addOperationToResource(operation);
         }
     }
 
