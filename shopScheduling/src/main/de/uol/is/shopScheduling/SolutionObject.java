@@ -1,9 +1,5 @@
-package de.uol.is.shopScheduling.solutionObject;
+package de.uol.is.shopScheduling;
 
-import de.uol.is.shopScheduling.Job;
-import de.uol.is.shopScheduling.Operation;
-import de.uol.is.shopScheduling.Resource;
-import de.uol.is.shopScheduling.Schedule;
 import lombok.Getter;
 import lombok.Setter;
 

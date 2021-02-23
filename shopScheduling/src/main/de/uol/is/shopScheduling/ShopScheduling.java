@@ -1,6 +1,6 @@
 package de.uol.is.shopScheduling;
 
-import de.uol.is.shopScheduling.solutionObject.EvolutionStrategy;
+import de.uol.is.shopScheduling.optimizationMethods.EvolutionStrategy;
 import de.uol.is.shopScheduling.strategys.FifoStrategy;
 import de.uol.is.shopScheduling.strategys.RandomStrategy;
 import de.uol.is.shopScheduling.strategys.SptStrategy;

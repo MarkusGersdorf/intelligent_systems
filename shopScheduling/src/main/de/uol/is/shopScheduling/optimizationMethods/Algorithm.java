@@ -1,6 +1,7 @@
-package de.uol.is.shopScheduling.solutionObject;
+package de.uol.is.shopScheduling.optimizationMethods;
 
 import de.uol.is.shopScheduling.Job;
+import de.uol.is.shopScheduling.SolutionObject;
 
 import java.util.ArrayList;
 
