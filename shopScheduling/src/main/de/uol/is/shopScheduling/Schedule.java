@@ -277,26 +277,6 @@ public class Schedule implements ISchedule {
         operation.setStartTime(Long.max(maxEndPoint, startPointOperation) + 1);
         operation.setEndTime(operation.getStartTime() + operation.getDuration());
 
-
-        // TODO: Update other items - but how should we do it?
-        /*// update start point from next Job Operation
-        if (getNextJobOperation(operation) != null) {
-            if (operation.getEndTime() > getNextJobOperation(operation).getStartTime()) {
-                getNextJobOperation(operation).setStartTime(operation.getEndTime() + 1);
-
-                ArrayList<Operation> operationArrayList = resourceHashMap.get(getResource(operation.getResource()));
-                if (operationArrayList != null) {
-                    for (Operation o : operationArrayList) {
-                        if (getNextResourceOperation(o) != null) {
-                            if (getNextResourceOperation(o).getStartTime() < o.getEndTime()) {
-                                getNextResourceOperation(o).setStartTime(o.getEndTime() + 1);
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
-
         addOperation(operation);
     }
 
