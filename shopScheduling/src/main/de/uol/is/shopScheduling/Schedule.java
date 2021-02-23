@@ -279,6 +279,12 @@ public class Schedule implements ISchedule {
         return maxEndTime - minStartTime;
     }
 
+    /**
+     * Get resource by resourceId
+     *
+     * @param resourceId resourceId
+     * @return resource object
+     */
     public Resource getResource(long resourceId) {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == resourceId) {
@@ -288,6 +294,12 @@ public class Schedule implements ISchedule {
         return null;
     }
 
+    /**
+     * Get operations by resourceId
+     *
+     * @param resourceId resourceId
+     * @return list of operations
+     */
     public ArrayList<Operation> getOperations(long resourceId) {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == resourceId) {
@@ -297,10 +309,23 @@ public class Schedule implements ISchedule {
         return null;
     }
 
+    /**
+     * Get operations by resource object
+     *
+     * @param resource resource object
+     * @return list of operations
+     */
     public ArrayList<Operation> getOperations(Resource resource) {
         return getOperations(resource.getId());
     }
 
+    /**
+     * Get operation at point in time
+     *
+     * @param resource    resource object
+     * @param pointInTime point in time as long value
+     * @return operation object
+     */
     public Operation getOperation(Resource resource, long pointInTime) {
         for (Operation operation : resourceHashMap.get(resource)) {
             if (operation.operationExists(pointInTime)) {
@@ -332,7 +357,7 @@ public class Schedule implements ISchedule {
         // Tabelle nach Ressource sortiert
 
         System.out.print("RessourceID\t");
-        for(Resource res : resourceHashMap.keySet()) {
+        for (Resource res : resourceHashMap.keySet()) {
             int steps = 0;
             for (Operation op : resourceHashMap.get(res)) {
                 System.out.print(" Step " + steps + " \t");
@@ -351,7 +376,9 @@ public class Schedule implements ISchedule {
         }
     }
 
-
+    /**
+     * print chart with points at what time on which resource which job runs
+     */
     public void printDiagram() {
         long minDuration = Long.MAX_VALUE;
         long maxDuration = Long.MIN_VALUE;
@@ -376,21 +403,28 @@ public class Schedule implements ISchedule {
         System.out.println();
     }
 
-    public void addOperationToResource(Resource resource, Operation operation) {
-        long startPointOperation = 0L;
-        long maxEndPoint = 0L;
+    /**
+     * Add one operation to resource, update start and end time from this object
+     *
+     * @param operation operation object which should be added to resource
+     */
+    public void addOperationToResource(Operation operation) {
+        long endPointPreviousJob = 0L;
+        long endPointPreviousResource = 0L;
 
         if (getPreviousJobOperation(operation) != null) {
-            startPointOperation = getPreviousJobOperation(operation).getEndTime();
+            endPointPreviousJob = getPreviousJobOperation(operation).getEndTime();
         }
 
         if (getLastInsertedElement(operation) != null) {
-            maxEndPoint = getLastInsertedElement(operation).getEndTime();
+            endPointPreviousResource = getLastInsertedElement(operation).getEndTime();
         }
 
-        operation.setStartTime(Long.max(maxEndPoint, startPointOperation) + 1);
+        // update start and end time from operation
+        operation.setStartTime(Long.max(endPointPreviousResource, endPointPreviousJob) + 1);
         operation.setEndTime(operation.getStartTime() + operation.getDuration());
 
+        // add operation to resource
         addOperation(operation);
     }
 
