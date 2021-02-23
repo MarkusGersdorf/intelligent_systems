@@ -70,8 +70,10 @@ public class Schedule implements ISchedule {
         for (Resource res : resources) {
             if (res.getId() == operation.getResource()) {
                 int idx = resourceHashMap.get(res).indexOf(operation);
-                if (resourceHashMap.get(res).get(idx) != null && resourceHashMap.get(res).get(idx + 1) != null) {
-                    return resourceHashMap.get(res).get(idx + 1);
+                if (resourceHashMap.get(res).size() > idx + 1) {
+                    if (resourceHashMap.get(res).get(idx) != null && resourceHashMap.get(res).get(idx + 1) != null) {
+                        return resourceHashMap.get(res).get(idx + 1);
+                    }
                 }
             }
         }
