@@ -65,6 +65,7 @@ public abstract class Strategy extends SolutionObject {
      */
     protected boolean checkConstraints(boolean print) {
         for (int i = 0; i < 9; i++) {
+            // TODO:
             for (Operation o : schedule.getOperations(i)) {
                 if (!checkAscendingOperationOrder(o)) {
                     if (print) {

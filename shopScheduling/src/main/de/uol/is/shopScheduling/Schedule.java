@@ -64,11 +64,25 @@ public class Schedule implements ISchedule {
         }
     }
 
+    public Operation getLastInsertedElement(Operation operation) {
+        for (Resource resource : resourceHashMap.keySet()) {
+            if (resource.getId() == operation.getResource()) {
+                ArrayList<Operation> operationArrayList = resourceHashMap.get(resource);
+                if (operationArrayList.size() > 0) {
+                    return operationArrayList.get(operationArrayList.size() - 1);
+                } else {
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
     public Operation getPreviousResourceOperation(Operation operation) {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == operation.getResource()) {
                 ArrayList<Operation> operationArrayList = resourceHashMap.get(resource);
-                if (operationArrayList.size() > 1 && operationArrayList.indexOf(operation) > 0) {
+                if (operationArrayList.size() > 1 && operationArrayList.indexOf(operation) > 1) {
                     return operationArrayList.get(operationArrayList.indexOf(operation) - 1);
                 } else {
                     return null;
@@ -260,8 +274,8 @@ public class Schedule implements ISchedule {
             startPointOperation = getPreviousJobOperation(operation).getEndTime();
         }
 
-        if (getPreviousResourceOperation(operation) != null) {
-            maxEndPoint = getPreviousResourceOperation(operation).getEndTime();
+        if (getLastInsertedElement(operation) != null) {
+            maxEndPoint = getLastInsertedElement(operation).getEndTime();
         }
 
         operation.setStartTime(Long.max(maxEndPoint, startPointOperation) + 1);
