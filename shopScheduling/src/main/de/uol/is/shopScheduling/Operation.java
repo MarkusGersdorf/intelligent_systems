@@ -35,23 +35,29 @@ public class Operation {
         this.jobId = jobId;
     }
 
-    public boolean operationExists(long pointInTime) {
-        for (int i = (int) startTime; i < (int) endTime; i++) {
-            if (i == pointInTime) return true;
-        }
-        return false;
-    }
-
-    //sort by jobId
+    /**
+     * Sort Operations in ascending order by jobId
+     */
     public static Comparator<Operation> sortByJobId = (obj1, obj2) -> {
         //sort in ascending order
         return (int) (obj1.jobId - obj2.jobId);
     };
-
-    //sort by duration
+    /**
+     * Sort Operations in ascending order by duration
+     */
     public static Comparator<Operation> sortByDuration = (obj1, obj2) -> {
         //sort in ascending order
         return (int) (obj1.duration - obj2.duration);
     };
+
+    /**
+     * This Operation works at point in time
+     *
+     * @param pointInTime point in time
+     * @return true if this operation works at point in time
+     */
+    public boolean operationExists(long pointInTime) {
+        return startTime <= pointInTime && endTime >= pointInTime;
+    }
 
 }

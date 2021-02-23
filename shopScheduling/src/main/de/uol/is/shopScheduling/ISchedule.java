@@ -2,30 +2,41 @@ package de.uol.is.shopScheduling;
 
 import java.util.ArrayList;
 
+/**
+ * Interface for scheduler
+ *
+ * @author Thomas Cwill
+ * @version 1.0
+ */
 public interface ISchedule {
+
     void addOperation(Operation operation);
 
     void addOperation(int index, Operation operation);
 
     void removeOperation(Operation operation);
 
-    Operation getPreviousOperation(Operation operation);
+    Operation getPreviousResourceOperation(Operation operation);
 
-    Operation getNextOperation(Operation operation);
+    Operation getNextResourceOperation(Operation operation);
 
     Operation getPreviousJobOperation(Operation operation);
 
     Operation getNextJobOperation(Operation operation);
 
-    Long durationFromTo(Operation startOperation, Operation endOperation);
+    long durationFromTo(Operation startOperation, Operation endOperation);
 
-    Long durationTo(Operation endOperation, boolean inclusive);
+    long durationTo(Operation endOperation, boolean inclusive);
 
-    Long durationTo(Operation endOperation);
+    long durationTo(Operation endOperation);
 
-    Long getMakespan(Resource resource);
+    long durationFrom(Operation endOperation, boolean inclusive);
 
-    Long getMakespan();
+    long durationFrom(Operation endOperation);
+
+    long getMakespan(Resource resource);
+
+    long getMakespan();
 
     Resource getResource(long resourceId);
 

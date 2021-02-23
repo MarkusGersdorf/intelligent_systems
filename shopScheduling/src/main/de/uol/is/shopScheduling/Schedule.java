@@ -4,8 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Resources are controlled here. If something is added then everything around it is adjusted if necessary.
+ * This includes the start times for all further operations of the own job and the start times of other jobs on the same resource.
+ *
+ * @author Thomas Cwill, Markus Gersdorf
+ * @version 1.0
+ */
 public class Schedule implements ISchedule {
-
 
     private final HashMap<Resource, ArrayList<Operation>> resourceHashMap = new HashMap<>();
 
@@ -13,11 +19,15 @@ public class Schedule implements ISchedule {
         initResources(resourcesList);
     }
 
-
+    /**
+     * generate the resource objects from a list
+     *
+     * @param resourcesList list of resources
+     */
     private void initResources(ArrayList<Long> resourcesList) {
 
-        for (Long resource : resourcesList) {
-            resourceHashMap.put(new Resource("Resource ", resource), new ArrayList<>());
+        for (Long id : resourcesList) {
+            resourceHashMap.put(new Resource("Resource " + id, id), new ArrayList<>());
         }
     }
 
@@ -52,20 +62,22 @@ public class Schedule implements ISchedule {
         }
     }
 
-    public Operation getPreviousOperation(Operation operation) {
+    public Operation getPreviousResourceOperation(Operation operation) {
         Set<Resource> resources = resourceHashMap.keySet();
         for (Resource res : resources) {
             if (res.getId() == operation.getResource()) {
                 int idx = resourceHashMap.get(res).indexOf(operation);
-                if (resourceHashMap.get(res).get(idx - 1) != null) {
-                    return resourceHashMap.get(res).get(idx - 1);
+                if (idx < resourceHashMap.get(res).size() && idx > 0) {
+                    if (resourceHashMap.get(res).get(idx - 1) != null) {
+                        return resourceHashMap.get(res).get(idx - 1);
+                    }
                 }
             }
         }
         return null;
     }
 
-    public Operation getNextOperation(Operation operation) {
+    public Operation getNextResourceOperation(Operation operation) {
         Set<Resource> resources = resourceHashMap.keySet();
         for (Resource res : resources) {
             if (res.getId() == operation.getResource()) {
@@ -101,8 +113,8 @@ public class Schedule implements ISchedule {
     }
 
 
-    public Long durationFromTo(Operation startOperation, Operation endOperation) {
-        Long duration = 0L;
+    public long durationFromTo(Operation startOperation, Operation endOperation) {
+        long duration = 0L;
         for (ArrayList<Operation> operationArrayList : resourceHashMap.values()) {
             for (Operation op : operationArrayList) {
                 if (op.getResource() > startOperation.getResource() && op.getResource() < endOperation.getResource())
@@ -119,21 +131,16 @@ public class Schedule implements ISchedule {
      * @param inclusive    inclusive endOperation
      * @return
      */
-    public Long durationTo(Operation endOperation, boolean inclusive) {
-        Long duration = 0L;
-        duration = durationTo(endOperation);
-
-        if (inclusive) {
-            duration += endOperation.getDuration();
-        }
-        return duration;
+    public long durationTo(Operation endOperation, boolean inclusive) {
+        return (inclusive) ? durationFrom(endOperation) + endOperation.getDuration() : durationFrom(endOperation);
     }
 
-    public Long durationTo(Operation endOperation) {
-        Long duration = 0L;
+
+    public long durationTo(Operation endOperation) {
+        long duration = 0L;
         for (ArrayList<Operation> operationArrayList : resourceHashMap.values()) {
             for (Operation op : operationArrayList) {
-                if (op.getResource() < endOperation.getResource())
+                if (op.getResource() < endOperation.getResource() && op.getJobId() == endOperation.getJobId())
                     duration += op.getDuration();
             }
         }
@@ -141,7 +148,23 @@ public class Schedule implements ISchedule {
         return duration;
     }
 
-    public Long getMakespan(Resource resource) {
+    public long durationFrom(Operation startOperation, boolean inclusive) {
+        return (inclusive) ? durationFrom(startOperation) + startOperation.getDuration() : durationFrom(startOperation);
+    }
+
+    public long durationFrom(Operation startOperation) {
+        long duration = 0L;
+        for (ArrayList<Operation> operationArrayList : resourceHashMap.values()) {
+            for (Operation op : operationArrayList) {
+                if (op.getResource() > startOperation.getResource() && op.getJobId() == startOperation.getJobId())
+                    duration += op.getDuration();
+            }
+        }
+
+        return duration;
+    }
+
+    public long getMakespan(Resource resource) {
         ArrayList<Operation> operations = resourceHashMap.get(resource);
 
         if (operations != null) {
@@ -153,7 +176,7 @@ public class Schedule implements ISchedule {
         return 0L;
     }
 
-    public Long getMakespan() {
+    public long getMakespan() {
         long makespan = 0L;
         for (Resource resource : resourceHashMap.keySet()) {
             makespan += getMakespan(resource);
@@ -180,8 +203,7 @@ public class Schedule implements ISchedule {
     }
 
     public ArrayList<Operation> getOperations(Resource resource) {
-        getOperations(resource.getId());
-        return null;
+        return getOperations(resource.getId());
     }
 
     public void print() {

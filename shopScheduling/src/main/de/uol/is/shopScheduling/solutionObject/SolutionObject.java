@@ -4,6 +4,8 @@ import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
 import de.uol.is.shopScheduling.Resource;
 import de.uol.is.shopScheduling.Schedule;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 public abstract class SolutionObject {
 
     protected ArrayList<Job> jobArrayList;
+    @Getter
+    @Setter
     protected Schedule schedule;
 
     public SolutionObject(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
@@ -58,10 +62,16 @@ public abstract class SolutionObject {
         boolean orderPreviousOk = true;
         boolean orderNextOk = true;
 
+        Resource resource = schedule.getResource(operation.getResource());
+        ArrayList<Operation> operationArrayList = schedule.getOperations(resource);
 
-        for (Operation op : schedule.getResource(operation.getResource()).getOperations()) {
-            Operation previousResourceOperation = schedule.getPreviousOperation(op);
-            Operation nextResourceOperation = schedule.getNextOperation(op);
+        if (operationArrayList == null) {
+            System.out.printf("Error");
+        }
+
+        for (Operation op : operationArrayList) {
+            Operation previousResourceOperation = schedule.getPreviousResourceOperation(op);
+            Operation nextResourceOperation = schedule.getNextResourceOperation(op);
 
             if (previousResourceOperation != null) {
                 orderPreviousOk = previousResourceOperation.getEndTime() < op.getStartTime();
@@ -80,7 +90,7 @@ public abstract class SolutionObject {
      * @return True if all operations are in the correct order.
      */
     protected boolean checkAscendingOperationOrder(Operation operation) {
-        Operation nextOperation = schedule.getNextOperation(operation);
+        Operation nextOperation = schedule.getNextResourceOperation(operation);
 
         if (nextOperation != null) {
             return nextOperation.getStartTime() > operation.getEndTime();

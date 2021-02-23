@@ -55,9 +55,9 @@ public class Metaheuristic extends Algorithm {
     protected double total_processing_time(ArrayList<Resource> resources) {
         long time = 0;
 
-        for(Resource r : resources) {
-            time += r.getDuration();
-        }
+//        for(Resource r : resources) {
+//            time += r.getDuration();
+//        }
 
         return time;
     }
