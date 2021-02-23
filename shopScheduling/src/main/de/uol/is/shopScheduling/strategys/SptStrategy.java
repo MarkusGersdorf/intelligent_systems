@@ -4,7 +4,6 @@ import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * This class implements the STP strategy. This is a strategy in which the jobs that have the shortest processing time
@@ -28,7 +27,7 @@ public class SptStrategy extends Strategy {
     /**
      * This method is used to sort the jobArrayList by the duration of the operation.
      *
-     * @return
+     * @return sorted list of operations with ascending order by duration
      */
     @Override
     public ArrayList<Operation> sort() {
@@ -36,7 +35,7 @@ public class SptStrategy extends Strategy {
         for (Job job : jobArrayList) {
             operationArrayList.addAll(job.getOperationArrayList());
         }
-        Collections.sort(operationArrayList, Operation.sortByDuration);
+        operationArrayList.sort(Operation.sortByDuration);
         return operationArrayList;
     }
 }

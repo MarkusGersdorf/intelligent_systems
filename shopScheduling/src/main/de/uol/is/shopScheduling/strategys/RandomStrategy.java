@@ -27,6 +27,8 @@ public class RandomStrategy extends Strategy {
 
     /**
      * This method is used to sort the jobArrayList by the duration of the operation.
+     *
+     * @return sorted list of operations with ascending order by random
      */
     @Override
     public ArrayList<Operation> sort() {
