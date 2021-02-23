@@ -44,7 +44,7 @@ public class EvolutionStrategy extends Algorithm {
 
         System.out.println("ES-init Fitness: " + bestMakespan);
 
-        while (searchCounter < 1000) {
+        while (searchCounter < 1) {
             searchCounter++;
             ArrayList<Job> test = jobArrayList;
             Collections.copy(test, jobArrayList);
@@ -60,7 +60,11 @@ public class EvolutionStrategy extends Algorithm {
                 System.out.println("Fitness: " + best.getMakespan());
             }
         }
-        schedule = strategies.get(strategies.size() - 1).getSchedule();
+        if (strategies.size() > 0) {
+            schedule = strategies.get(strategies.size() - 1).getSchedule();
+        } else {
+            schedule = best.getSchedule();
+        }
     }
 
     public long get_best_makespan() { return this.bestMakespan; }

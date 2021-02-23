@@ -38,7 +38,7 @@ public class ShopScheduling {
             }
             */
             FifoStrategy fifoStrategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
-            fifoStrategy.printDiagram();
+            fifoStrategy.printToConsole();
             System.out.println("----------------------------------------------------------------");
             System.out.println("----------------------------------------------------------------");
             System.out.println("Fifo-Strategy: " + fifoStrategy.getMakespan());
@@ -52,6 +52,7 @@ public class ShopScheduling {
             System.out.println("---------ES-Start---------");
             EvolutionStrategy evolutionStrategy = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
             System.out.println("ES-Strategy: " + evolutionStrategy.get_best_makespan());
+            evolutionStrategy.printToConsole();
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
