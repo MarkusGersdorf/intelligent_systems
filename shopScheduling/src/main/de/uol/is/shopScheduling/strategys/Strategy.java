@@ -21,7 +21,7 @@ public abstract class Strategy extends SolutionObject {
      */
     public Strategy(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
         super(jobArrayList, resourcesArrayList);
-        planning();
+        planning(sort());
         checkConstraints(true);
     }
 
@@ -29,18 +29,16 @@ public abstract class Strategy extends SolutionObject {
      * Implemented by the heuristic and by this it is specified in which order
      * the jobs are selected by the scheduling function
      */
-    protected abstract void sort();
+    protected abstract ArrayList<Operation> sort();
 
     /**
      * The planning function uses the list sorted by the heuristics
      * to create a plan. This function implements all dependencies
      */
-    protected void planning() {
-        for (Job job : jobArrayList) {
-            for (Operation operation : job.getOperationArrayList()) {
-                schedule.addOperationToResource(schedule.getResource(operation.getResource()), operation);
-                // TODO: implementieren
-            }
+    protected void planning(ArrayList<Operation> operationArrayList) {
+        for (Operation operation : operationArrayList) {
+            schedule.addOperationToResource(schedule.getResource(operation.getResource()), operation);
+            // TODO: implementieren
         }
     }
 

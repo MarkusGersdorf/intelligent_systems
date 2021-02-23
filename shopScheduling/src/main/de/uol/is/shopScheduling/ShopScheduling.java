@@ -1,13 +1,15 @@
 package de.uol.is.shopScheduling;
 
+import de.uol.is.shopScheduling.solutionObject.EvolutionStrategy;
 import de.uol.is.shopScheduling.strategys.FifoStrategy;
+import de.uol.is.shopScheduling.strategys.RandomStrategy;
+import de.uol.is.shopScheduling.strategys.SptStrategy;
 import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.Objects;
 
 public class ShopScheduling {
     public static void main(String[] args) {
@@ -36,6 +38,14 @@ public class ShopScheduling {
             }
             */
             FifoStrategy fifoStrategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+            System.out.println("Fifo-Strategy: " + fifoStrategy.getMakespan());
+            RandomStrategy randomStrategy = new RandomStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+            System.out.println("Random-Strategy: " + randomStrategy.getMakespan());
+            SptStrategy sptStrategy = new SptStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+            System.out.println("Spt-Strategy: " + sptStrategy.getMakespan());
+            System.out.println("---------ES-Start---------");
+            EvolutionStrategy evolutionStrategy = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+            System.out.println("ES-Strategy: " + evolutionStrategy.getMakespan());
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }

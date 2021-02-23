@@ -3,6 +3,8 @@ package de.uol.is.shopScheduling;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Comparator;
+
 /**
  * This class represents an operation that is necessary to process a workpiece
  *
@@ -39,4 +41,17 @@ public class Operation {
         }
         return false;
     }
+
+    //sort by jobId
+    public static Comparator<Operation> sortByJobId = (obj1, obj2) -> {
+        //sort in ascending order
+        return (int) (obj1.jobId - obj2.jobId);
+    };
+
+    //sort by duration
+    public static Comparator<Operation> sortByDuration = (obj1, obj2) -> {
+        //sort in ascending order
+        return (int) (obj1.duration - obj2.duration);
+    };
+
 }

@@ -1,8 +1,10 @@
 package de.uol.is.shopScheduling.strategys;
 
 import de.uol.is.shopScheduling.Job;
+import de.uol.is.shopScheduling.Operation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Fifo strategy
@@ -26,9 +28,12 @@ public class FifoStrategy extends Strategy {
      * This method is used to sort the jobArrayList by the duration of the operation.
      */
     @Override
-    public void sort() {
-        jobArrayList.sort((j1, j2) -> {
-            return (int) (j1.getId() - j2.getId()); // Ascending
-        });
+    public ArrayList<Operation> sort() {
+        ArrayList<Operation> operationArrayList = new ArrayList<>();
+        for (Job job : jobArrayList) {
+            operationArrayList.addAll(job.getOperationArrayList());
+        }
+        Collections.sort(operationArrayList, Operation.sortByJobId);
+        return operationArrayList;
     }
 }

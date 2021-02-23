@@ -14,10 +14,11 @@ public class Metaheuristic extends Algorithm {
 
     public Metaheuristic(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
         super(jobArrayList, resourcesArrayList);
+        optimize(resourcesArrayList);
     }
 
     @Override
-    protected void optimize() {
+    protected void optimize(ArrayList<Long> resourcesArrayList) {
        /* ArrayList<Resource> new_resources_array_list = new ArrayList<>();
         int runs = 0;
         boolean success = false;

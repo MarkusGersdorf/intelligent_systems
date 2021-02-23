@@ -15,8 +15,6 @@ import java.util.Collections;
  */
 public class EvolutionStrategy extends Algorithm {
 
-    private ArrayList<Long> resourcesArrayList;
-
     /**
      * Basic constructor
      *
@@ -25,8 +23,7 @@ public class EvolutionStrategy extends Algorithm {
      */
     public EvolutionStrategy(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
         super(jobArrayList, resourcesArrayList);
-        this.resourcesArrayList = resourcesArrayList;
-        optimize();
+        optimize(resourcesArrayList);
     }
 
     /**
@@ -34,23 +31,27 @@ public class EvolutionStrategy extends Algorithm {
      * We implement a simple 1+1 ES
      */
     @Override
-    protected void optimize() {
+    protected void optimize(ArrayList<Long> resourcesArrayList) {
         int searchCounter = 0;
 
         RandomStrategy best = new RandomStrategy(jobArrayList, resourcesArrayList);
+        long bestMakespan = best.getMakespan();
 
-        while (searchCounter < 10) {
+        System.out.println("ES-init Fitness: " + bestMakespan);
+
+        while (searchCounter < 1000) {
             searchCounter++;
             ArrayList<Job> test = jobArrayList;
             Collections.copy(test, jobArrayList);
+
             // generate mutation
-
             RandomStrategy mutation = new RandomStrategy(jobArrayList, resourcesArrayList);
-            System.out.println("System still working");
-            // override old Array List
 
-            if (mutation.getMakespan() <= best.getMakespan()) {
+            long mutationMakespan = mutation.getMakespan();
+
+            if (mutationMakespan <= bestMakespan) {
                 best = mutation;
+                bestMakespan = mutationMakespan;
                 System.out.println("Fitness: " + best.getMakespan());
             }
         }

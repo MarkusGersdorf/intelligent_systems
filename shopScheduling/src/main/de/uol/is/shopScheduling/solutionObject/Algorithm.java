@@ -21,7 +21,7 @@ public abstract class Algorithm extends SolutionObject {
     /**
      * Optimize the existing plan
      */
-    protected abstract void optimize();
+    protected abstract void optimize(ArrayList<Long> resourcesArrayList);
 
     /**
      * initialize the population
