@@ -5,7 +5,6 @@ import de.uol.is.shopScheduling.strategys.RandomStrategy;
 import de.uol.is.shopScheduling.strategys.SptStrategy;
 import de.uol.is.shopScheduling.strategys.Strategy;
 import org.json.simple.parser.ParseException;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -40,20 +39,6 @@ public class ShopSchedulingTest {
 
     private final Map<Long, Job> map = new HashMap<>();
 
-    /**
-     * Befor start init job list and build map
-     *
-     * @throws IOException    read file from benchmark problems
-     * @throws ParseException read file from benchmark problems
-     */
-    @Before
-    public void init() throws IOException, ParseException {
-        ArrayList<Job> jobArrayList = jsonParser.parseJsonJobs(listOfFiles[0]);
-
-        for (Job job : jobArrayList) {
-            map.put(job.getId(), job);
-        }
-    }
 
     /**
      * Unfortunately only a test.
@@ -65,18 +50,23 @@ public class ShopSchedulingTest {
     @Test
     public void testOrderFromData() throws IOException, ParseException {
         for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
+            ArrayList<Job> jobArrayList = jsonParser.parseJsonJobs(listOfFiles[i]);
+
+            for (Job job : jobArrayList) {
+                map.put(job.getId(), job);
+            }
 
             strategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
             Schedule schedule = strategy.getSchedule();
             tests(schedule);
 
             strategy = new RandomStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
-            schedule = strategy.getSchedule();
-            tests(schedule);
+            Schedule schedule_random = strategy.getSchedule();
+            tests(schedule_random);
 
             strategy = new SptStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
-            schedule = strategy.getSchedule();
-            tests(schedule);
+            Schedule schedule_spt = strategy.getSchedule();
+            tests(schedule_spt);
 
 //            Algorithm algorithm = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
 //            schedule = algorithm.getSchedule();
@@ -98,6 +88,7 @@ public class ShopSchedulingTest {
         testNextResourceOperation(schedule);
         testPreviousResourceOperation(schedule);
         testOneOperationDirectBeforeCurrent(schedule);
+        checkStrategy(strategy, schedule);
 
     }
 
@@ -207,6 +198,36 @@ public class ShopSchedulingTest {
             } else if (previousOperationOnResource != null) {
                 if (previousOperationOnResource.getEndTime() + 1 > operation.getStartTime()) {
                     fail();
+                }
+            }
+        }
+    }
+
+    private void checkStrategy(Strategy strategy, Schedule schedule) {
+        if (strategy instanceof FifoStrategy) {
+            for (Resource resource : schedule.getResources()) {
+                for (Operation operation : schedule.getOperations(resource.getId())) {
+                    Operation nextResourceOperation = schedule.getNextResourceOperation(operation);
+                    if (nextResourceOperation != null) {
+                        if (!(operation.getJobId() < nextResourceOperation.getJobId())) {
+                            fail();
+                        }
+                    }
+                }
+            }
+        } else if (strategy instanceof SptStrategy) {
+            for (Resource resource : schedule.getResources()) {
+                for (Operation operation : schedule.getOperations(resource.getId())) {
+                    Operation nextResourceOperation = schedule.getNextResourceOperation(operation);
+                    if (nextResourceOperation != null) {
+                        Job oneJob = map.get(operation.getJobId());
+                        Job secondJob = map.get(nextResourceOperation.getJobId());
+                        long one = map.get(operation.getJobId()).duration();
+                        long two = map.get(nextResourceOperation.getJobId()).duration();
+                        if (one > two) {
+                            fail();
+                        }
+                    }
                 }
             }
         }
