@@ -45,4 +45,12 @@ public class Job {
         return (int) (obj1.getDuration() - obj2.getDuration());
     };
 
+    /**
+     * Sort Operations in ascending order by jobId
+     */
+    public static Comparator<Operation> sortById = (obj1, obj2) -> {
+        //sort in ascending order
+        return (int) (obj2.getIndex() - obj1.getIndex());
+    };
+
 }

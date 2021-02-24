@@ -8,8 +8,6 @@ import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.Objects;
 
 public class ShopScheduling {
@@ -23,13 +21,6 @@ public class ShopScheduling {
         // search for all json files and save them
         File folder = new File(project_path.concat("/shopScheduling/src/main/resources/benchmark_problems"));
         File[] listOfFiles = folder.listFiles();
-
-        // save all jobs into this list
-        ArrayList<ArrayList<Job>> listArrayList = new ArrayList<>();
-
-        LinkedHashSet<Long> resourcesSet = new LinkedHashSet<>();
-        ArrayList<Resource> resourceArrayList = new ArrayList<>();
-
 
         // now for each file generate java object
         try {
