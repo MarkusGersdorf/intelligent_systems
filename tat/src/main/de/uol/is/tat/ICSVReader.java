@@ -1,5 +1,8 @@
 package de.uol.is.tat;
 
+/**
+ * Interface for a ICSVReader class
+ */
 public interface ICSVReader {
-    IField[][] convert_csv_to_fields(String path);
+    IField[][] convertCsvToFields(String path);
 }

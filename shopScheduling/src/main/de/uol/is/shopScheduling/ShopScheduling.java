@@ -1,7 +1,9 @@
 package de.uol.is.shopScheduling;
 
+import de.uol.is.shopScheduling.optimizationMethods.EvolutionStrategy;
+import de.uol.is.shopScheduling.strategys.FifoStrategy;
 import de.uol.is.shopScheduling.strategys.RandomStrategy;
-import de.uol.is.shopScheduling.strategys.Strategy;
+import de.uol.is.shopScheduling.strategys.SptStrategy;
 import org.json.simple.parser.ParseException;
 
 import java.io.File;
@@ -9,7 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.TreeSet;
 
 public class ShopScheduling {
     public static void main(String[] args) {
@@ -33,35 +34,25 @@ public class ShopScheduling {
         // now for each file generate java object
         try {
             for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
-                listArrayList.add(jsonParser.parseJsonResources(listOfFiles[i]));
+                //for (int i = 0; i < 1; i++) {
+                System.out.println("Path: " + listOfFiles[0].getPath().substring(55));
+                FifoStrategy fifoStrategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+                //fifoStrategy.printDiagram();
+                System.out.println("Fifo-Strategy: " + fifoStrategy.getMakespan());
+                RandomStrategy randomStrategy = new RandomStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+                //randomStrategy.printDiagram();
+                System.out.println("Random-Strategy: " + randomStrategy.getMakespan());
+                SptStrategy sptStrategy = new SptStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+                //sptStrategy.printDiagram();
+                System.out.println("Spt-Strategy: " + sptStrategy.getMakespan());
+                System.out.println("---------ES-Start---------");
+                EvolutionStrategy evolutionStrategy = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+                System.out.println("ES-Strategy: " + evolutionStrategy.getMakespan());
+                System.out.println("-------------------------------------------------------------------------------");
             }
-
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
 
-        // search for resources and generate them
-        for (ArrayList<Job> jobs : listArrayList) {
-
-            // search resources - for each operation in each job - to generate resources
-            resourcesSet.clear();
-            resourceArrayList.clear();
-
-            for (Job job : jobs) {
-                for (Operation operation : job.getOperationArrayList()) {
-                    resourcesSet.add(operation.getResource());
-                }
-            }
-
-            // generate resources - sort set before
-            // TODO: We don't need to sort the set
-            new TreeSet<>(resourcesSet).forEach(resource -> resourceArrayList.add(new Resource("Resource" + resource.toString(), resource)));
-
-            // call different strategies
-            // Strategy strategy = new FifoStrategy(jobs, resourceArrayList);
-            //Strategy spt = new SptStrategy(jobs, resourceArrayList);
-            //Strategy fifo = new FifoStrategy(jobs, resourceArrayList);
-            Strategy random = new RandomStrategy(jobs, resourceArrayList);
-        }
     }
 }
