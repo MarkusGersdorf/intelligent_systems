@@ -2,8 +2,7 @@ package de.uol.is.shopScheduling.strategys;
 
 import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
-import de.uol.is.shopScheduling.Resource;
-import de.uol.is.shopScheduling.solutionObject.SolutionObject;
+import de.uol.is.shopScheduling.SolutionObject;
 
 import java.util.ArrayList;
 
@@ -17,71 +16,70 @@ public abstract class Strategy extends SolutionObject {
     /**
      * constructor calls the functions for sorting and planning the heuristics directly after creating the class
      *
-     * @param jobArrayList List of jobs
-     * @param resource     List of resources
+     * @param jobArrayList       List of jobs
+     * @param resourcesArrayList List of resources
      */
-    public Strategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
-        this.jobArrayList = jobArrayList;
-        this.resourceArrayList = resource;
-        sort();
-        planning();
-        //printToConsole();
-        //printDiagram();
+    public Strategy(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
+        super(jobArrayList, resourcesArrayList);
+        planning(sort());
+        checkConstraints(true);
     }
 
     /**
      * Implemented by the heuristic and by this it is specified in which order
      * the jobs are selected by the scheduling function
      */
-    protected abstract void sort();
+    protected abstract ArrayList<Operation> sort();
 
     /**
      * The planning function uses the list sorted by the heuristics
      * to create a plan. This function implements all dependencies
      */
-    protected void planning() {
-        // TODO-Marcel&Joosten: Ihr hattet noch änderungen an dieser funktion. Pflegt die bitte ein :-)
-        //System.out.println("New planning");
-        for (Job job : jobArrayList) {
-            long verplanteZeit = 0;
-            for (Operation operation : job.getOperationArrayList()) {
-                Resource machine = resourceArrayList.get((int) operation.getResource());
-                long dauerDerOperation = operation.getDuration();
+    protected void planning(ArrayList<Operation> operationArrayList) {
+        long getMaxId = 0;
 
-                if (machine.getOperations().size() == 0) {
-                    operation.setStartTime(verplanteZeit);
-                    operation.setEndTime(verplanteZeit + dauerDerOperation);
-                    verplanteZeit += dauerDerOperation;
-                    machine.addOperation(operation);
-                } else {
-                    boolean hinzugefuegt = false;
-                    boolean blockiert = false;
+        ArrayList<Operation> solutionList = new ArrayList<>();
 
-                    while(!hinzugefuegt) {
-                        for (Operation operationInMaschine : machine.getOperations()) {
-                            if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
-                                    ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime()) ||
-                                    (operationInMaschine.getStartTime() > verplanteZeit && operationInMaschine.getStartTime() < (verplanteZeit + dauerDerOperation)) ||
-                                    (operationInMaschine.getEndTime() > verplanteZeit && operationInMaschine.getEndTime() < (verplanteZeit + dauerDerOperation)) ||
-                                    (verplanteZeit == operationInMaschine.getStartTime() && verplanteZeit + dauerDerOperation == operationInMaschine.getEndTime())) {
-                                verplanteZeit = operationInMaschine.getEndTime();
-                                blockiert = true;
-                                break;
-                            }
-                        }
+        for (Operation operation : operationArrayList) {
+            getMaxId = Long.max(getMaxId, operation.getIndex());
+        }
 
-                        if (!blockiert) {
-                            operation.setStartTime(verplanteZeit);
-                            operation.setEndTime(verplanteZeit + operation.getDuration());
-                            machine.addOperation(operation);
-                            verplanteZeit += operation.getDuration();
-                            hinzugefuegt = true;
-                        } else {
-                            blockiert = false;
-                        }
+        for (int i = 0; i < getMaxId; i++) {
+            for (Operation operation : operationArrayList) {
+                if (operation.getIndex() == i) {
+                    solutionList.add(operation);
+                }
+            }
+        }
+
+        for (Operation operation : solutionList) {
+            schedule.addOperationToResource(operation);
+        }
+    }
+
+    /**
+     * Check constraints from scheduling plan
+     *
+     * @param print when true error messages will be printed
+     * @return true if constraints success else false
+     */
+    protected boolean checkConstraints(boolean print) {
+        for (int i = 0; i < 9; i++) {
+            // TODO:
+            for (Operation o : schedule.getOperations(i)) {
+                if (!checkAscendingOperationOrder(o)) {
+                    if (print) {
+                        System.err.println("Ascending order not ok!" + " Startpoint: " + o.getStartTime() + " - OperationId: " + o.getIndex() + " - JobId: " + o.getJobId());
+                    }
+                    return false;
+                }
+                if (!checkIneJobAtOnePointInTime(o)) {
+                    if (print) {
+                        System.err.println("There is more as one job in one time!" + " Startpoint: " + o.getStartTime() + " - OperationId: " + o.getIndex() + " - JobId: " + o.getJobId());
                     }
                 }
             }
         }
+        return true;
     }
 }
