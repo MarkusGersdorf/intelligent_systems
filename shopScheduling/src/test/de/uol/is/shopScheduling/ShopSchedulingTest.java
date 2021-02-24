@@ -1,6 +1,8 @@
 package de.uol.is.shopScheduling;
 
 import de.uol.is.shopScheduling.strategys.FifoStrategy;
+import de.uol.is.shopScheduling.strategys.RandomStrategy;
+import de.uol.is.shopScheduling.strategys.SptStrategy;
 import de.uol.is.shopScheduling.strategys.Strategy;
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
@@ -11,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.Assert.fail;
 
@@ -27,11 +30,10 @@ public class ShopSchedulingTest {
 
     Strategy strategy;
 
-    private Map<Long, Job> map = new HashMap<>();
+    private final Map<Long, Job> map = new HashMap<>();
 
     @Before
     public void init() throws IOException, ParseException {
-        strategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
         ArrayList<Job> jobArrayList = jsonParser.parseJsonJobs(listOfFiles[0]);
 
         for (Job job : jobArrayList) {
@@ -40,15 +42,37 @@ public class ShopSchedulingTest {
     }
 
     @Test
-    public void testInsert() {
-        Schedule schedule = strategy.getSchedule();
+    public void testOrderFromData() throws IOException, ParseException {
+        for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
 
+            strategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
+            Schedule schedule = strategy.getSchedule();
+            tests(schedule);
+
+            strategy = new RandomStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
+            schedule = strategy.getSchedule();
+            tests(schedule);
+
+            strategy = new SptStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
+            schedule = strategy.getSchedule();
+            tests(schedule);
+
+//            Algorithm algorithm = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
+//            schedule = algorithm.getSchedule();
+//            tests(schedule);
+
+        }
+    }
+
+    public void tests(Schedule schedule) {
         testNextItemHasBiggerStartPoint(schedule);
         testPreviousItemHasSmallerEndPoint(schedule);
         testCheckNextJobElement(schedule);
         testPreviousJobOperation(schedule);
         testNextResourceOperation(schedule);
         testPreviousResourceOperation(schedule);
+        testOneOperationDirectBeforeCurrent(schedule);
+
     }
 
     private void testNextItemHasBiggerStartPoint(Schedule schedule) {
@@ -112,15 +136,16 @@ public class ShopSchedulingTest {
 
         for (Operation operation : operationArrayList) {
             Operation nextJobOperation = schedule.getNextResourceOperation(operation);
-            map.get(operation.getJobId()).getOperationArrayList().sort(Job.sortById);
-            long maxIndex = map.get(operation.getJobId()).getOperationArrayList().get(map.get(operation.getJobId()).getOperationArrayList().size() - 1).getIndex();
+            if (map.get(operation.getJobId()) != null) {
+                map.get(operation.getJobId()).getOperationArrayList().sort(Job.sortById);
 
-            if (nextJobOperation != null) {
-                if (nextJobOperation.getJobId() == operation.getJobId() && nextJobOperation.getStartTime() <= operation.getEndTime() && nextJobOperation.getIndex() == operation.getIndex() + 1) {
+                if (nextJobOperation != null) {
+                    if (nextJobOperation.getJobId() == operation.getJobId() && nextJobOperation.getStartTime() <= operation.getEndTime() && nextJobOperation.getIndex() == operation.getIndex() + 1) {
+                        fail();
+                    }
+                } else if (!operationIsLastOnResource(schedule, operation)) {
                     fail();
                 }
-            } else if (false) {
-                fail();
             }
         }
     }
@@ -140,14 +165,44 @@ public class ShopSchedulingTest {
         }
     }
 
+    private void testOneOperationDirectBeforeCurrent(Schedule schedule) {
+        ArrayList<Operation> operationArrayList = getAllOperations(schedule);
+
+        for (Operation operation : operationArrayList) {
+            Operation previousOperationOnResource = schedule.getPreviousResourceOperation(operation);
+            Operation previousOperationOnJob = schedule.getPreviousJobOperation(operation);
+
+            if (previousOperationOnJob == null && previousOperationOnResource == null && operation.getStartTime() > 1) {
+                fail();
+            } else if (previousOperationOnJob != null) {
+                if (previousOperationOnJob.getEndTime() + 1 > operation.getStartTime()) {
+                    fail();
+                }
+            } else if (previousOperationOnResource != null) {
+                if (previousOperationOnResource.getEndTime() + 1 > operation.getStartTime()) {
+                    fail();
+                }
+            }
+        }
+    }
+
     private boolean operationIsFirstOnResource(Schedule schedule, Operation operation) {
         ArrayList<Operation> operationOnResource = schedule.getOperations(schedule.getResource(operation.getResource()));
 
         if (operationOnResource != null) {
             if ((operationOnResource.size() != 0)) {
-                if (operation == operationOnResource.get(0)) {
-                    return true;
-                }
+                return operation == operationOnResource.get(0);
+            }
+        }
+        return false;
+    }
+
+    private boolean operationIsLastOnResource(Schedule schedule, Operation operation) {
+        ArrayList<Operation> operationOnResource = schedule.getOperations(schedule.getResource(operation.getResource()));
+
+        if (operationOnResource != null) {
+            if ((operationOnResource.size() != 0)) {
+                return operation == operationOnResource.get(operationOnResource.size() - 1);
             }
         }
         return false;
