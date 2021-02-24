@@ -106,7 +106,7 @@ public class Schedule implements ISchedule {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == operation.getResource()) {
                 ArrayList<Operation> operationArrayList = resourceHashMap.get(resource);
-                if (operationArrayList.size() > 1 && operationArrayList.indexOf(operation) > 1) {
+                if (operationArrayList.size() > 1 && operationArrayList.indexOf(operation) > 0) {
                     return operationArrayList.get(operationArrayList.indexOf(operation) - 1);
                 } else {
                     return null;

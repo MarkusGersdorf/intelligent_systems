@@ -119,7 +119,7 @@ public class ShopSchedulingTest {
                 if (nextJobOperation.getJobId() == operation.getJobId() && nextJobOperation.getStartTime() <= operation.getEndTime() && nextJobOperation.getIndex() == operation.getIndex() + 1) {
                     fail();
                 }
-            } else if (operation.getIndex() != maxIndex) {
+            } else if (false) {
                 fail();
             }
         }
@@ -134,10 +134,23 @@ public class ShopSchedulingTest {
                 if (previousJobOperation.getJobId() == operation.getJobId() && previousJobOperation.getEndTime() >= operation.getStartTime() && previousJobOperation.getIndex() + 1 == operation.getIndex()) {
                     fail();
                 }
-            } else if (operation.getIndex() != 0) {
+            } else if (!operationIsFirstOnResource(schedule, operation)) {
                 fail();
             }
         }
+    }
+
+    private boolean operationIsFirstOnResource(Schedule schedule, Operation operation) {
+        ArrayList<Operation> operationOnResource = schedule.getOperations(schedule.getResource(operation.getResource()));
+
+        if (operationOnResource != null) {
+            if ((operationOnResource.size() != 0)) {
+                if (operation == operationOnResource.get(0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private ArrayList<Operation> getAllOperations(Schedule schedule) {
