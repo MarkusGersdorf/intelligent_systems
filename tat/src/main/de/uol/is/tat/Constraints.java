@@ -4,6 +4,7 @@ package de.uol.is.tat;
  * This class offers several functions to check if all necessary dependencies and rules are fulfilled.
  *
  * @author Joosten Steenhusen
+ * @author Thomas Cwil
  * @version 0.1
  */
 public class Constraints implements IConstraints {
