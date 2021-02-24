@@ -35,7 +35,7 @@ public class ShopScheduling {
         try {
             for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
                 //for (int i = 0; i < 1; i++) {
-                System.out.println("Path: " + listOfFiles[0].getPath().substring(55));
+                System.out.println("Path: " + listOfFiles[i].getPath().substring(55));
                 FifoStrategy fifoStrategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
                 //fifoStrategy.printDiagram();
                 System.out.println("Fifo-Strategy: " + fifoStrategy.getMakespan());

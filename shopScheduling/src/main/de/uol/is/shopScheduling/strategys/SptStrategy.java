@@ -40,9 +40,7 @@ public class SptStrategy extends Strategy {
             // key is already in map, add operations to this key
             if (map.get(job.duration()) != null) {
                 map.get(job.duration()).addAll(job.getOperationArrayList());
-                map.get(job.duration()).sort(Operation.sortByIndex);
             } else {
-                job.getOperationArrayList().sort(Operation.sortByIndex);
                 map.put(job.duration(), job.getOperationArrayList());
             }
         }
