@@ -41,7 +41,7 @@ public class EvolutionStrategy extends Algorithm {
         ArrayList<Strategy> strategies = new ArrayList<>();
         System.out.println("ES-init Fitness: " + bestMakespan);
 
-        while (searchCounter < 100) {
+        while (searchCounter < 1000) {
             searchCounter++;
             ArrayList<Job> test = jobArrayList;
             Collections.copy(test, jobArrayList);

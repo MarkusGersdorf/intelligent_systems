@@ -17,6 +17,14 @@ import java.util.Objects;
 
 import static org.junit.Assert.fail;
 
+/**
+ * In this test the functionality of the scheduler should be checked. The insertion of the data is to be checked.
+ * For this purpose, a strategy is run through and the generated schedule is then checked. Operations in a resource must not overlap and a job must be completed in a specified order.
+ *
+ * @author Markus Gersdorf
+ * @version 1.0
+ * @since 24.02.2021
+ */
 public class ShopSchedulingTest {
 
     JsonParser jsonParser = new JsonParser();
@@ -32,6 +40,12 @@ public class ShopSchedulingTest {
 
     private final Map<Long, Job> map = new HashMap<>();
 
+    /**
+     * Befor start init job list and build map
+     *
+     * @throws IOException    read file from benchmark problems
+     * @throws ParseException read file from benchmark problems
+     */
     @Before
     public void init() throws IOException, ParseException {
         ArrayList<Job> jobArrayList = jsonParser.parseJsonJobs(listOfFiles[0]);
@@ -41,6 +55,13 @@ public class ShopSchedulingTest {
         }
     }
 
+    /**
+     * Unfortunately only a test.
+     * Here the test is performed once for each strategy.
+     *
+     * @throws IOException    read file from benchmark problems
+     * @throws ParseException read file from benchmark problems
+     */
     @Test
     public void testOrderFromData() throws IOException, ParseException {
         for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
@@ -64,6 +85,11 @@ public class ShopSchedulingTest {
         }
     }
 
+    /**
+     * Call different test methods
+     *
+     * @param schedule schedule object from strategy which is tested
+     */
     public void tests(Schedule schedule) {
         testNextItemHasBiggerStartPoint(schedule);
         testPreviousItemHasSmallerEndPoint(schedule);
