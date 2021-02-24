@@ -1,6 +1,6 @@
 package de.uol.is.shopScheduling;
 
-import de.uol.is.shopScheduling.solutionObject.EvolutionStrategy;
+import de.uol.is.shopScheduling.optimizationMethods.EvolutionStrategy;
 import de.uol.is.shopScheduling.strategys.FifoStrategy;
 import de.uol.is.shopScheduling.strategys.RandomStrategy;
 import de.uol.is.shopScheduling.strategys.SptStrategy;
@@ -21,7 +21,7 @@ public class ShopScheduling {
         String project_path = new File("").getAbsolutePath();
 
         // search for all json files and save them
-        File folder = new File(project_path.concat("/src/main/java/de/uol/is/shopScheduling/resources/benchmark_problems"));
+        File folder = new File(project_path.concat("/shopScheduling/src/main/resources/benchmark_problems"));
         File[] listOfFiles = folder.listFiles();
 
         // save all jobs into this list

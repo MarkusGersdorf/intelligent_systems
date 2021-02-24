@@ -1,54 +1,66 @@
 package de.uol.is.tat;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
+/**
+ * This class offers several functions to check if all necessary dependencies and rules are fulfilled.
+ *
+ * @author Joosten Steenhusen
+ * @author Thomas Cwil
+ * @version 0.1
+ */
 public class Constraints implements IConstraints {
-    protected ArrayList<IField[][]> fields;
-    public Constraints() {
-    }
+
+    /**
+     * Check for this tree if a tent is available
+     *
+     * @param f current field
+     * @return true when a neighbor is a tent
+     */
     @Override
-    public boolean one_tent_per_tree(IField[][] f) {
-        return f[0][1].get_field_type() == IField.field_type.TENT ||
-                f[1][0].get_field_type() == IField.field_type.TENT ||
-                f[1][2].get_field_type() == IField.field_type.TENT ||
-                f[2][1].get_field_type() == IField.field_type.TENT;
+    public boolean oneTentPerTree(IField[][] f) {
+        return f[0][1].getFieldType() == IField.field_type.TENT ||
+                f[1][0].getFieldType() == IField.field_type.TENT ||
+                f[1][2].getFieldType() == IField.field_type.TENT ||
+                f[2][1].getFieldType() == IField.field_type.TENT;
     }
 
+    /**
+     * Check for this tent if a tree is available
+     *
+     * @param f current field
+     * @return true when a neighbor is a tree
+     */
     @Override
-    public boolean one_tree_per_tent(IField[][] f) {
-        return f[0][1].get_field_type() == IField.field_type.TREE ||
-                f[1][0].get_field_type() == IField.field_type.TREE ||
-                f[1][2].get_field_type() == IField.field_type.TREE ||
-                f[2][1].get_field_type() == IField.field_type.TREE;
+    public boolean oneTreePerTent(IField[][] f) {
+        return f[0][1].getFieldType() == IField.field_type.TREE ||
+                f[1][0].getFieldType() == IField.field_type.TREE ||
+                f[1][2].getFieldType() == IField.field_type.TREE ||
+                f[2][1].getFieldType() == IField.field_type.TREE;
     }
 
+    /**
+     * Is the number of tents in a row respected?
+     *
+     * @param f      field
+     * @param fieldI position column
+     * @param fieldJ position row
+     * @return true if constraint fulfills
+     */
     @Override
-    public boolean horizontal_vertical_tent_at_tree(IField[][] f) {
-        return false;
-    }
-
-    @Override
-    public boolean adjacent_tent_tree(IField[][] f) {
-        return false;
-    }
-
-    @Override
-    public boolean only_n_tents_per_row(IField[][] f, int field_i, int field_j) {
-        int row_limit = f[field_i][0].get_border_limit();
-        int column_limit = f[0][field_j].get_border_limit();
+    public boolean onlyNTentsPerRow(IField[][] f, int fieldI, int fieldJ) {
+        int row_limit = f[fieldI][0].getBorderLimit();
+        int column_limit = f[0][fieldJ].getBorderLimit();
 
         int number_of_tents_row = 0;
         int number_of_tents_column = 0;
 
-        for(int i = 0; i < f[0].length; i++) {
-            if(f[field_i][i].get_field_type() == IField.field_type.TENT) {
+        for (int i = 0; i < f[0].length; i++) {
+            if (f[fieldI][i].getFieldType() == IField.field_type.TENT) {
                 number_of_tents_row++;
             }
         }
 
-        for(int i = 0; i < f.length; i++) {
-            if(f[i][field_j].get_field_type() == IField.field_type.TENT) {
+        for (IField[] iFields : f) {
+            if (iFields[fieldJ].getFieldType() == IField.field_type.TENT) {
                 number_of_tents_column++;
             }
         }
@@ -56,15 +68,21 @@ public class Constraints implements IConstraints {
         return row_limit == number_of_tents_row && column_limit == number_of_tents_column;
     }
 
+    /**
+     * There is no tent available around this tree
+     *
+     * @param f current field
+     * @return true when no tent available
+     */
     @Override
-    public boolean no_tent_around_tent(IField[][] f) {
+    public boolean noTentAroundTent(IField[][] f) {
 
-        for(int i = 0; i < f.length; i++) {
-            for(int j = 0; j < f.length; j++) {
-                if(i == 1 && j == 1) {
+        for (int i = 0; i < f.length; i++) {
+            for (int j = 0; j < f.length; j++) {
+                if (i == 1 && j == 1) {
                     continue;
                 }
-                if(f[i][j].get_field_type() == IField.field_type.TENT) {
+                if (f[i][j].getFieldType() == IField.field_type.TENT) {
                     return false;
                 }
             }

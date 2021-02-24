@@ -2,7 +2,7 @@ package de.uol.is.shopScheduling.strategys;
 
 import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
-import de.uol.is.shopScheduling.solutionObject.SolutionObject;
+import de.uol.is.shopScheduling.SolutionObject;
 
 import java.util.ArrayList;
 
