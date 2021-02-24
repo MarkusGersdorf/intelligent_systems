@@ -51,6 +51,14 @@ public class Operation {
     };
 
     /**
+     * Sort Operations in ascending order by index
+     */
+    public static Comparator<Operation> sortByIndex = (obj1, obj2) -> {
+        //sort in ascending order
+        return (int) (obj1.index - obj2.index);
+    };
+
+    /**
      * This Operation works at point in time
      *
      * @param pointInTime point in time

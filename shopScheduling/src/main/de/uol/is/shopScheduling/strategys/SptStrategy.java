@@ -4,6 +4,8 @@ import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This class implements the STP strategy. This is a strategy in which the jobs that have the shortest processing time
@@ -31,11 +33,22 @@ public class SptStrategy extends Strategy {
      */
     @Override
     public ArrayList<Operation> sort() {
+        Map<Long, ArrayList<Operation>> map = new TreeMap<>();
         ArrayList<Operation> operationArrayList = new ArrayList<>();
+
         for (Job job : jobArrayList) {
-            operationArrayList.addAll(job.getOperationArrayList());
+            // key is already in map, add operations to this key
+            if (map.get(job.duration()) != null) {
+                map.get(job.duration()).addAll(job.getOperationArrayList());
+                map.get(job.duration()).sort(Operation.sortByIndex);
+            } else {
+                job.getOperationArrayList().sort(Operation.sortByIndex);
+                map.put(job.duration(), job.getOperationArrayList());
+            }
         }
-        operationArrayList.sort(Operation.sortByDuration);
+        for (Long l : map.keySet()) {
+            operationArrayList.addAll(map.get(l));
+        }
         return operationArrayList;
     }
 }
