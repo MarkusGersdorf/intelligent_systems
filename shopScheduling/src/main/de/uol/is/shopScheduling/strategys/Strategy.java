@@ -2,6 +2,7 @@ package de.uol.is.shopScheduling.strategys;
 
 import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
+import de.uol.is.shopScheduling.Resource;
 import de.uol.is.shopScheduling.SolutionObject;
 
 import java.util.ArrayList;
@@ -36,24 +37,13 @@ public abstract class Strategy extends SolutionObject {
      * to create a plan. This function implements all dependencies
      */
     protected void planning(ArrayList<Operation> operationArrayList) {
-        long getMaxId = 0;
 
-        ArrayList<Operation> solutionList = new ArrayList<>();
-
-        for (Operation operation : operationArrayList) {
-            getMaxId = Long.max(getMaxId, operation.getIndex());
-        }
-
-        for (int i = 0; i < getMaxId; i++) {
+        for (Resource resource : schedule.getResources()) {
             for (Operation operation : operationArrayList) {
-                if (operation.getIndex() == i) {
-                    solutionList.add(operation);
+                if (operation.getResource() == resource.getId()) {
+                    schedule.addOperationToResource(operation);
                 }
             }
-        }
-
-        for (Operation operation : solutionList) {
-            schedule.addOperationToResource(operation);
         }
     }
 

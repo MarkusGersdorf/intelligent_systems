@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Resources are controlled here. If something is added then everything around it is adjusted if necessary.
@@ -401,6 +402,15 @@ public class Schedule implements ISchedule {
             System.out.print("|" + StringUtils.leftPad(i + "|\t", 6, "0"));
         }
         System.out.println();
+    }
+
+    /**
+     * Get all resources
+     *
+     * @return set of all resources
+     */
+    public Set<Resource> getResources() {
+        return resourceHashMap.keySet();
     }
 
     /**
