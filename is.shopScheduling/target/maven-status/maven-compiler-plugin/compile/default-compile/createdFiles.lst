@@ -1,0 +1,15 @@
+de\uol\is\shopScheduling\solutionObject\Algorithm.class
+de\uol\is\shopScheduling\solutionObject\Metaheuristic.class
+de\uol\is\shopScheduling\Operation.class
+de\uol\is\shopScheduling\strategys\Strategy.class
+de\uol\is\shopScheduling\Resource.class
+de\uol\is\shopScheduling\strategys\FifoStrategy.class
+de\uol\is\shopScheduling\Job.class
+de\uol\is\shopScheduling\Schedule.class
+de\uol\is\shopScheduling\JsonParser.class
+de\uol\is\shopScheduling\strategys\RandomStrategy.class
+de\uol\is\shopScheduling\strategys\SptStrategy.class
+de\uol\is\shopScheduling\solutionObject\SolutionObject.class
+de\uol\is\shopScheduling\solutionObject\EvolutionStrategy.class
+de\uol\is\shopScheduling\ISchedule.class
+de\uol\is\shopScheduling\ShopScheduling.class

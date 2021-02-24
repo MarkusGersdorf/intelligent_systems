@@ -1,0 +1,43 @@
+package de.uol.de.uol.is.agents;
+
+import de.uol.de.uol.is.IBoard;
+import de.uol.de.uol.is.IPawn;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
+/**
+ * This class implements a strategy to play Ludo.
+ * Randomly move a piece on the board.
+ *
+ * @author Markus Gersdorf
+ * @author Marcel Peplies
+ * @version 0.1
+ */
+public class Strategy1 extends Agent {
+
+    /**
+     * @param name  agent name
+     * @param color agent color
+     * @param board playing field
+     */
+    public Strategy1(String name, IPawn.player color, IBoard board) {
+        super(name, color, board);
+        this.strategy = "Strategy1";
+    }
+
+    /**
+     * First look for figures that are on the initial positions.
+     * These must always be moved first.
+     * Otherwise, randomly choose a figure to move.
+     *
+     * @return a list in which the game pieces are returned sorted
+     */
+    @Override
+    protected ArrayList<IPawn> chooseFigure(ArrayList<IPawn> pawns) {
+        Collections.shuffle(pawns, new Random()); // Generate a random ranking
+        optionList.addAll(pawns); // Add all other characters to the result, sorted by game progress
+        return optionList;
+    }
+}
