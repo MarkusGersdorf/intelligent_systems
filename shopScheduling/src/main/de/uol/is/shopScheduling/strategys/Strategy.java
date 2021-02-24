@@ -6,6 +6,7 @@ import de.uol.is.shopScheduling.Resource;
 import de.uol.is.shopScheduling.SolutionObject;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * Superclass, which is to be used by all heuristics
@@ -38,14 +39,17 @@ public abstract class Strategy extends SolutionObject {
      */
     protected void planning(ArrayList<Operation> operationArrayList) {
 
-        for (Resource resource : schedule.getResources()) {
-            for (Operation operation : operationArrayList) {
-                if (operation.getResource() == resource.getId()) {
-                    schedule.addOperationToResource(operation);
-                }
+        ListIterator<Operation> listIterator = operationArrayList.listIterator();
+        while (listIterator.hasNext()) {
+            Operation operation = listIterator.next();
+            if (operation.getIndex() == 0 || schedule.getPreviousJobOperation(operation) != null) {
+                schedule.addOperationToResource(operation);
+                listIterator.remove(); // Removes operation from list
+                listIterator = operationArrayList.listIterator(); // start at item 0 again
             }
         }
     }
+
 
     /**
      * Check constraints from scheduling plan
@@ -54,9 +58,8 @@ public abstract class Strategy extends SolutionObject {
      * @return true if constraints success else false
      */
     protected boolean checkConstraints(boolean print) {
-        for (int i = 0; i < 9; i++) {
-            // TODO:
-            for (Operation o : schedule.getOperations(i)) {
+        for (Resource resource : schedule.getResources()) {
+            for (Operation o : schedule.getOperations(resource)) {
                 if (!checkAscendingOperationOrder(o)) {
                     if (print) {
                         System.err.println("Ascending order not ok!" + " Startpoint: " + o.getStartTime() + " - OperationId: " + o.getIndex() + " - JobId: " + o.getJobId());
