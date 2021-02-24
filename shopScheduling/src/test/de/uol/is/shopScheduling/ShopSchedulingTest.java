@@ -68,9 +68,9 @@ public class ShopSchedulingTest {
             Schedule schedule_spt = strategy.getSchedule();
             tests(schedule_spt);
 
-//            Algorithm algorithm = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
-//            schedule = algorithm.getSchedule();
-//            tests(schedule);
+            //Algorithm algorithm = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
+            //schedule = algorithm.getSchedule();
+            //tests(schedule);
 
         }
     }
@@ -220,11 +220,7 @@ public class ShopSchedulingTest {
                 for (Operation operation : schedule.getOperations(resource.getId())) {
                     Operation nextResourceOperation = schedule.getNextResourceOperation(operation);
                     if (nextResourceOperation != null) {
-                        Job oneJob = map.get(operation.getJobId());
-                        Job secondJob = map.get(nextResourceOperation.getJobId());
-                        long one = map.get(operation.getJobId()).duration();
-                        long two = map.get(nextResourceOperation.getJobId()).duration();
-                        if (one > two) {
+                        if (map.get(operation.getJobId()).duration() > map.get(nextResourceOperation.getJobId()).duration()) {
                             fail();
                         }
                     }
