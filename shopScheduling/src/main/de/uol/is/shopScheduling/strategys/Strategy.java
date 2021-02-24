@@ -2,131 +2,84 @@ package de.uol.is.shopScheduling.strategys;
 
 import de.uol.is.shopScheduling.Job;
 import de.uol.is.shopScheduling.Operation;
-import de.uol.is.shopScheduling.Resource;
-import org.apache.commons.lang3.StringUtils;
+import de.uol.is.shopScheduling.SolutionObject;
 
 import java.util.ArrayList;
 
-public abstract class Strategy {
+/**
+ * Superclass, which is to be used by all heuristics
+ *
+ * @author Joosten Steenhusen, Marcel Peplies
+ */
+public abstract class Strategy extends SolutionObject {
 
-    protected ArrayList<Job> jobArrayList;
-    protected ArrayList<Resource> resourceArrayList;
-
-    public Strategy(ArrayList<Job> jobArrayList, ArrayList<Resource> resource) {
-        this.jobArrayList = jobArrayList;
-        this.resourceArrayList = resource;
+    /**
+     * constructor calls the functions for sorting and planning the heuristics directly after creating the class
+     *
+     * @param jobArrayList       List of jobs
+     * @param resourcesArrayList List of resources
+     */
+    public Strategy(ArrayList<Job> jobArrayList, ArrayList<Long> resourcesArrayList) {
+        super(jobArrayList, resourcesArrayList);
+        planning(sort());
+        checkConstraints(true);
     }
 
-    protected abstract void sort();
+    /**
+     * Implemented by the heuristic and by this it is specified in which order
+     * the jobs are selected by the scheduling function
+     */
+    protected abstract ArrayList<Operation> sort();
 
-    public void print() {
-        //System.out.println("Print strategy");
-        print_to_console();
-        printDiagram();
-    }
+    /**
+     * The planning function uses the list sorted by the heuristics
+     * to create a plan. This function implements all dependencies
+     */
+    protected void planning(ArrayList<Operation> operationArrayList) {
+        long getMaxId = 0;
 
-    public void print_to_console() {
-        // Tabelle nach Job sortiert
-        System.out.print("JobID\t\t");
-        Job job = jobArrayList.get(0);
-        int steps = 0;
-        for (Operation op : job.getOperationArrayList()) {
-            System.out.print(" Step " + steps + " \t");
-            steps += 1;
-        }
-        System.out.println();
-        for (Job j : jobArrayList) {
-            System.out.print(j.getId() + "\t\t\t");
-            for (Operation op : j.getOperationArrayList()) {
-                System.out.print(" " + op.getResource() + "," + op.getDuration() + " \t\t");
-            }
-            System.out.println();
+        ArrayList<Operation> solutionList = new ArrayList<>();
+
+        for (Operation operation : operationArrayList) {
+            getMaxId = Long.max(getMaxId, operation.getIndex());
         }
 
-        // Tabelle nach Ressource sortiert
-        /*
-        System.out.print("RessourceID\t");
-        Resource res = resourceArrayList.get(0);
-        int steps = 0;
-        for (Operation op : res.getOperations()) {
-            System.out.print(" Step " + steps + " \t");
-            steps += 1;
-        }
-        System.out.println();
-        for (Resource r : resourceArrayList) {
-            System.out.print(r.getId() + "\t\t\t");
-            for (Operation op : r.getOperations()) {
-                System.out.print(" " + op.getResource() + "," + op.getDuration() + " \t\t");
-            }
-            System.out.println("");
-        }
-        */
-    }
-
-    public void printDiagram() {
-        long minDuration = Long.MAX_VALUE;
-        long maxDuration = Long.MIN_VALUE;
-
-        for (Resource resource : resourceArrayList) {
-            for (Operation operation : resource.getOperations()) {
-                minDuration = Long.min(minDuration, operation.getStartTime());
-                maxDuration = Long.max(maxDuration, operation.getEndTime());
+        for (int i = 0; i < getMaxId; i++) {
+            for (Operation operation : operationArrayList) {
+                if (operation.getIndex() == i) {
+                    solutionList.add(operation);
+                }
             }
         }
 
-        for (Resource resource : resourceArrayList) {
-            for (int i = (int) minDuration; i < (int) maxDuration; i++) {
-                String resourceString = resource.getOperation(i) == -1.0 ? " " : "" + resource.getOperation(i) + "";
-                System.out.print("|" + StringUtils.leftPad(resourceString + "|\t", 6, " "));
-            }
-            System.out.println();
-        }
-        for (int i = (int) minDuration; i < (int) maxDuration; i++) {
-            System.out.print("|" + StringUtils.leftPad(i + "|\t", 6, "0"));
+        for (Operation operation : solutionList) {
+            schedule.addOperationToResource(operation);
         }
     }
 
-    protected void planning() {
-        //System.out.println("New planning");
-        for (Job job : jobArrayList) {
-            long verplanteZeit = 0;
-            for (Operation operation : job.getOperationArrayList()) {
-                Resource machine = resourceArrayList.get((int) operation.getResource());
-                long dauerDerOperation = operation.getDuration();
-
-                if (machine.getOperations().size() == 0) {
-                    operation.setStartTime(verplanteZeit);
-                    operation.setEndTime(verplanteZeit + dauerDerOperation);
-                    verplanteZeit += dauerDerOperation;
-                    machine.addOperation(operation);
-                } else {
-                    boolean hinzugefuegt = false;
-                    boolean blockiert = false;
-
-                    while (!hinzugefuegt) {
-                        //System.out.println(verplanteZeit);
-                        for (Operation operationInMaschine : machine.getOperations()) {
-                            if ((verplanteZeit > operationInMaschine.getStartTime() && verplanteZeit < operationInMaschine.getEndTime()) ||
-                                    ((verplanteZeit + dauerDerOperation) > operationInMaschine.getStartTime() && (verplanteZeit + dauerDerOperation) < operationInMaschine.getEndTime())) {
-                                verplanteZeit = operationInMaschine.getEndTime();
-                                blockiert = true;
-                                break;
-                            }
-                        }
-
-                        if (!blockiert) {
-                            operation.setStartTime(verplanteZeit);
-                            operation.setEndTime(verplanteZeit + operation.getDuration());
-                            machine.addOperation(operation);
-                            verplanteZeit += operation.getDuration();
-                            hinzugefuegt = true;
-                        } else {
-                            blockiert = false;
-                        }
+    /**
+     * Check constraints from scheduling plan
+     *
+     * @param print when true error messages will be printed
+     * @return true if constraints success else false
+     */
+    protected boolean checkConstraints(boolean print) {
+        for (int i = 0; i < 9; i++) {
+            // TODO:
+            for (Operation o : schedule.getOperations(i)) {
+                if (!checkAscendingOperationOrder(o)) {
+                    if (print) {
+                        System.err.println("Ascending order not ok!" + " Startpoint: " + o.getStartTime() + " - OperationId: " + o.getIndex() + " - JobId: " + o.getJobId());
+                    }
+                    return false;
+                }
+                if (!checkIneJobAtOnePointInTime(o)) {
+                    if (print) {
+                        System.err.println("There is more as one job in one time!" + " Startpoint: " + o.getStartTime() + " - OperationId: " + o.getIndex() + " - JobId: " + o.getJobId());
                     }
                 }
             }
         }
+        return true;
     }
-
 }
