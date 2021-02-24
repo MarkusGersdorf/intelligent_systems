@@ -8,23 +8,27 @@ import sim.engine.SimState;
 import java.util.ArrayList;
 
 /**
+ * Main class, will run simulation based on given configuration
+ *
+ * IDs from players and fields:
+ *
  * PlayerID
  * 0: player.RED;
  * 1: player.BLUE;
  * 2: player.YELLOW;
  * 3: player.BLACK;
- * <p>
+ *
  * FieldID
- * -1: Entry
- * 0 - 39: Fields
+ * -1:      Entry
+ * 0 - 39:  Fields
  * 40 - 43: Goal (RED)
  * 44 - 47: Goal (BLUE)
  * 48 - 51: Goal (YELLOW)
  * 52 - 55: Goal (BLACK)
+ *
+ * @author Thomas Cwil
+ * @author Joosten Steenhusen
  */
-
-// TODO: Magic Numbers entfernen / erklären 
-
 public class Ludo extends SimState {
     private static final IBoard board = new Board(System.currentTimeMillis());
     private static int rolled;
@@ -37,6 +41,9 @@ public class Ludo extends SimState {
         super(seed);
     }
 
+    /**
+     * Starter method
+     */
     public void start() {
         super.start();
         initialize_agents();
@@ -45,11 +52,19 @@ public class Ludo extends SimState {
         }
     }
 
+    /**
+     * Main method
+     */
     public static void main(String[] args) {
         doLoop(Ludo.class, args);
         System.exit(0);
     }
 
+    /**
+     * Helper to get pawns that stand on entry
+     * @param pawns Pawn
+     * @return IPawn
+     */
     private static IPawn get_pawn_from_entry(ArrayList<IPawn> pawns) {
         for (IPawn p : pawns) {
             if (p.get_field().get_field_type() == IField.field_type.ENTRY) {
@@ -59,6 +74,9 @@ public class Ludo extends SimState {
         return null;
     }
 
+    /**
+     * Initialize method
+     */
     private static void initialize_agents() {
         Agent[] agents = new Agent[4];
         for (int i = 0; i < 4; i++) {
@@ -73,6 +91,11 @@ public class Ludo extends SimState {
         board.set_agents(agents);
     }
 
+    /**
+     * Helper method to get the linked id from a color of a player
+     * @param player_id ID
+     * @return id of color
+     */
     private static IPawn.player get_player_color(int player_id) {
         switch (player_id) {
             case 0:

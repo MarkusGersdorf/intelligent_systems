@@ -1,5 +1,11 @@
 package de.uol.is.ludo;
 
+/**
+ * Interface for pawn
+ *
+ * @author Thomas Cwil
+ * @author Joosten Steenhusen
+ */
 public class Pawn implements IPawn
 {
     private int id;

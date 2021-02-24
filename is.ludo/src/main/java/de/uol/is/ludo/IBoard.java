@@ -4,6 +4,12 @@ import de.uol.is.ludo.agents.Agent;
 
 import java.util.ArrayList;
 
+/**
+ * Interface for Board
+ *
+ * @author Thomas Cwil
+ * @author Joosten Steenhusen
+ */
 public interface IBoard
 {
     int roll();
