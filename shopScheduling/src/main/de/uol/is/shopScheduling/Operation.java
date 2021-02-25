@@ -11,7 +11,7 @@ import java.util.Comparator;
  * @author markusgersdorf
  * @version 0.1
  */
-public class Operation {
+public class Operation implements Cloneable {
     @Getter
     private final long index;
     @Getter
@@ -68,4 +68,8 @@ public class Operation {
         return startTime <= pointInTime && endTime >= pointInTime;
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

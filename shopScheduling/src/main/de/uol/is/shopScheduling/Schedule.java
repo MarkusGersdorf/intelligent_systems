@@ -1,5 +1,6 @@
 package de.uol.is.shopScheduling;
 
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -13,11 +14,14 @@ import java.util.Set;
  * @author Thomas Cwill, Markus Gersdorf
  * @version 1.0
  */
-public class Schedule implements ISchedule {
+public class Schedule implements ISchedule, Cloneable {
 
-    private final HashMap<Resource, ArrayList<Operation>> resourceHashMap = new HashMap<>();
+    @Setter
+    private HashMap<Resource, ArrayList<Operation>> resourceHashMap = new HashMap<>();
+    private ArrayList<Long> resourcesList;
 
     public Schedule(ArrayList<Long> resourcesList) {
+        this.resourcesList = resourcesList;
         initResources(resourcesList);
     }
 
@@ -438,4 +442,22 @@ public class Schedule implements ISchedule {
         addOperation(operation);
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Schedule newSchedule = new Schedule(resourcesList);
+        HashMap<Resource, ArrayList<Operation>> resourceHashMap = new HashMap<>();
+
+        for (Resource resource : getResources()) {
+            ArrayList<Operation> newOperation = new ArrayList<>();
+
+            for (Operation operation : getOperations(resource.getId())) {
+                newOperation.add((Operation) operation.clone());
+            }
+
+            resourceHashMap.put(resource, newOperation);
+        }
+
+        newSchedule.setResourceHashMap(resourceHashMap);
+        return newSchedule;
+    }
 }

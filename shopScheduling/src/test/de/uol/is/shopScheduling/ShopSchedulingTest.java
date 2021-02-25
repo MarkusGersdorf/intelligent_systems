@@ -1,5 +1,7 @@
 package de.uol.is.shopScheduling;
 
+import de.uol.is.shopScheduling.optimizationMethods.Algorithm;
+import de.uol.is.shopScheduling.optimizationMethods.EvolutionStrategy;
 import de.uol.is.shopScheduling.strategys.FifoStrategy;
 import de.uol.is.shopScheduling.strategys.RandomStrategy;
 import de.uol.is.shopScheduling.strategys.SptStrategy;
@@ -59,6 +61,7 @@ public class ShopSchedulingTest {
             strategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
             Schedule schedule = strategy.getSchedule();
             tests(schedule);
+            checkStrategy(strategy, schedule);
 
             strategy = new RandomStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
             Schedule schedule_random = strategy.getSchedule();
@@ -67,10 +70,11 @@ public class ShopSchedulingTest {
             strategy = new SptStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
             Schedule schedule_spt = strategy.getSchedule();
             tests(schedule_spt);
+            //checkStrategy(strategy, schedule);
 
-            //Algorithm algorithm = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
-            //schedule = algorithm.getSchedule();
-            //tests(schedule);
+            Algorithm algorithm = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
+            schedule = algorithm.getSchedule();
+            tests(schedule);
 
         }
     }
@@ -88,10 +92,14 @@ public class ShopSchedulingTest {
         testNextResourceOperation(schedule);
         testPreviousResourceOperation(schedule);
         testOneOperationDirectBeforeCurrent(schedule);
-        checkStrategy(strategy, schedule);
 
     }
 
+    /**
+     * Check if the next element on the resource has a larger starting point than the current one.
+     *
+     * @param schedule machine assignment plan
+     */
     private void testNextItemHasBiggerStartPoint(Schedule schedule) {
 
         for (Resource resource : schedule.getResources()) {
@@ -105,6 +113,11 @@ public class ShopSchedulingTest {
         }
     }
 
+    /**
+     * Check if the previous element on the resource has a larger starting point than the current one.
+     *
+     * @param schedule machine assignment plan
+     */
     private void testPreviousItemHasSmallerEndPoint(Schedule schedule) {
 
         for (Resource resource : schedule.getResources()) {
@@ -120,6 +133,11 @@ public class ShopSchedulingTest {
         }
     }
 
+    /**
+     * Check if the next element of the job has a larger starting point than the current one.
+     *
+     * @param schedule machine assignment plan
+     */
     private void testCheckNextJobElement(Schedule schedule) {
         ArrayList<Operation> operationArrayList = getAllOperations(schedule);
 
@@ -133,6 +151,11 @@ public class ShopSchedulingTest {
         }
     }
 
+    /**
+     * Check if the previous element of the job has a larger starting point than the current one.
+     *
+     * @param schedule machine assignment plan
+     */
     private void testPreviousJobOperation(Schedule schedule) {
         ArrayList<Operation> operationArrayList = getAllOperations(schedule);
 
@@ -148,6 +171,9 @@ public class ShopSchedulingTest {
         }
     }
 
+    /**
+     * @param schedule
+     */
     private void testNextResourceOperation(Schedule schedule) {
         ArrayList<Operation> operationArrayList = getAllOperations(schedule);
 
