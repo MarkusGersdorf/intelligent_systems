@@ -189,14 +189,18 @@ public class ShopSchedulingTest {
             Operation previousOperationOnResource = schedule.getPreviousResourceOperation(operation);
             Operation previousOperationOnJob = schedule.getPreviousJobOperation(operation);
 
-            if (previousOperationOnJob == null && previousOperationOnResource == null && operation.getStartTime() > 1) {
+            if (previousOperationOnJob != null && previousOperationOnResource != null) {
+                if (Long.max(previousOperationOnResource.getEndTime(), previousOperationOnJob.getEndTime()) + 1 != operation.getStartTime()) {
+                    fail();
+                }
+            } else if (previousOperationOnJob == null && previousOperationOnResource == null && operation.getStartTime() > 1) {
                 fail();
             } else if (previousOperationOnJob != null) {
-                if (previousOperationOnJob.getEndTime() + 1 > operation.getStartTime()) {
+                if (previousOperationOnJob.getEndTime() + 1 != operation.getStartTime()) {
                     fail();
                 }
             } else if (previousOperationOnResource != null) {
-                if (previousOperationOnResource.getEndTime() + 1 > operation.getStartTime()) {
+                if (previousOperationOnResource.getEndTime() + 1 != operation.getStartTime()) {
                     fail();
                 }
             }
