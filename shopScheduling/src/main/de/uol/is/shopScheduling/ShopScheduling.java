@@ -40,20 +40,20 @@ public class ShopScheduling {
             for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
                 //for (int i = 0; i < 1; i++) {
                 System.out.println("Path: " + listOfFiles[i].getPath().substring(55));
-                FifoStrategy fifoStrategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+                FifoStrategy fifoStrategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
                 //fifoStrategy.printDiagram();
                 long fifoMakeSpan = fifoStrategy.getMakespan();
                 System.out.println("Fifo-Strategy: " + fifoMakeSpan);
-                RandomStrategy randomStrategy = new RandomStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+                RandomStrategy randomStrategy = new RandomStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
                 //randomStrategy.printDiagram();
                 long randomMakeSpan = randomStrategy.getMakespan();
                 System.out.println("Random-Strategy: " + randomMakeSpan);
-                SptStrategy sptStrategy = new SptStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+                SptStrategy sptStrategy = new SptStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
                 //sptStrategy.printDiagram();
                 long sptMakeSpan = sptStrategy.getMakespan();
                 System.out.println("Spt-Strategy: " + sptMakeSpan);
                 System.out.println("---------ES-Start---------");
-                EvolutionStrategy evolutionStrategy = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+                EvolutionStrategy evolutionStrategy = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
                 long esMakeSpan = evolutionStrategy.getMakespan();
                 System.out.println("ES-Strategy: " + esMakeSpan);
                 System.out.println("-------------------------------------------------------------------------------");
