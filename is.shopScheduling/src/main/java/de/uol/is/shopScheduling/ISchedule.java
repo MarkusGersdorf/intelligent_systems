@@ -1,6 +1,7 @@
 package de.uol.is.shopScheduling;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Interface for scheduler
@@ -39,6 +40,8 @@ public interface ISchedule {
     long getMakespan();
 
     Resource getResource(long resourceId);
+
+    Set<Resource> getResources();
 
     ArrayList<Operation> getOperations(long resourceId);
 

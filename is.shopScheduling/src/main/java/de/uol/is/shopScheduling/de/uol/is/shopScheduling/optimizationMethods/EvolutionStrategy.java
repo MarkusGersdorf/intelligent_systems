@@ -1,11 +1,10 @@
 package de.uol.is.shopScheduling.optimizationMethods;
 
 import de.uol.is.shopScheduling.Job;
+import de.uol.is.shopScheduling.Schedule;
 import de.uol.is.shopScheduling.strategys.RandomStrategy;
-import de.uol.is.shopScheduling.strategys.Strategy;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Evolutionary 1+1 algorithm
@@ -38,13 +37,11 @@ public class EvolutionStrategy extends Algorithm {
         RandomStrategy best = new RandomStrategy(jobArrayList, resourcesArrayList);
         long bestMakespan = best.getMakespan();
 
-        ArrayList<Strategy> strategies = new ArrayList<>();
+        ArrayList<Schedule> strategies = new ArrayList<>();
         System.out.println("ES-init Fitness: " + bestMakespan);
 
-        while (searchCounter < 100) {
+        while (searchCounter < 10) {
             searchCounter++;
-            ArrayList<Job> test = jobArrayList;
-            Collections.copy(test, jobArrayList);
 
             // generate mutation
             RandomStrategy mutation = new RandomStrategy(jobArrayList, resourcesArrayList);
@@ -52,15 +49,23 @@ public class EvolutionStrategy extends Algorithm {
             long mutationMakespan = mutation.getMakespan();
 
             if (mutationMakespan <= bestMakespan) {
-                strategies.add(mutation); // add solutions to a list
-                bestMakespan = mutationMakespan;
-                System.out.println("Fitness: " + best.getMakespan());
+                try {
+                    strategies.add((Schedule) mutation.getSchedule().clone()); // add solutions to a list
+                    bestMakespan = mutationMakespan;
+                    System.out.println("Fitness: " + bestMakespan);
+                } catch (Exception ignored) {
+
+                }
             }
         }
         if (strategies.size() > 0) {
-            schedule = strategies.get(strategies.size() - 1).getSchedule(); // select last solution
+            schedule = strategies.get(strategies.size() - 1); // select last solution
         } else {
-            schedule = best.getSchedule(); // select init solution
+            try {
+                schedule = (Schedule) best.getSchedule().clone(); // select init solution
+            } catch (Exception ignored) {
+
+            }
         }
     }
 }

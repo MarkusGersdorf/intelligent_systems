@@ -1,9 +1,11 @@
 package de.uol.is.shopScheduling;
 
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Resources are controlled here. If something is added then everything around it is adjusted if necessary.
@@ -12,11 +14,14 @@ import java.util.HashMap;
  * @author Thomas Cwill, Markus Gersdorf
  * @version 1.0
  */
-public class Schedule implements ISchedule {
+public class Schedule implements ISchedule, Cloneable {
 
-    private final HashMap<Resource, ArrayList<Operation>> resourceHashMap = new HashMap<>();
+    @Setter
+    private HashMap<Resource, ArrayList<Operation>> resourceHashMap = new HashMap<>();
+    private ArrayList<Long> resourcesList;
 
     public Schedule(ArrayList<Long> resourcesList) {
+        this.resourcesList = resourcesList;
         initResources(resourcesList);
     }
 
@@ -105,7 +110,7 @@ public class Schedule implements ISchedule {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == operation.getResource()) {
                 ArrayList<Operation> operationArrayList = resourceHashMap.get(resource);
-                if (operationArrayList.size() > 1 && operationArrayList.indexOf(operation) > 1) {
+                if (operationArrayList.size() > 1 && operationArrayList.indexOf(operation) > 0) {
                     return operationArrayList.get(operationArrayList.indexOf(operation) - 1);
                 } else {
                     return null;
@@ -404,6 +409,15 @@ public class Schedule implements ISchedule {
     }
 
     /**
+     * Get all resources
+     *
+     * @return set of all resources
+     */
+    public Set<Resource> getResources() {
+        return resourceHashMap.keySet();
+    }
+
+    /**
      * Add one operation to resource, update start and end time from this object
      *
      * @param operation operation object which should be added to resource
@@ -428,4 +442,22 @@ public class Schedule implements ISchedule {
         addOperation(operation);
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Schedule newSchedule = new Schedule(resourcesList);
+        HashMap<Resource, ArrayList<Operation>> resourceHashMap = new HashMap<>();
+
+        for (Resource resource : getResources()) {
+            ArrayList<Operation> newOperation = new ArrayList<>();
+
+            for (Operation operation : getOperations(resource.getId())) {
+                newOperation.add((Operation) operation.clone());
+            }
+
+            resourceHashMap.put(resource, newOperation);
+        }
+
+        newSchedule.setResourceHashMap(resourceHashMap);
+        return newSchedule;
+    }
 }
