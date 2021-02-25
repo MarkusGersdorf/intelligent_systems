@@ -61,7 +61,11 @@ public class EvolutionStrategy extends Algorithm {
         if (strategies.size() > 0) {
             schedule = strategies.get(strategies.size() - 1); // select last solution
         } else {
-            schedule = best.getSchedule(); // select init solution
+            try {
+                schedule = (Schedule) best.getSchedule().clone(); // select init solution
+            } catch (Exception ignored) {
+
+            }
         }
     }
 }

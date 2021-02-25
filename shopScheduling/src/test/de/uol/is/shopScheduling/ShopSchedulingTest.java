@@ -1,7 +1,5 @@
 package de.uol.is.shopScheduling;
 
-import de.uol.is.shopScheduling.optimizationMethods.Algorithm;
-import de.uol.is.shopScheduling.optimizationMethods.EvolutionStrategy;
 import de.uol.is.shopScheduling.strategys.FifoStrategy;
 import de.uol.is.shopScheduling.strategys.RandomStrategy;
 import de.uol.is.shopScheduling.strategys.SptStrategy;
@@ -70,11 +68,7 @@ public class ShopSchedulingTest {
             strategy = new SptStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
             Schedule schedule_spt = strategy.getSchedule();
             tests(schedule_spt);
-            //checkStrategy(strategy, schedule);
-
-            Algorithm algorithm = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
-            schedule = algorithm.getSchedule();
-            tests(schedule);
+            checkStrategy(strategy, schedule_spt);
 
         }
     }
@@ -172,7 +166,9 @@ public class ShopSchedulingTest {
     }
 
     /**
-     * @param schedule
+     * Check the next operation on the same resource
+     *
+     * @param schedule machine assignment plan
      */
     private void testNextResourceOperation(Schedule schedule) {
         ArrayList<Operation> operationArrayList = getAllOperations(schedule);
@@ -193,6 +189,11 @@ public class ShopSchedulingTest {
         }
     }
 
+    /**
+     * Check the previous operation on the same resource
+     *
+     * @param schedule machine assignment plan
+     */
     private void testPreviousResourceOperation(Schedule schedule) {
         ArrayList<Operation> operationArrayList = getAllOperations(schedule);
 
@@ -208,6 +209,11 @@ public class ShopSchedulingTest {
         }
     }
 
+    /**
+     * test if there is an operation directly before the current one without gap
+     *
+     * @param schedule machine assignment plan
+     */
     private void testOneOperationDirectBeforeCurrent(Schedule schedule) {
         ArrayList<Operation> operationArrayList = getAllOperations(schedule);
 
@@ -233,6 +239,12 @@ public class ShopSchedulingTest {
         }
     }
 
+    /**
+     * Check the implementation of the heuristics
+     *
+     * @param strategy instance of strategy
+     * @param schedule machine assignment plan
+     */
     private void checkStrategy(Strategy strategy, Schedule schedule) {
         if (strategy instanceof FifoStrategy) {
             for (Resource resource : schedule.getResources()) {
@@ -259,6 +271,13 @@ public class ShopSchedulingTest {
         }
     }
 
+    /**
+     * Query whether the operation is the first on a resource
+     *
+     * @param schedule  machine assignment plan
+     * @param operation machine assignment plan
+     * @return true if it is
+     */
     private boolean operationIsFirstOnResource(Schedule schedule, Operation operation) {
         ArrayList<Operation> operationOnResource = schedule.getOperations(schedule.getResource(operation.getResource()));
 
@@ -270,6 +289,13 @@ public class ShopSchedulingTest {
         return false;
     }
 
+    /**
+     * Query whether the operation is the last on a resource
+     *
+     * @param schedule  machine assignment plan
+     * @param operation machine assignment plan
+     * @return true if it is
+     */
     private boolean operationIsLastOnResource(Schedule schedule, Operation operation) {
         ArrayList<Operation> operationOnResource = schedule.getOperations(schedule.getResource(operation.getResource()));
 
@@ -281,6 +307,12 @@ public class ShopSchedulingTest {
         return false;
     }
 
+    /**
+     * Get all operations
+     *
+     * @param schedule machine assignment plan
+     * @return list of operations
+     */
     private ArrayList<Operation> getAllOperations(Schedule schedule) {
         ArrayList<Operation> allOperations = new ArrayList<>();
         for (Resource resource : schedule.getResources()) {
