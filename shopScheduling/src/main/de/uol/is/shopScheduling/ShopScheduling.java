@@ -53,7 +53,7 @@ public class ShopScheduling {
                 long sptMakeSpan = sptStrategy.getMakespan();
                 System.out.println("Spt-Strategy: " + sptMakeSpan);
                 System.out.println("---------ES-Start---------");
-                EvolutionStrategy evolutionStrategy = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[0]), jsonParser.parseJsonResources(listOfFiles[0]));
+                EvolutionStrategy evolutionStrategy = new EvolutionStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
                 long esMakeSpan = evolutionStrategy.getMakespan();
                 System.out.println("ES-Strategy: " + esMakeSpan);
                 System.out.println("-------------------------------------------------------------------------------");
