@@ -36,7 +36,7 @@ public class Tat {
     public static void main(String[] args) {
         int fieldNumber = 0;
         String projectPath = new File("").getAbsolutePath();
-        String csvPath = projectPath.concat("\\tat\\src\\main\\java\\de\\uol\\is\\tat\\resources\\");
+        String csvPath = projectPath.concat("\\src\\main\\java\\de\\uol\\is\\tat\\resources\\");
 
         for (int i = 0; i < 10; i++) {
             path[i] = csvPath.concat("tents_trees_" + i + ".csv");

@@ -22,13 +22,13 @@ public class ShopScheduling {
         String project_path = new File("").getAbsolutePath();
 
         // search for all json files and save them
-        File folder = new File(project_path.concat("/shopScheduling/src/main/java/de/uol/is/shopSchedulingresources/benchmark_problems"));
+        File folder = new File(project_path.concat("/src/main/java/de/uol/is/shopScheduling/resources/benchmark_problems"));
         File[] listOfFiles = folder.listFiles();
 
         //CSVWriter writer = null;
         BufferedWriter writer = null;
         try {
-            writer = Files.newBufferedWriter(Paths.get(project_path.concat("/shopScheduling/src/main/java/de/uol/is/shopSchedulingresources/benchmark_problems.csv")));
+            writer = Files.newBufferedWriter(Paths.get(project_path.concat("/src/main/java/de/uol/is/shopScheduling/resources/benchmark_problems.csv")));
             writer.write("id,fifo,random,spt,es");
             writer.newLine();
         } catch (Exception ignored) {
@@ -38,7 +38,7 @@ public class ShopScheduling {
         try {
             for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
                 //for (int i = 0; i < 2; i++) {
-                System.out.println("Path: " + listOfFiles[i].getPath().substring(55));
+            	System.out.println("Path: " + listOfFiles[i].getPath().split("/")[listOfFiles[i].getPath().split("/").length-1]);
                 FifoStrategy fifoStrategy = new FifoStrategy(jsonParser.parseJsonJobs(listOfFiles[i]), jsonParser.parseJsonResources(listOfFiles[i]));
                 //fifoStrategy.printDiagram();
                 long fifoMakeSpan = fifoStrategy.getMakespan();
