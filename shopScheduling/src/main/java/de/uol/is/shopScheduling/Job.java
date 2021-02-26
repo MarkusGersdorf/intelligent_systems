@@ -53,4 +53,8 @@ public class Job {
         return (int) (obj2.getIndex() - obj1.getIndex());
     };
 
+	public Long getId() {
+		return this.id;
+	}
+
 }
