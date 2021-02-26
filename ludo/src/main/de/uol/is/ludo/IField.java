@@ -1,5 +1,11 @@
 package de.uol.is.ludo;
 
+/**
+ * Interface for Field
+ *
+ * @author Thomas Cwil
+ * @author Joosten Steenhusen
+ */
 public interface IField
 {
     enum field_type

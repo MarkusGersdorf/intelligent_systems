@@ -5,9 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Read in a cdv file and create the individual fields
+ * Read in a csv file and create the individual fields
  *
- * @author Thomas Cwill
+ * @author Thomas Cwil
  * @version 0.1
  */
 public class CSVReader implements ICSVReader {
