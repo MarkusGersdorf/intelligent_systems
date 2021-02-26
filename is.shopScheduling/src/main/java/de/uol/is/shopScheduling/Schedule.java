@@ -1,22 +1,27 @@
 package de.uol.is.shopScheduling;
 
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Resources are controlled here. If something is added then everything around it is adjusted if necessary.
  * This includes the start times for all further operations of the own job and the start times of other jobs on the same resource.
  *
- * @author Thomas Cwill, Markus Gersdorf
+ * @author Thomas Cwil, Markus Gersdorf
  * @version 1.0
  */
-public class Schedule implements ISchedule {
+public class Schedule implements ISchedule, Cloneable {
 
-    private final HashMap<Resource, ArrayList<Operation>> resourceHashMap = new HashMap<>();
+    @Setter
+    private HashMap<Resource, ArrayList<Operation>> resourceHashMap = new HashMap<>();
+    private ArrayList<Long> resourcesList;
 
     public Schedule(ArrayList<Long> resourcesList) {
+        this.resourcesList = resourcesList;
         initResources(resourcesList);
     }
 
@@ -105,7 +110,7 @@ public class Schedule implements ISchedule {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == operation.getResource()) {
                 ArrayList<Operation> operationArrayList = resourceHashMap.get(resource);
-                if (operationArrayList.size() > 1 && operationArrayList.indexOf(operation) > 1) {
+                if (operationArrayList.size() > 1 && operationArrayList.indexOf(operation) > 0) {
                     return operationArrayList.get(operationArrayList.indexOf(operation) - 1);
                 } else {
                     return null;
@@ -279,6 +284,12 @@ public class Schedule implements ISchedule {
         return maxEndTime - minStartTime;
     }
 
+    /**
+     * Get resource by resourceId
+     *
+     * @param resourceId resourceId
+     * @return resource object
+     */
     public Resource getResource(long resourceId) {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == resourceId) {
@@ -288,6 +299,12 @@ public class Schedule implements ISchedule {
         return null;
     }
 
+    /**
+     * Get operations by resourceId
+     *
+     * @param resourceId resourceId
+     * @return list of operations
+     */
     public ArrayList<Operation> getOperations(long resourceId) {
         for (Resource resource : resourceHashMap.keySet()) {
             if (resource.getId() == resourceId) {
@@ -297,10 +314,23 @@ public class Schedule implements ISchedule {
         return null;
     }
 
+    /**
+     * Get operations by resource object
+     *
+     * @param resource resource object
+     * @return list of operations
+     */
     public ArrayList<Operation> getOperations(Resource resource) {
         return getOperations(resource.getId());
     }
 
+    /**
+     * Get operation at point in time
+     *
+     * @param resource    resource object
+     * @param pointInTime point in time as long value
+     * @return operation object
+     */
     public Operation getOperation(Resource resource, long pointInTime) {
         for (Operation operation : resourceHashMap.get(resource)) {
             if (operation.operationExists(pointInTime)) {
@@ -332,7 +362,7 @@ public class Schedule implements ISchedule {
         // Tabelle nach Ressource sortiert
 
         System.out.print("RessourceID\t");
-        for(Resource res : resourceHashMap.keySet()) {
+        for (Resource res : resourceHashMap.keySet()) {
             int steps = 0;
             for (Operation op : resourceHashMap.get(res)) {
                 System.out.print(" Step " + steps + " \t");
@@ -351,7 +381,9 @@ public class Schedule implements ISchedule {
         }
     }
 
-
+    /**
+     * print chart with points at what time on which resource which job runs
+     */
     public void printDiagram() {
         long minDuration = Long.MAX_VALUE;
         long maxDuration = Long.MIN_VALUE;
@@ -376,22 +408,56 @@ public class Schedule implements ISchedule {
         System.out.println();
     }
 
+    /**
+     * Get all resources
+     *
+     * @return set of all resources
+     */
+    public Set<Resource> getResources() {
+        return resourceHashMap.keySet();
+    }
+
+    /**
+     * Add one operation to resource, update start and end time from this object
+     *
+     * @param operation operation object which should be added to resource
+     */
     public void addOperationToResource(Operation operation) {
-        long startPointOperation = 0L;
-        long maxEndPoint = 0L;
+        long endPointPreviousJob = 0L;
+        long endPointPreviousResource = 0L;
 
         if (getPreviousJobOperation(operation) != null) {
-            startPointOperation = getPreviousJobOperation(operation).getEndTime();
+            endPointPreviousJob = getPreviousJobOperation(operation).getEndTime();
         }
 
         if (getLastInsertedElement(operation) != null) {
-            maxEndPoint = getLastInsertedElement(operation).getEndTime();
+            endPointPreviousResource = getLastInsertedElement(operation).getEndTime();
         }
 
-        operation.setStartTime(Long.max(maxEndPoint, startPointOperation) + 1);
+        // update start and end time from operation
+        operation.setStartTime(Long.max(endPointPreviousResource, endPointPreviousJob) + 1);
         operation.setEndTime(operation.getStartTime() + operation.getDuration());
 
+        // add operation to resource
         addOperation(operation);
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Schedule newSchedule = new Schedule(resourcesList);
+        HashMap<Resource, ArrayList<Operation>> resourceHashMap = new HashMap<>();
+
+        for (Resource resource : getResources()) {
+            ArrayList<Operation> newOperation = new ArrayList<>();
+
+            for (Operation operation : getOperations(resource.getId())) {
+                newOperation.add((Operation) operation.clone());
+            }
+
+            resourceHashMap.put(resource, newOperation);
+        }
+
+        newSchedule.setResourceHashMap(resourceHashMap);
+        return newSchedule;
+    }
 }

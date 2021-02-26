@@ -1,9 +1,5 @@
-package de.uol.is.shopScheduling.solutionObject;
+package de.uol.is.shopScheduling;
 
-import de.uol.is.shopScheduling.Job;
-import de.uol.is.shopScheduling.Operation;
-import de.uol.is.shopScheduling.Resource;
-import de.uol.is.shopScheduling.Schedule;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +8,7 @@ import java.util.ArrayList;
 /**
  * This is a solution object. This solution object provides functions to output the solution visually in the console.
  *
- * @author Thomas Cwill, Markus Gersdorf, Joosten Steenhusen, Marcel Peplies
+ * @author Thomas Cwil, Markus Gersdorf, Joosten Steenhusen, Marcel Peplies
  * @version 2.0
  */
 public abstract class SolutionObject {

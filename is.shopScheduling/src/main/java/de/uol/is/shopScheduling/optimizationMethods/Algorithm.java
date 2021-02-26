@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * All optimization methods inherit from this class
  *
- * @author Markus Gersdorf, Thomas Cwill
+ * @author Markus Gersdorf, Thomas Cwil
  * @version 1.0
  */
 public abstract class Algorithm extends SolutionObject {

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Fifo strategy
  *
- * @author Markus Gersdorf, Thomas Cwill
+ * @author Markus Gersdorf, Thomas Cwil
  * @version 1.0
  */
 public class FifoStrategy extends Strategy {
