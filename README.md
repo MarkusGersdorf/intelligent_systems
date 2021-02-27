@@ -8,3 +8,5 @@ How to import Projects into Eclipse
     * Ludo:             src/main/java/de/uol/is/ludo/Ludo.java
     * Tat:              src/main/java/de/uol/is/tat/Tat.java
     * ShopScheduling:   src/main/java/de/uol/is/shopScheduling/ShopScheduling.java
+
+Link zum Repository auf GitLab: https://gitlab.uni-oldenburg.de/wulo3715/intelligent\_systems.git
