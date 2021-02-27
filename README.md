@@ -1,11 +1,10 @@
-TODOS:
+How to import Projects into Eclipse
 -
-1. Repository exportieren bzw. in Eclipse importierbar machen (Maven)
-2. Doku fertigstellen (siehe Overleaf TODOS) -> AUSWERTUNG (1. 2. Assignment)
-3. Code dokumentieren (falls noch nicht geschehen)
-4. Assignment 1/2 Auswertung (bei 3 haben wir schon bisschen was)
-
-Was wollen wir abgeben?
-- 
-1. Dokumentation (3 einzelne Berichte + 1 Projektbezogenes Dokument (1seitig))
-2. Repository abgeben (GitLab-Link + .zip-Datei, inkl. Anleitung)
+1. Open Eclipse
+2. Import.. -> Existing Maven Projects
+3. Select "intelligent_systems" as Sourcefolder
+4. Check all three Projects -> Finish
+5. Now you can run every Projects Main
+    * Ludo:             src/main/java/de/uol/is/ludo/Ludo.java
+    * Tat:              src/main/java/de/uol/is/tat/Tat.java
+    * ShopScheduling:   src/main/java/de/uol/is/shopScheduling/ShopScheduling.java
